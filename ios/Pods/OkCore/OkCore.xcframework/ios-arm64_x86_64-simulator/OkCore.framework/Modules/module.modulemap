@@ -1,0 +1,11 @@
+framework module OkCore {
+  umbrella header "OkCore.h"
+
+  export *
+  module * { export * }
+}
+
+module OkCore.Swift {
+    header "OkCore-Swift.h"
+    requires objc
+}

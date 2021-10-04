@@ -1,18 +1,15 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-okhi';
+import { isLocationPermissionGranted } from 'react-native-okhi';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
-
   React.useEffect(() => {
-    multiply(3, 7).then(setResult);
+    isLocationPermissionGranted().then(console.log);
   }, []);
-
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text>Result: Hiiiiii</Text>
     </View>
   );
 }

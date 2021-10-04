@@ -1,0 +1,229 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.5 (swiftlang-1300.0.31.1 clang-1300.0.29.1)
+// swift-module-flags: -target arm64-apple-ios12.1-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name OkCore
+import SystemConfiguration.CaptiveNetwork
+import CoreLocation
+import CoreTelephony
+import Foundation
+import Network
+@_exported import OkCore
+import Swift
+import SystemConfiguration
+import UIKit
+import _Concurrency
+public class OkHiAppContext {
+  public var mode: Swift.String?
+  public var platform: Swift.String
+  public var developer: Swift.String
+  public var appMeta: OkCore.OkHiAppMeta?
+  public init()
+  public func withAppMeta(name: Swift.String, version: Swift.String, build: Swift.String) -> OkCore.OkHiAppContext
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class OkHiAppMeta {
+  public var name: Swift.String?
+  public var version: Swift.String?
+  public var build: Swift.String?
+  @objc deinit
+}
+public class OkHiUser : Swift.Codable {
+  public var phone: Swift.String
+  public var firstName: Swift.String?
+  public var lastName: Swift.String?
+  public var id: Swift.String?
+  public init()
+  public init(phoneNumber: Swift.String)
+  public func with(firstName: Swift.String) -> OkCore.OkHiUser
+  public func with(lastName: Swift.String) -> OkCore.OkHiUser
+  public func with(okHiId: Swift.String) -> OkCore.OkHiUser
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+public class OkHiLocation : Swift.Codable {
+  public var id: Swift.String?
+  public var userId: Swift.String?
+  public var streetName: Swift.String?
+  public var propertyName: Swift.String?
+  public var directions: Swift.String?
+  public var geoPoint: OkCore.GeoPoint
+  public var streetView: OkCore.StreetView?
+  public var otherInformation: Swift.String?
+  public var updateAt: Swift.String?
+  public var createdAt: Swift.String?
+  public var url: Swift.String?
+  public var plusCode: Swift.String?
+  public var photo: Swift.String?
+  public var title: Swift.String?
+  public var subtitle: Swift.String?
+  public var displayTitle: Swift.String?
+  public init()
+  public init(identifier: Swift.String, lat: Swift.Double, lon: Swift.Double)
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@_hasMissingDesignatedInitializers public class OkHiUtils {
+  public static func encode<T>(object: T) throws -> Swift.String where T : Swift.Encodable
+  public static func decode<T>(json: Swift.String?, model: T.Type) throws -> T? where T : Swift.Decodable, T : Swift.Encodable
+  @objc deinit
+}
+public struct StreetView : Swift.Codable {
+  public var url: Swift.String?
+  public var panoId: Swift.String?
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct OkHiGeofenceConfig : Swift.Codable {
+  public var radius: Swift.Int
+  public var expiration: Swift.Int
+  public var notificationResponsiveness: Swift.Int
+  public var setInitialTriggers: Swift.Bool
+  public var registerOnDeviceRestart: Swift.Bool
+  public var setDwellTransitionType: Swift.Bool
+  public var loiteringDelay: Swift.Int
+  public init()
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public enum LocationPermissionType {
+  case whenInUse
+  case always
+  public static func == (a: OkCore.LocationPermissionType, b: OkCore.LocationPermissionType) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public protocol OkHiLocationServiceDelegate : ObjectiveC.NSObject {
+  func okHiLocationService(locationService: OkCore.OkHiLocationService, didChangeLocationPermissionStatus locationPermissionType: OkCore.LocationPermissionType, result: Swift.Bool)
+}
+@objc @_inheritsConvenienceInitializers public class OkHiLocationService : ObjectiveC.NSObject, CoreLocation.CLLocationManagerDelegate {
+  weak public var delegate: OkCore.OkHiLocationServiceDelegate?
+  @objc override dynamic public init()
+  public func isLocationPermissionGranted() -> Swift.Bool
+  public func isLocationServicesAvailable() -> Swift.Bool
+  public func requestLocationPermission(withBackgroundLocationPermission: Swift.Bool = true)
+  @objc public func locationManager(_ manager: CoreLocation.CLLocationManager, didChangeAuthorization status: CoreLocation.CLAuthorizationStatus)
+  @objc deinit
+}
+public enum Environment {
+  case prod
+  case sandbox
+  public static func == (a: OkCore.Environment, b: OkCore.Environment) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public enum OkHiAccessScope : Swift.String {
+  case verify
+  case address
+  case checkout
+  case profile
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+extension UIKit.UIDevice {
+  @_Concurrency.MainActor(unsafe) public static let modelName: Swift.String
+}
+@objc public class GeoPoint : ObjectiveC.NSObject, Foundation.NSSecureCoding, Swift.Codable {
+  @objc public static var supportsSecureCoding: Swift.Bool
+  public var lat: Swift.Double
+  public var lon: Swift.Double
+  public init(lat: Swift.Double, lon: Swift.Double)
+  @objc public func encode(with aCoder: Foundation.NSCoder)
+  @objc required public init?(coder: Foundation.NSCoder)
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers public class OkHiCore : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  public init(okHiAuth: OkCore.OkHiAuth)
+  public func anonymousSignInWith(phoneNumber: Swift.String, in scopes: [Swift.String], completion: @escaping (Swift.Result<Swift.String, OkCore.OkHiError>) -> Swift.Void)
+  public func anonymousSignInWith(userId: Swift.String, in scopes: [Swift.String], completion: @escaping (Swift.Result<Swift.String, OkCore.OkHiError>) -> Swift.Void)
+  public func getConfiguration(authToken: Swift.String, completion: @escaping (Swift.Result<OkCore.OkHiGeofenceConfig, OkCore.OkHiError>) -> Swift.Void)
+  public func transitEvents(with jsonData: Foundation.Data? = nil, accessToken: Swift.String, completion: @escaping (Swift.Result<Swift.String, OkCore.OkHiError>) -> Swift.Void)
+  public func sendDeviceHealthInfo(accessToken: Swift.String, completion: @escaping (Swift.Result<Swift.Bool, OkCore.OkHiError>) -> Swift.Void)
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class OkHiAuth {
+  public var accessToken: Swift.String? {
+    get
+  }
+  public var environment: OkCore.Environment?
+  final public let appContext: OkCore.OkHiAppContext
+  public init(branchId: Swift.String, clientKey: Swift.String, environment: OkCore.Environment, appContext: OkCore.OkHiAppContext? = nil)
+  public init(branchId: Swift.String, clientKey: Swift.String, environment: Swift.String, appContext: OkCore.OkHiAppContext? = nil)
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class OkPreferences {
+  public static let shared: OkCore.OkPreferences
+  public var branchId: Swift.String? {
+    get
+  }
+  public var clientKey: Swift.String? {
+    get
+  }
+  public var environment: OkCore.Environment? {
+    get
+  }
+  public var appContext: OkCore.OkHiAppContext? {
+    get
+  }
+  @objc deinit
+}
+public class OkHiError : Swift.Error {
+  public enum ErrorCodes : Swift.String {
+    case unknown
+    case network
+    case invalidPhone
+    case unauthorized
+    case permisionDenied
+    case unableToParse
+    case webViewInternalHttp
+    case missingLocationId
+    public init?(rawValue: Swift.String)
+    public typealias RawValue = Swift.String
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+  public enum ErrorMessages : Swift.String {
+    case unknown
+    case network
+    case invalidPhone
+    case unauthorized
+    case unableToParse
+    case webViewInternalHttp
+    case missingLocationId
+    public init?(rawValue: Swift.String)
+    public typealias RawValue = Swift.String
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+  public var code: Swift.String
+  public var message: Swift.String
+  public init(code: Swift.String?, message: Swift.String?)
+  public init(code: OkCore.OkHiError.ErrorCodes?, message: OkCore.OkHiError.ErrorMessages?)
+  public init(code: OkCore.OkHiError.ErrorCodes?, message: Swift.String?)
+  @objc deinit
+}
+extension OkCore.LocationPermissionType : Swift.Equatable {}
+extension OkCore.LocationPermissionType : Swift.Hashable {}
+extension OkCore.Environment : Swift.Equatable {}
+extension OkCore.Environment : Swift.Hashable {}
+extension OkCore.OkHiAccessScope : Swift.Equatable {}
+extension OkCore.OkHiAccessScope : Swift.Hashable {}
+extension OkCore.OkHiAccessScope : Swift.RawRepresentable {}
+extension OkCore.OkHiError.ErrorCodes : Swift.Equatable {}
+extension OkCore.OkHiError.ErrorCodes : Swift.Hashable {}
+extension OkCore.OkHiError.ErrorCodes : Swift.RawRepresentable {}
+extension OkCore.OkHiError.ErrorMessages : Swift.Equatable {}
+extension OkCore.OkHiError.ErrorMessages : Swift.Hashable {}
+extension OkCore.OkHiError.ErrorMessages : Swift.RawRepresentable {}
