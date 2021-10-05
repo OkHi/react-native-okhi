@@ -1,11 +1,12 @@
 import type { OkHiLocationManagerProps } from './types';
-import type { ApplicationConfiguration, OkHiLocation } from '../OkCore';
+import type { OkHiLocation } from '../OkCore';
 import { OkHiMode } from '../OkCore';
 import type {
   OkHiLocationManagerStartDataPayload,
   OkHiLocationManagerStartMessage,
 } from './types';
 import manifest from './app.json'; //TODO: fix this
+import type { AuthApplicationConfig } from '../OkCore/_types';
 
 /**
  * @ignore
@@ -13,7 +14,7 @@ import manifest from './app.json'; //TODO: fix this
 export const generateStartDataPayload = (
   props: OkHiLocationManagerProps,
   authToken: string,
-  applicationConfiguration: ApplicationConfiguration
+  applicationConfiguration: AuthApplicationConfig
 ): OkHiLocationManagerStartDataPayload => {
   const payload: any = {};
   payload.style = !props.theme
@@ -22,7 +23,7 @@ export const generateStartDataPayload = (
         base: {
           color: props.theme?.colors?.primary,
           logo: props.theme?.appBar?.logo,
-          name: applicationConfiguration.app.name,
+          name: applicationConfiguration.app?.name,
         },
       };
   payload.user = {
@@ -35,8 +36,8 @@ export const generateStartDataPayload = (
   };
   payload.context = {
     container: {
-      name: applicationConfiguration.app.name,
-      version: applicationConfiguration.app.version,
+      name: applicationConfiguration.app?.name,
+      version: applicationConfiguration.app?.version,
     },
     developer: {
       name: applicationConfiguration.context.developer,
@@ -66,7 +67,7 @@ export const generateStartDataPayload = (
  * @ignore
  */
 export const getFrameUrl = (
-  applicationConfiguration: ApplicationConfiguration
+  applicationConfiguration: AuthApplicationConfig
 ) => {
   const DEV_FRAME_URL = 'https://dev-manager-v5.okhi.io';
   const PROD_FRAME_URL = 'https://manager-v5.okhi.io';
@@ -74,7 +75,7 @@ export const getFrameUrl = (
   if (applicationConfiguration.context.mode === OkHiMode.PROD) {
     return PROD_FRAME_URL;
   }
-  if (applicationConfiguration.context.mode === 'dev') {
+  if (applicationConfiguration.context.mode === ('dev' as any)) {
     return DEV_FRAME_URL;
   }
   return SANDBOX_FRAME_URL;

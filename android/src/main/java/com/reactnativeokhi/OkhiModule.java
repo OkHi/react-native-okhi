@@ -2,6 +2,7 @@ package com.reactnativeokhi;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Base64;
 
 import androidx.annotation.NonNull;
 
@@ -168,5 +169,12 @@ public class OkhiModule extends ReactContextBaseJavaModule {
     } catch (Exception e) {
       promise.reject(OkHiException.UNKNOWN_ERROR_CODE, "Unable to parse auth credentials");
     }
+  }
+
+  @ReactMethod
+  public void getAuthToken(String branchId, String clientKey, Promise promise) {
+    String concat = branchId + ":" + clientKey;
+    String token = Base64.encodeToString(concat.getBytes(), Base64.NO_WRAP);
+    promise.resolve("Token " + token);
   }
 }

@@ -12,8 +12,9 @@ import {
   generateStartDataPayload,
   parseOkHiLocation,
 } from './Util';
-import { ApplicationConfiguration, OkHiException } from '../OkCore';
+import { getApplicationConfiguration, OkHiException } from '../OkCore';
 import { OkHiAuth } from '../OkCore/OkHiAuth';
+import type { AuthApplicationConfig } from '../OkCore/_types';
 
 /**
  * The OkHiLocationManager React Component is used to display an in app modal, enabling the user to quickly create an accurate OkHi address.
@@ -21,7 +22,7 @@ import { OkHiAuth } from '../OkCore/OkHiAuth';
 const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
   const [token, setToken] = useState<string | null>(null);
   const [applicationConfiguration, setApplicationConfiguration] =
-    useState<ApplicationConfiguration | null>(null);
+    useState<AuthApplicationConfig | null>(null);
   const defaultStyle = { flex: 1 };
   const style = props.style
     ? { ...props.style, ...defaultStyle }
@@ -36,8 +37,7 @@ const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
         .anonymousSignInWithPhoneNumber(user.phone, ['address'])
         .then(setToken)
         .catch(onError);
-      auth
-        .getApplicationConfiguration()
+      getApplicationConfiguration()
         .then(setApplicationConfiguration)
         .catch(onError);
     }

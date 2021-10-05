@@ -156,22 +156,18 @@ export interface OkHiError {
   message: string;
 }
 
-/**
- * @ignore
- */
-// TODO: don't exposee this, should remove after ios goes live on cocoapods
-export interface ApplicationConfiguration {
-  auth: {
-    accessToken: string;
+export type OkHiApplicationConfiguration = {
+  credentials: {
+    branchId: string;
+    clientKey: string;
   };
   context: {
-    platform: 'react-native';
-    developer: 'okhi' | 'external';
-    mode: 'dev' | 'sandbox' | 'prod';
+    mode: 'sandbox' | 'prod';
+    developer?: 'okhi' | 'external';
   };
-  app: {
-    name: string;
-    version: string;
-    versionCode: number;
+  app?: {
+    name?: string;
+    version?: string;
+    build?: number;
   };
-}
+};

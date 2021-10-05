@@ -59,6 +59,10 @@ class Okhi: NSObject {
         resolve(true)
     }
     
+    @objc func getAuthToken(_ branchId: String, clientKey: String, resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+        resolve("Token " + "\(branchId):\(clientKey)".toBase64())
+    }
+    
     private func _isBackgroundLocationPermissionGranted() -> Bool {
         if okhiLocationService.isLocationServicesAvailable() {
             return CLLocationManager.authorizationStatus() == .authorizedAlways
@@ -82,3 +86,17 @@ extension Okhi: OkHiLocationServiceDelegate {
         }
     }
 }
+
+extension String {
+    func fromBase64() -> String? {
+        guard let data = Data(base64Encoded: self) else {
+            return nil
+        }
+        return String(data: data, encoding: .utf8)
+    }
+    func toBase64() -> String {
+        return Data(self.utf8).base64EncodedString()
+    }
+}
+
+extension String: Error {}
