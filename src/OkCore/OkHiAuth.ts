@@ -1,15 +1,8 @@
 import axios from 'axios';
-import type { ApplicationConfiguration } from './types';
-import type { OkHiAccessScope } from './_types';
 import { OkHiMode } from './OkHiMode';
 import { OkHiException } from './OkHiException';
-import { OkHiNativeModule } from '../OkHiNativeModule';
-
-let applicationConfiguration: ApplicationConfiguration | null = null;
-
-export function configureApplication(config: ApplicationConfiguration) {
-  applicationConfiguration = config;
-}
+import type { OkHiAccessScope } from './_types';
+import { getApplicationConfiguration } from '.';
 
 /**
  * @ignore
@@ -25,25 +18,6 @@ export class OkHiAuth {
     this.ANONYMOUS_SIGN_IN_ENDPOINT;
   private readonly PROD_BASE_URL =
     `https://api.okhi.io/${this.API_VERSION}` + this.ANONYMOUS_SIGN_IN_ENDPOINT;
-
-  getApplicationConfiguration(): Promise<ApplicationConfiguration> {
-    return new Promise((resolve, reject) => {
-      if (typeof applicationConfiguration === 'object') {
-        resolve(applicationConfiguration as ApplicationConfiguration);
-      } else {
-        console.log('called');
-        OkHiNativeModule.getApplicationConfiguration()
-          .then((config) => {
-            console.log('config>_<', config);
-            resolve(JSON.parse(config));
-          })
-          .catch((error) => {
-            console.log(error);
-            reject(error);
-          });
-      }
-    });
-  }
 
   anonymousSignInWithPhoneNumber(
     phone: string,
@@ -70,33 +44,35 @@ export class OkHiAuth {
     [key: string]: any;
   }): Promise<string> {
     return new Promise(async (resolve, reject) => {
-      this.getApplicationConfiguration()
-        .then((config) => {
+      try {
+        const config = await getApplicationConfiguration();
+        console.log(config);
+        if (config === null) {
+          reject(
+            new OkHiException({
+              code: OkHiException.UNAUTHORIZED_CODE,
+              message: OkHiException.UNAUTHORIZED_MESSAGE,
+            })
+          );
+        } else {
           const { auth, context } = config;
           let url = this.SANDBOX_BASE_URL;
-          if (context.mode === 'dev') {
+          if (context?.mode === ('dev' as any)) {
             url = this.DEV_BASE_URL;
-          } else if (context.mode === OkHiMode.PROD) {
+          } else if (context?.mode === OkHiMode.PROD) {
             url = this.PROD_BASE_URL;
           } else {
             url = this.SANDBOX_BASE_URL;
           }
-          const headers = { Authorization: auth.accessToken };
-          axios
-            .post(url, payload, {
-              headers,
-            })
-            .then(({ data }) => resolve(data.authorization_token))
-            .catch((error) => reject(this.parseRequestError(error)));
-        })
-        .catch((error) =>
-          reject(
-            new OkHiException({
-              code: OkHiException.UNKNOWN_ERROR_CODE,
-              message: error.message || OkHiException.UNKNOWN_ERROR_MESSAGE,
-            })
-          )
-        );
+          const headers = { Authorization: auth.token };
+          const { data } = await axios.post(url, payload, {
+            headers,
+          });
+          resolve(data.authorization_token);
+        }
+      } catch (error) {
+        reject(this.parseRequestError(error));
+      }
     });
   }
 
