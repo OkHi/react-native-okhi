@@ -20,4 +20,6 @@ RCT_EXTERN_METHOD(requestEnableLocationServices: (RCTPromiseResolveBlock)resolve
 
 RCT_EXTERN_METHOD(getSystemVersion: (RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(getApplicationConfiguration: (RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
 @end

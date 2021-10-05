@@ -59,6 +59,49 @@ class Okhi: NSObject {
         resolve(true)
     }
     
+    @objc func getApplicationConfiguration(_ resolve: RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+        let clientKey = OkPreferences.shared.clientKey
+        let branchId = OkPreferences.shared.branchId
+        let context = OkPreferences.shared.appContext
+        let env = OkPreferences.shared.environment
+        if let clientKey = clientKey, let branchId = branchId, let context = context, let env = env {
+            let accessToken = "\(branchId):\(clientKey)".toBase64()
+            let mode: String = env == .prod ? "production" : env == .sandbox ? "sandbox" : "dev"
+            let appName: String = context.appMeta?.name ?? ""
+            let appVresion: String = context.appMeta?.version ?? ""
+            let versionCode: String = context.appMeta?.build ?? ""
+            let developer: String = context.developer
+            let credentials = [
+                "auth": [
+                    "accessToken": accessToken
+                ],
+                "context": [
+                    "platform": "react-native",
+                    "developer": developer,
+                    "mode": mode
+                ],
+                "app": [
+                    "name": appName,
+                    "version": appVresion,
+                    "versionCode":versionCode
+                ]
+            ]
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: credentials, options: .prettyPrinted)
+                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                    resolve(jsonString)
+                } else {
+                    throw "unable parse credentials"
+                }
+            } catch {
+                reject("unknown_error", "could not parse credentials", error)
+            }
+            
+        } else {
+            reject("unauthorized", "invalid credentials provided", nil)
+        }
+    }
+    
     private func _isBackgroundLocationPermissionGranted() -> Bool {
         if okhiLocationService.isLocationServicesAvailable() {
             return CLLocationManager.authorizationStatus() == .authorizedAlways
@@ -82,3 +125,17 @@ extension Okhi: OkHiLocationServiceDelegate {
         }
     }
 }
+
+extension String {
+    func fromBase64() -> String? {
+        guard let data = Data(base64Encoded: self) else {
+            return nil
+        }
+        return String(data: data, encoding: .utf8)
+    }
+    func toBase64() -> String {
+        return Data(self.utf8).base64EncodedString()
+    }
+}
+
+extension String: Error {}
