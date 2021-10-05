@@ -31,9 +31,16 @@ export class OkHiAuth {
       if (typeof applicationConfiguration === 'object') {
         resolve(applicationConfiguration as ApplicationConfiguration);
       } else {
+        console.log('called');
         OkHiNativeModule.getApplicationConfiguration()
-          .then((config) => resolve(JSON.parse(config)))
-          .catch(reject);
+          .then((config) => {
+            console.log('config>_<', config);
+            resolve(JSON.parse(config));
+          })
+          .catch((error) => {
+            console.log(error);
+            reject(error);
+          });
       }
     });
   }
@@ -82,7 +89,14 @@ export class OkHiAuth {
             .then(({ data }) => resolve(data.authorization_token))
             .catch((error) => reject(this.parseRequestError(error)));
         })
-        .catch(reject);
+        .catch((error) =>
+          reject(
+            new OkHiException({
+              code: OkHiException.UNKNOWN_ERROR_CODE,
+              message: error.message || OkHiException.UNKNOWN_ERROR_MESSAGE,
+            })
+          )
+        );
     });
   }
 
