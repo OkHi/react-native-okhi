@@ -77,7 +77,7 @@ class Okhi: NSObject {
                     let auth = OkHiAuth(
                         branchId: config.credentials.branchId,
                         clientKey: config.credentials.clientKey,
-                        environment: config.context.mode == "prod" ? .prod : .sandbox,
+                        environment: "https://dev-api.okhi.io",
                         appContext:context
                     )
                     OkHiVerify.initialize(with: auth)
@@ -86,7 +86,7 @@ class Okhi: NSObject {
                     let auth = OkHiAuth(
                         branchId: config.credentials.branchId,
                         clientKey: config.credentials.clientKey,
-                        environment: "https://dev-api.okhi.io",
+                        environment: config.context.mode == "prod" ? .prod : .sandbox,
                         appContext:context
                     )
                     OkHiVerify.initialize(with: auth)
