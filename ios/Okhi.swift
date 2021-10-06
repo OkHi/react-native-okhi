@@ -91,10 +91,10 @@ class Okhi: NSObject {
                     resolve(true)
                 }
             } else {
-                resolve(false)
+                reject("unauthorized", "unable to decode init configuration", nil)
             }
         } else {
-            resolve(false)
+            reject("unauthorized", "unable to decode init data configuration", nil)
         }
     }
     
