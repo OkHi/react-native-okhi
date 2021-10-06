@@ -11,6 +11,8 @@ class Okhi: NSObject {
     private var locationPermissionRequestType: LocationPermissionRequestType = .always
     private let okhiLocationService = OkHiLocationService()
     private var resolve: RCTPromiseResolveBlock?
+    private var reject: RCTPromiseRejectBlock?
+    private var okVerify:OkHiVerify?
     
     @objc(multiply:withB:withResolver:withRejecter:)
     func multiply(a: Float, b: Float, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
@@ -98,6 +100,16 @@ class Okhi: NSObject {
         }
     }
     
+    @objc func startAddressVerification(_ phoneNumber: String, locationId: String, lat: Double, lon: Double, resolve:@escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        let user = OkHiUser(phoneNumber: phoneNumber)
+        let location = OkHiLocation(identifier: locationId, lat: lat, lon: lon)
+        self.resolve = resolve
+        self.reject = reject
+        okVerify = OkHiVerify(user: user)
+        okVerify?.delegate = self
+        okVerify?.start(location: location)
+    }
+    
     private func _isBackgroundLocationPermissionGranted() -> Bool {
         if okhiLocationService.isLocationServicesAvailable() {
             return CLLocationManager.authorizationStatus() == .authorizedAlways
@@ -107,27 +119,7 @@ class Okhi: NSObject {
     }
 }
 
-struct RNOkHiCredential: Codable {
-    let branchId: String
-    let clientKey: String
-}
-
-struct RNOkHiContext: Codable {
-    let mode: String
-    let developer: String?
-}
-
-struct RNOkHiApp: Codable {
-    let name: String?
-    let version: String?
-    let build: String?
-}
-struct RNOkHiConfiguration: Codable {
-    let credentials: RNOkHiCredential
-    let context: RNOkHiContext
-    let app: RNOkHiApp?
-}
-
+// MARK: - OkHiLocationService Delegate
 extension Okhi: OkHiLocationServiceDelegate {
     func okHiLocationService(locationService: OkHiLocationService, didChangeLocationPermissionStatus locationPermissionType: LocationPermissionType, result: Bool) {
         guard let resolve = resolve else { return }
@@ -143,21 +135,17 @@ extension Okhi: OkHiLocationServiceDelegate {
     }
 }
 
-extension String {
-    func fromBase64() -> String? {
-        guard let data = Data(base64Encoded: self) else {
-            return nil
-        }
-        return String(data: data, encoding: .utf8)
+// MARK: - OkVerify Delegate
+extension Okhi: OkVerifyDelegate {
+    func verify(_ okVerify: OkHiVerify, didEncounterError error: OkHiError) {
+        guard let reject = reject else { return }
+        reject(error.code, error.message, nil)
     }
-    func toBase64() -> String {
-        return Data(self.utf8).base64EncodedString()
+    
+    func verify(_ okVerify: OkHiVerify, didStart locationId: String) {
+        guard let resolve = resolve else { return }
+        resolve(locationId)
     }
-}
-
-extension String {
-    func toJSON() -> Any? {
-        guard let data = self.data(using: .utf8, allowLossyConversion: false) else { return nil }
-        return try? JSONSerialization.jsonObject(with: data, options: .mutableContainers)
-    }
+    
+    func verify(_ okVerify: OkHiVerify, didEnd locationId: String) { }
 }
