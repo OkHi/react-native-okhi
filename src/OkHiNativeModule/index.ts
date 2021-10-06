@@ -11,7 +11,6 @@ type OkHiNativeModuleType = {
   isGooglePlayServicesAvailable(): Promise<boolean>;
   requestEnableGooglePlayServices(): Promise<boolean>;
   getSystemVersion(): Promise<number | string>;
-  getApplicationConfiguration(): Promise<string>;
   getAuthToken(branchId: string, clientKey: string): Promise<string>;
   initialize(configuration: string): Promise<void>;
   startAddressVerification(
