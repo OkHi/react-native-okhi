@@ -14,6 +14,12 @@ type OkHiNativeModuleType = {
   getApplicationConfiguration(): Promise<string>;
   getAuthToken(branchId: string, clientKey: string): Promise<string>;
   initialize(configuration: string): Promise<void>;
+  startAddressVerification(
+    phoneNumber: string,
+    locationId: string,
+    lat: Number,
+    lon: Number
+  ): Promise<string>;
 };
 
 export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi;
