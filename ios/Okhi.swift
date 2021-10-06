@@ -1,4 +1,5 @@
 import OkCore
+import OkVerify
 import UIKit
 
 @objc(Okhi)
@@ -10,6 +11,8 @@ class Okhi: NSObject {
     private var locationPermissionRequestType: LocationPermissionRequestType = .always
     private let okhiLocationService = OkHiLocationService()
     private var resolve: RCTPromiseResolveBlock?
+    private var reject: RCTPromiseRejectBlock?
+    private var okVerify:OkHiVerify?
     
     @objc(multiply:withB:withResolver:withRejecter:)
     func multiply(a: Float, b: Float, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
@@ -63,6 +66,50 @@ class Okhi: NSObject {
         resolve("Token " + "\(branchId):\(clientKey)".toBase64())
     }
     
+    @objc func initialize(_ configuration: String, resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+        if let data = configuration.data(using: .utf8) {
+            if let config = try? JSONDecoder().decode(RNOkHiConfiguration.self, from: data) {
+                var context = OkHiAppContext()
+                if let appName = config.app?.name, let appVersion = config.app?.version, let appBuild = config.app?.build {
+                    context = OkHiAppContext().withAppMeta(name: appName, version: appVersion, build: appBuild)
+                }
+                if config.context.mode == "dev" {
+                    let auth = OkHiAuth(
+                        branchId: config.credentials.branchId,
+                        clientKey: config.credentials.clientKey,
+                        environment: "https://dev-api.okhi.io",
+                        appContext:context
+                    )
+                    OkHiVerify.initialize(with: auth)
+                    resolve(true)
+                } else {
+                    let auth = OkHiAuth(
+                        branchId: config.credentials.branchId,
+                        clientKey: config.credentials.clientKey,
+                        environment: config.context.mode == "prod" ? .prod : .sandbox,
+                        appContext:context
+                    )
+                    OkHiVerify.initialize(with: auth)
+                    resolve(true)
+                }
+            } else {
+                reject("unauthorized", "unable to decode init configuration", nil)
+            }
+        } else {
+            reject("unauthorized", "unable to decode init data configuration", nil)
+        }
+    }
+    
+    @objc func startAddressVerification(_ phoneNumber: String, locationId: String, lat: Double, lon: Double, resolve:@escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        let user = OkHiUser(phoneNumber: phoneNumber)
+        let location = OkHiLocation(identifier: locationId, lat: lat, lon: lon)
+        self.resolve = resolve
+        self.reject = reject
+        okVerify = OkHiVerify(user: user)
+        okVerify?.delegate = self
+        okVerify?.start(location: location)
+    }
+    
     private func _isBackgroundLocationPermissionGranted() -> Bool {
         if okhiLocationService.isLocationServicesAvailable() {
             return CLLocationManager.authorizationStatus() == .authorizedAlways
@@ -72,6 +119,7 @@ class Okhi: NSObject {
     }
 }
 
+// MARK: - OkHiLocationService Delegate
 extension Okhi: OkHiLocationServiceDelegate {
     func okHiLocationService(locationService: OkHiLocationService, didChangeLocationPermissionStatus locationPermissionType: LocationPermissionType, result: Bool) {
         guard let resolve = resolve else { return }
@@ -87,16 +135,17 @@ extension Okhi: OkHiLocationServiceDelegate {
     }
 }
 
-extension String {
-    func fromBase64() -> String? {
-        guard let data = Data(base64Encoded: self) else {
-            return nil
-        }
-        return String(data: data, encoding: .utf8)
+// MARK: - OkVerify Delegate
+extension Okhi: OkVerifyDelegate {
+    func verify(_ okVerify: OkHiVerify, didEncounterError error: OkHiError) {
+        guard let reject = reject else { return }
+        reject(error.code, error.message, nil)
     }
-    func toBase64() -> String {
-        return Data(self.utf8).base64EncodedString()
+    
+    func verify(_ okVerify: OkHiVerify, didStart locationId: String) {
+        guard let resolve = resolve else { return }
+        resolve(locationId)
     }
+    
+    func verify(_ okVerify: OkHiVerify, didEnd locationId: String) { }
 }
-
-extension String: Error {}

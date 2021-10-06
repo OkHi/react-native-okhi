@@ -32,6 +32,6 @@ export type AuthApplicationConfig = {
   app?: {
     name?: string;
     version?: string;
-    build?: number;
+    build?: string;
   };
 };

@@ -15,6 +15,7 @@ import {
   OkHiLocationManager,
   // OkHiException,
   OkHiUser,
+  startAddressVerification,
 } from 'react-native-okhi';
 
 const USER: OkHiUser = {
@@ -30,6 +31,16 @@ const App = () => {
     // perform any logic you'd wish with user and location objects
     console.log(response.user);
     console.log(response.location);
+    if (response.location.id) {
+      startAddressVerification(
+        response.user.phone,
+        response.location.id,
+        response.location.lat,
+        response.location.lon
+      )
+        .then(console.log)
+        .catch(console.error);
+    }
     setLaunch(false);
   };
 

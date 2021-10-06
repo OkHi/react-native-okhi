@@ -137,7 +137,6 @@
 				47F7ED3B7971BE374F7B8635 /* Pods-OkhiExample.debug.xcconfig */,
 				E00ACF0FDA8BF921659E2F9A /* Pods-OkhiExample.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -358,10 +357,12 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-OkhiExample/Pods-OkhiExample-frameworks.sh",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OkCore/OkCore.framework/OkCore",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OkVerify/OkVerify.framework/OkVerify",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OkCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OkVerify.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

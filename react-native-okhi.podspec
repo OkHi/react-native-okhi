@@ -17,4 +17,5 @@ Pod::Spec.new do |s|
 
   s.dependency "React-Core"
   s.dependency 'OkCore', '~> 1.3.7'
+  s.dependency 'OkVerify', '~> 1.3.5'
 end

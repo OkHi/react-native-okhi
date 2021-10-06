@@ -168,6 +168,6 @@ export type OkHiApplicationConfiguration = {
   app?: {
     name?: string;
     version?: string;
-    build?: number;
+    build?: string;
   };
 };

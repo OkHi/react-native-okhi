@@ -24,4 +24,8 @@ RCT_EXTERN_METHOD(getApplicationConfiguration: (RCTPromiseResolveBlock)resolve r
 
 RCT_EXTERN_METHOD(getAuthToken:(NSString *)branchId clientKey:(NSString *)clientKey resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(initialize:(NSString *)configuration resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(startAddressVerification:(NSString *)phoneNumber locationId:(NSString *)locationId lat:(double)lat lon:(double)lon resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
 @end
