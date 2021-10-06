@@ -19,6 +19,9 @@ type OkHiNativeModuleType = {
     lat: Number,
     lon: Number
   ): Promise<string>;
+  stopAddressVerification(locationId: string): Promise<string>;
+  startForegroundService(): Promise<boolean>;
+  stopForegroundService(): Promise<boolean>;
 };
 
 export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi;
