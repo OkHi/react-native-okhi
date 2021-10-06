@@ -199,4 +199,35 @@ public class OkhiModule extends ReactContextBaseJavaModule {
       }
     });
   }
+
+  @ReactMethod
+  public void stopAddressVerification(String locationId, Promise promise) {
+    OkVerify.stop(getReactApplicationContext(), locationId, new OkVerifyCallback<String>() {
+      @Override
+      public void onSuccess(String result) {
+        promise.resolve(result);
+      }
+      @Override
+      public void onError(OkHiException e) {
+        promise.reject(e.getCode(), e.getMessage(), e);
+      }
+    });
+  }
+
+  @ReactMethod
+  public void startForegroundService(Promise promise) {
+    try {
+      OkVerify.startForegroundService(getReactApplicationContext());
+      promise.resolve(true);
+    } catch (OkHiException e) {
+      e.printStackTrace();
+      promise.reject(e.getCode(), e.getMessage(), e);
+    }
+  }
+
+  @ReactMethod
+  public void stopForegroundService(Promise promise) {
+    OkVerify.stopForegroundService(getReactApplicationContext());
+    promise.resolve(true);
+  }
 }
