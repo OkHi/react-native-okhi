@@ -6,6 +6,7 @@ export const startAddressVerification = (
   lat: number,
   lon: number
 ) => {
+  //TODO: add config for start without foreground service
   return OkHiNativeModule.startAddressVerification(
     phoneNumber,
     locationId,
@@ -13,3 +14,12 @@ export const startAddressVerification = (
     lon
   );
 };
+
+export const stopAddressVerification = (locationId: string) =>
+  OkHiNativeModule.stopAddressVerification(locationId);
+
+export const startForegroundService = () =>
+  OkHiNativeModule.startForegroundService();
+
+export const stopForegroundService = () =>
+  OkHiNativeModule.stopForegroundService();
