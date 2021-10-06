@@ -170,4 +170,11 @@ export type OkHiApplicationConfiguration = {
     version?: string;
     build?: string;
   };
+  notification?: {
+    title: string;
+    text: string;
+    channelId: string;
+    channelName: string;
+    channelDescription: string;
+  };
 };
