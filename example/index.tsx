@@ -11,6 +11,15 @@ OkHi.initialize({
   context: {
     mode: 'dev' as any,
   },
-}).catch(console.log);
+  notification: {
+    title: 'Address verification in progress',
+    text: 'Tap here to view your verification status.',
+    channelId: 'okhi',
+    channelName: 'OkHi Channel',
+    channelDescription: 'OkHi verification alerts',
+  },
+})
+  .then(() => console.log('init done'))
+  .catch(console.log);
 
 AppRegistry.registerComponent(appName, () => App);

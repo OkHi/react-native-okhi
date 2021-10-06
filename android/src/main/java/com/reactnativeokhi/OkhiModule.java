@@ -1,7 +1,9 @@
 package com.reactnativeokhi;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Base64;
 
 import androidx.annotation.NonNull;
@@ -21,17 +23,22 @@ import io.okhi.android_core.models.OkHiAppContext;
 import io.okhi.android_core.models.OkHiAppMeta;
 import io.okhi.android_core.models.OkHiAuth;
 import io.okhi.android_core.models.OkHiException;
+import io.okhi.android_core.models.OkHiLocation;
+import io.okhi.android_core.models.OkHiUser;
+import io.okhi.android_okverify.OkVerify;
+import io.okhi.android_okverify.interfaces.OkVerifyCallback;
+import io.okhi.android_okverify.models.OkHiNotification;
 
 @ReactModule(name = OkhiModule.NAME)
 public class OkhiModule extends ReactContextBaseJavaModule {
   public static final String NAME = "Okhi";
   OkHi okHi;
-  RNOkHiCore core;
+  OkVerify okVerify;
+  OkHiAuth auth;
 
   public OkhiModule(ReactApplicationContext reactContext) {
     super(reactContext);
     try {
-      core = new RNOkHiCore(getReactApplicationContext());
       ActivityEventListener activityEventListener = new ActivityEventListener() {
         @Override
         public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
@@ -137,44 +144,90 @@ public class OkhiModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void getApplicationConfiguration (Promise promise) {
-    if (core == null) {
-      promise.reject(OkHiException.UNKNOWN_ERROR_CODE, "Unable to obtain auth credentials");
-      return;
-    }
-    try {
-      OkHiAuth auth = core.getAuth();
-      OkHiAppContext appContext = auth.getContext();
-      OkHiAppMeta appMeta = auth.getContext().getAppMeta();
-      JSONObject payload = new JSONObject();
-
-      JSONObject authPayload = new JSONObject();
-      authPayload.put("accessToken", auth.getAccessToken());
-
-      JSONObject contextPayload = new JSONObject();
-      contextPayload.put("platform", "react-native");
-      contextPayload.put("developer", appContext.getDeveloper());
-      contextPayload.put("mode", appContext.getMode());
-
-      JSONObject appMetaPayload = new JSONObject();
-      appMetaPayload.put("name", appMeta.getName());
-      appMetaPayload.put("version", appMeta.getVersion());
-      appMetaPayload.put("versionCode", appMeta.getVersionCode());
-
-      payload.put("auth", authPayload);
-      payload.put("context", contextPayload);
-      payload.put("app", appMetaPayload);
-
-      promise.resolve(payload.toString());
-    } catch (Exception e) {
-      promise.reject(OkHiException.UNKNOWN_ERROR_CODE, "Unable to parse auth credentials");
-    }
-  }
-
-  @ReactMethod
   public void getAuthToken(String branchId, String clientKey, Promise promise) {
     String concat = branchId + ":" + clientKey;
     String token = Base64.encodeToString(concat.getBytes(), Base64.NO_WRAP);
     promise.resolve("Token " + token);
+  }
+
+  @ReactMethod
+  public void initialize(String configuration, Promise promise) {
+    try {
+      JSONObject config = new JSONObject(configuration);
+      String branchId = config.getJSONObject("credentials").getString("branchId");
+      String clientKey = config.getJSONObject("credentials").getString("clientKey");
+      String mode = config.getJSONObject("context").getString("mode");
+      String developer = config.getJSONObject("context").optString("developer", "external");
+      OkHiAppContext context = new OkHiAppContext(getReactApplicationContext(), mode, "react-native", developer);
+      auth = new OkHiAuth(getReactApplicationContext(), branchId, clientKey, context);
+      okVerify = new OkVerify.Builder(getCurrentActivity(), auth).build();
+      if (config.has("notification")) {
+        JSONObject notificationConfig = config.getJSONObject("notification");
+        int importance = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? NotificationManager.IMPORTANCE_DEFAULT : 3;
+        OkVerify.init(getReactApplicationContext(), new OkHiNotification(
+          notificationConfig.optString("title", "Verification in progress"),
+          notificationConfig.optString("text", "Address Verification in progress"),
+          notificationConfig.optString("channelId", "okhi"),
+          notificationConfig.optString("channelName", "OkHi Channel"),
+          notificationConfig.optString("channelDescription", "OkHi verification alerts"),
+          importance
+        ));
+      }
+      promise.resolve(true);
+    } catch (Exception e) {
+      e.printStackTrace();
+      promise.reject("unauthorized", "unable to parse credentials", e);
+    }
+  }
+
+  @ReactMethod
+  public void startAddressVerification(String phoneNumber, String locationId, Float lat, Float lon, Promise promise) {
+    if (okVerify == null) {
+      promise.reject("unauthorized", "failed to initialise okhi with credentials");
+      return;
+    }
+    OkHiUser user = new OkHiUser.Builder(phoneNumber).build();
+    OkHiLocation location = new OkHiLocation.Builder(locationId, lat, lon).build();
+    okVerify.start(user, location, new OkVerifyCallback<String>() {
+      @Override
+      public void onSuccess(String result) {
+        promise.resolve(result);
+      }
+      @Override
+      public void onError(OkHiException e) {
+        promise.reject(e.getCode(), e.getMessage(), e);
+      }
+    });
+  }
+
+  @ReactMethod
+  public void stopAddressVerification(String locationId, Promise promise) {
+    OkVerify.stop(getReactApplicationContext(), locationId, new OkVerifyCallback<String>() {
+      @Override
+      public void onSuccess(String result) {
+        promise.resolve(result);
+      }
+      @Override
+      public void onError(OkHiException e) {
+        promise.reject(e.getCode(), e.getMessage(), e);
+      }
+    });
+  }
+
+  @ReactMethod
+  public void startForegroundService(Promise promise) {
+    try {
+      OkVerify.startForegroundService(getReactApplicationContext());
+      promise.resolve(true);
+    } catch (OkHiException e) {
+      e.printStackTrace();
+      promise.reject(e.getCode(), e.getMessage(), e);
+    }
+  }
+
+  @ReactMethod
+  public void stopForegroundService(Promise promise) {
+    OkVerify.stopForegroundService(getReactApplicationContext());
+    promise.resolve(true);
   }
 }

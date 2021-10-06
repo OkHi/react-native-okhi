@@ -11,7 +11,6 @@ type OkHiNativeModuleType = {
   isGooglePlayServicesAvailable(): Promise<boolean>;
   requestEnableGooglePlayServices(): Promise<boolean>;
   getSystemVersion(): Promise<number | string>;
-  getApplicationConfiguration(): Promise<string>;
   getAuthToken(branchId: string, clientKey: string): Promise<string>;
   initialize(configuration: string): Promise<void>;
   startAddressVerification(
@@ -20,6 +19,9 @@ type OkHiNativeModuleType = {
     lat: Number,
     lon: Number
   ): Promise<string>;
+  stopAddressVerification(locationId: string): Promise<string>;
+  startForegroundService(): Promise<boolean>;
+  stopForegroundService(): Promise<boolean>;
 };
 
 export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi;
