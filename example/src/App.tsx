@@ -17,6 +17,8 @@ import {
   OkHiUser,
   startAddressVerification,
   stopAddressVerification,
+  startForegroundService,
+  stopForegroundService,
 } from 'react-native-okhi';
 
 const USER: OkHiUser = {
@@ -122,6 +124,22 @@ const App = () => {
             );
           }
         }}
+      />
+      <Button
+        title="Start Foreground Service"
+        onPress={() =>
+          startForegroundService().then((result) =>
+            console.log(`start foreground service: ${result}`)
+          )
+        }
+      />
+      <Button
+        title="Stop Foreground Service"
+        onPress={() =>
+          stopForegroundService().then((result) =>
+            console.log(`stop foreground service: ${result}`)
+          )
+        }
       />
       <OkHiLocationManager
         user={USER}
