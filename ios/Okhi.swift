@@ -110,6 +110,15 @@ class Okhi: NSObject {
         okVerify?.start(location: location)
     }
     
+    @objc func stopAddressVerification(_ phoneNumber: String, locationId: String, resolve:@escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        let user = OkHiUser(phoneNumber: phoneNumber)
+        self.resolve = resolve
+        self.reject = reject
+        okVerify = OkHiVerify(user: user)
+        okVerify?.delegate = self
+        okVerify?.stop(locationId: locationId)
+    }
+    
     private func _isBackgroundLocationPermissionGranted() -> Bool {
         if okhiLocationService.isLocationServicesAvailable() {
             return CLLocationManager.authorizationStatus() == .authorizedAlways
@@ -147,5 +156,8 @@ extension Okhi: OkVerifyDelegate {
         resolve(locationId)
     }
     
-    func verify(_ okVerify: OkHiVerify, didEnd locationId: String) { }
+    func verify(_ okVerify: OkHiVerify, didEnd locationId: String) {
+        guard let resolve = resolve else { return }
+        resolve(locationId)
+    }
 }
