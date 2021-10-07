@@ -19,7 +19,10 @@ type OkHiNativeModuleType = {
     lat: Number,
     lon: Number
   ): Promise<string>;
-  stopAddressVerification(locationId: string): Promise<string>;
+  stopAddressVerification(
+    phoneNumber: string,
+    locationId: string
+  ): Promise<string>;
   startForegroundService(): Promise<boolean>;
   stopForegroundService(): Promise<boolean>;
 };
