@@ -16,6 +16,7 @@ import {
   // OkHiException,
   OkHiUser,
   startAddressVerification,
+  stopAddressVerification,
 } from 'react-native-okhi';
 
 const USER: OkHiUser = {
@@ -26,19 +27,18 @@ const USER: OkHiUser = {
 
 const App = () => {
   const [launch, setLaunch] = useState(false);
-
+  const [locationId, setLocationId] = useState<string | null>(null);
   const handleOnSuccess = (response: OkCollectSuccessResponse) => {
     // perform any logic you'd wish with user and location objects
-    console.log(response.user);
-    console.log(response.location);
     if (response.location.id) {
+      setLocationId(response.location.id);
       startAddressVerification(
         response.user.phone,
         response.location.id,
         response.location.lat,
         response.location.lon
       )
-        .then(console.log)
+        .then((result) => console.log(`started verification for: ${result}`))
         .catch(console.error);
     }
     setLaunch(false);
@@ -113,6 +113,16 @@ const App = () => {
         }}
       />
       <Button title="Create Address" onPress={() => setLaunch(true)} />
+      <Button
+        title="Stop Verification"
+        onPress={() => {
+          if (locationId) {
+            stopAddressVerification(USER.phone, locationId).then((result) =>
+              console.log(`stopped verification for: ${result}`)
+            );
+          }
+        }}
+      />
       <OkHiLocationManager
         user={USER}
         launch={launch}
