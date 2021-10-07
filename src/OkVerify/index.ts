@@ -15,8 +15,10 @@ export const startAddressVerification = (
   );
 };
 
-export const stopAddressVerification = (locationId: string) =>
-  OkHiNativeModule.stopAddressVerification(locationId);
+export const stopAddressVerification = (
+  phoneNumber: string,
+  locationId: string
+) => OkHiNativeModule.stopAddressVerification(phoneNumber, locationId);
 
 export const startForegroundService = () =>
   OkHiNativeModule.startForegroundService();

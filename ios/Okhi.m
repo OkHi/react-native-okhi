@@ -28,4 +28,6 @@ RCT_EXTERN_METHOD(initialize:(NSString *)configuration resolve:(RCTPromiseResolv
 
 RCT_EXTERN_METHOD(startAddressVerification:(NSString *)phoneNumber locationId:(NSString *)locationId lat:(double)lat lon:(double)lon resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(stopAddressVerification:(NSString *)phoneNumber locationId:(NSString *)locationId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
 @end

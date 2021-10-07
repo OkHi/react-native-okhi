@@ -201,7 +201,7 @@ public class OkhiModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void stopAddressVerification(String locationId, Promise promise) {
+  public void stopAddressVerification(String phoneNumber, String locationId, Promise promise) {
     OkVerify.stop(getReactApplicationContext(), locationId, new OkVerifyCallback<String>() {
       @Override
       public void onSuccess(String result) {
