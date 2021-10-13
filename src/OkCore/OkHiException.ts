@@ -55,8 +55,7 @@ export class OkHiException extends Error {
   /**
    * Error is thrown whenever an OkHi service is run on an unsupported platform.
    */
-  static UNSUPPORTED_PLATFORM_MESSAGE =
-    'OkHi methods currently support Android devices only';
+  static UNSUPPORTED_PLATFORM_MESSAGE = 'Current platform is not supported';
   /**
    * Error is thrown whenever bad configuration is provided to an OkHi service.
    */
