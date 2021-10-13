@@ -47,7 +47,7 @@ export class OkHiAuth {
       try {
         const config = await getApplicationConfiguration();
         console.log(config);
-        if (config === null) {
+        if (config === null || !config.auth || !config.auth.token) {
           reject(
             new OkHiException({
               code: OkHiException.UNAUTHORIZED_CODE,
