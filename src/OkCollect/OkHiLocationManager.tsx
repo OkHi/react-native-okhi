@@ -15,7 +15,8 @@ import {
 import { getApplicationConfiguration, OkHiException } from '../OkCore';
 import { OkHiAuth } from '../OkCore/OkHiAuth';
 import type { AuthApplicationConfig } from '../OkCore/_types';
-
+import { startVerification as sv } from '../OkVerify';
+import type { OkVerifyStartConfiguration } from '../OkVerify/types';
 /**
  * The OkHiLocationManager React Component is used to display an in app modal, enabling the user to quickly create an accurate OkHi address.
  */
@@ -59,6 +60,32 @@ const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
         onSuccess({
           ...response.payload,
           location: parseOkHiLocation(response.payload.location),
+          startAddressVerification: function (
+            config?: OkVerifyStartConfiguration
+          ) {
+            const createdUser = { ...this.user };
+            const location = { ...this.location };
+            return new Promise((resolve, reject) => {
+              if (!location.id) {
+                reject(
+                  new OkHiException({
+                    code: OkHiException.BAD_REQUEST_CODE,
+                    message: 'Missing location id from response',
+                  })
+                );
+              } else {
+                sv(
+                  createdUser.phone,
+                  location.id,
+                  location.lat,
+                  location.lon,
+                  config
+                )
+                  .then(resolve)
+                  .catch(reject);
+              }
+            });
+          },
         });
       }
     } catch (error) {
