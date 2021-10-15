@@ -3,15 +3,11 @@ import { PermissionsAndroid, Platform } from 'react-native';
 import { errorHandler, isValidPlatform } from './_helpers';
 
 export const isLocationServicesEnabled = (): Promise<boolean> => {
-  return isValidPlatform(() =>
-    errorHandler(OkHiNativeModule.isLocationServicesEnabled)
-  );
+  return isValidPlatform(OkHiNativeModule.isLocationServicesEnabled);
 };
 
 export const isLocationPermissionGranted = (): Promise<boolean> => {
-  return isValidPlatform(() =>
-    errorHandler(OkHiNativeModule.isLocationPermissionGranted)
-  );
+  return isValidPlatform(OkHiNativeModule.isLocationPermissionGranted);
 };
 
 const isBackgroundLocationPermissionGrantedAndroid =
@@ -34,13 +30,11 @@ const isBackgroundLocationPermissionGrantedIOS = (): Promise<boolean> => {
 };
 
 export const isBackgroundLocationPermissionGranted = (): Promise<boolean> => {
-  return isValidPlatform(() => {
-    return errorHandler(
-      Platform.OS === 'android'
-        ? isBackgroundLocationPermissionGrantedAndroid
-        : isBackgroundLocationPermissionGrantedIOS
-    );
-  });
+  const fn =
+    Platform.OS === 'android'
+      ? isBackgroundLocationPermissionGrantedAndroid
+      : isBackgroundLocationPermissionGrantedIOS;
+  return isValidPlatform(fn);
 };
 
 const requestLocationPermissionAndroid = async (): Promise<boolean> => {
@@ -69,14 +63,17 @@ const requestBackgroundLocationPermissionAndroid =
   async (): Promise<boolean> => {
     const sdkVersion = await OkHiNativeModule.getSystemVersion();
     if (sdkVersion < 23) return true;
-    const status: any = await PermissionsAndroid.requestMultiple([
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-      PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
-    ]);
-    return sdkVersion < 29
-      ? status['android.permission.ACCESS_FINE_LOCATION'] === 'granted'
-      : status['android.permission.ACCESS_BACKGROUND_LOCATION'] === 'granted';
+    await requestLocationPermission();
+    const permissions: any = [];
+    if (sdkVersion >= 29) {
+      permissions.push(
+        PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION
+      );
+    }
+    const status: any = await PermissionsAndroid.requestMultiple(permissions);
+    return sdkVersion >= 29
+      ? status['android.permission.ACCESS_BACKGROUND_LOCATION'] === 'granted'
+      : status['android.permission.ACCESS_FINE_LOCATION'] === 'granted';
   };
 
 const requestBackgroundLocationPermissionIOS = (): Promise<boolean> => {
@@ -95,24 +92,22 @@ export const requestBackgroundLocationPermission =
   };
 
 export const requestEnableLocationServices = (): Promise<boolean> => {
-  return isValidPlatform(() =>
-    errorHandler(OkHiNativeModule.requestEnableLocationServices)
-  );
+  return isValidPlatform(OkHiNativeModule.requestEnableLocationServices);
 };
 
 export const isGooglePlayServicesAvailable = (): Promise<boolean> => {
   return isValidPlatform(
-    () => errorHandler(OkHiNativeModule.isGooglePlayServicesAvailable),
+    OkHiNativeModule.isGooglePlayServicesAvailable,
     'android'
   );
 };
 
 export const requestEnableGooglePlayServices = (): Promise<boolean> => {
   return isValidPlatform(
-    () => errorHandler(OkHiNativeModule.requestEnableGooglePlayServices),
+    OkHiNativeModule.requestEnableGooglePlayServices,
     'android'
   );
 };
 
 export const getSystemVersion = (): Promise<string | number> =>
-  isValidPlatform(() => errorHandler(OkHiNativeModule.getSystemVersion));
+  isValidPlatform(OkHiNativeModule.getSystemVersion);
