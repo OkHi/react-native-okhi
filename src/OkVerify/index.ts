@@ -10,7 +10,6 @@ export const startVerification = (
   lon: number,
   configuration?: OkVerifyStartConfiguration
 ) => {
-  //TODO: add config for start without foreground service
   return isValidPlatform(() => {
     return OkHiNativeModule.startAddressVerification(
       phoneNumber,
