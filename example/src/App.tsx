@@ -15,7 +15,6 @@ import {
   OkHiLocationManager,
   // OkHiException,
   OkHiUser,
-  startAddressVerification,
   stopAddressVerification,
   startForegroundService,
   stopForegroundService,
@@ -31,10 +30,7 @@ const App = () => {
   const [launch, setLaunch] = useState(false);
   const [locationId, setLocationId] = useState<string | null>(null);
   const handleOnSuccess = (response: OkCollectSuccessResponse) => {
-    // perform any logic you'd wish with user and location objects
-    startAddressVerification(response, { android: { withForeground: true } })
-      .then((result) => console.log(`started verification for: ${result}`))
-      .catch(console.error);
+    response.startAddressVerification().then(console.log).catch(console.error);
     if (response.location.id) {
       setLocationId(response.location.id);
     }
