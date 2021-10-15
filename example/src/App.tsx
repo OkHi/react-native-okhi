@@ -32,16 +32,11 @@ const App = () => {
   const [locationId, setLocationId] = useState<string | null>(null);
   const handleOnSuccess = (response: OkCollectSuccessResponse) => {
     // perform any logic you'd wish with user and location objects
+    startAddressVerification(response)
+      .then((result) => console.log(`started verification for: ${result}`))
+      .catch(console.error);
     if (response.location.id) {
       setLocationId(response.location.id);
-      startAddressVerification(
-        response.user.phone,
-        response.location.id,
-        response.location.lat,
-        response.location.lon
-      )
-        .then((result) => console.log(`started verification for: ${result}`))
-        .catch(console.error);
     }
     setLaunch(false);
   };
