@@ -1,12 +1,14 @@
 import { OkCollectSuccessResponse, OkHiException } from '..';
 import { errorHandler, isValidPlatform } from '../OkCore/_helpers';
 import { OkHiNativeModule } from '../OkHiNativeModule';
+import type { OkVerifyStartConfiguration } from './types';
 
 export const startVerification = (
   phoneNumber: string,
   locationId: string,
   lat: number,
-  lon: number
+  lon: number,
+  configuration?: OkVerifyStartConfiguration
 ) => {
   //TODO: add config for start without foreground service
   return isValidPlatform(() => {
@@ -14,13 +16,15 @@ export const startVerification = (
       phoneNumber,
       locationId,
       lat,
-      lon
+      lon,
+      configuration
     );
   });
 };
 
 export const startAddressVerification = async (
-  response: OkCollectSuccessResponse
+  response: OkCollectSuccessResponse,
+  configuration?: OkVerifyStartConfiguration
 ) => {
   return new Promise((resolve, reject) => {
     const { location, user } = response;
@@ -29,7 +33,8 @@ export const startAddressVerification = async (
         user.phone,
         location.id,
         location.lat,
-        location.lon
+        location.lon,
+        configuration
       );
       resolve(result);
     } else {
