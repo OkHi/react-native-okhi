@@ -1,5 +1,6 @@
 import type { ViewStyle } from 'react-native';
 import type { OkHiUser, OkHiLocation, OkHiException } from '../OkCore';
+import type { OkVerifyStartConfiguration } from '../OkVerify/types';
 
 /**
  * The OkCollect Success Response object contains information about the newly created user and location once an address has been successfully created.
@@ -14,6 +15,10 @@ export interface OkCollectSuccessResponse {
    * The [OkHiLocation](https://okhi.github.io/react-native-core/interfaces/okhilocation.html) object containing information about the newly created user.
    */
   location: OkHiLocation;
+
+  startAddressVerification: (
+    config?: OkVerifyStartConfiguration
+  ) => Promise<string>;
 }
 
 /**
