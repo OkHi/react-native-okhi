@@ -9,10 +9,12 @@ import android.util.Base64;
 import androidx.annotation.NonNull;
 
 import com.facebook.react.bridge.ActivityEventListener;
+import com.facebook.react.bridge.Dynamic;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.module.annotations.ReactModule;
 
 import org.json.JSONObject;
@@ -20,7 +22,6 @@ import org.json.JSONObject;
 import io.okhi.android_core.OkHi;
 import io.okhi.android_core.interfaces.OkHiRequestHandler;
 import io.okhi.android_core.models.OkHiAppContext;
-import io.okhi.android_core.models.OkHiAppMeta;
 import io.okhi.android_core.models.OkHiAuth;
 import io.okhi.android_core.models.OkHiException;
 import io.okhi.android_core.models.OkHiLocation;
@@ -181,14 +182,19 @@ public class OkhiModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void startAddressVerification(String phoneNumber, String locationId, Float lat, Float lon, Promise promise) {
+  public void startAddressVerification(String phoneNumber, String locationId, Float lat, Float lon, ReadableMap config, Promise promise) {
     if (okVerify == null) {
       promise.reject("unauthorized", "failed to initialise okhi with credentials");
       return;
     }
     OkHiUser user = new OkHiUser.Builder(phoneNumber).build();
     OkHiLocation location = new OkHiLocation.Builder(locationId, lat, lon).build();
-    okVerify.start(user, location, new OkVerifyCallback<String>() {
+    Boolean withForeground = true;
+    Dynamic foregroundConfig = getConfig(config, "withForeground");
+    if(foregroundConfig != null) {
+      withForeground = foregroundConfig.asBoolean();
+    }
+    okVerify.start(user, location, withForeground, new OkVerifyCallback<String>() {
       @Override
       public void onSuccess(String result) {
         promise.resolve(result);
@@ -229,5 +235,17 @@ public class OkhiModule extends ReactContextBaseJavaModule {
   public void stopForegroundService(Promise promise) {
     OkVerify.stopForegroundService(getReactApplicationContext());
     promise.resolve(true);
+  }
+
+  private Dynamic getConfig(ReadableMap map, String prop) {
+    if (map != null && map.hasKey("android")) {
+      ReadableMap config = map.getMap("android");
+      if (config.hasKey("withForeground")) {
+        return config.getDynamic("withForeground");
+      } else {
+        return null;
+      }
+    }
+    return  null;
   }
 }

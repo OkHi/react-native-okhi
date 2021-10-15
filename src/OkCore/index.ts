@@ -1,6 +1,6 @@
 import { OkHiNativeModule } from '../OkHiNativeModule';
-import { OkHiException } from './OkHiException';
 import type { OkHiApplicationConfiguration } from './types';
+import { errorHandler } from './_helpers';
 import type { AuthApplicationConfig } from './_types';
 
 export * from './types';
@@ -10,21 +10,12 @@ export * from './Helpers';
 
 let okhiApplicationConfiguration: OkHiApplicationConfiguration | undefined;
 
-export function initialize(configuration: OkHiApplicationConfiguration) {
-  return new Promise<void>((resolve, reject) => {
-    OkHiNativeModule.initialize(JSON.stringify(configuration))
-      .then(() => {
-        okhiApplicationConfiguration = configuration;
-        resolve();
-      })
-      .catch((error) => {
-        reject(
-          new OkHiException({
-            code: error.code || OkHiException.UNKNOWN_ERROR_CODE,
-            message: error.message || OkHiException.UNKNOWN_ERROR_MESSAGE,
-          })
-        );
-      });
+export function initialize(
+  configuration: OkHiApplicationConfiguration
+): Promise<void> {
+  return errorHandler(async () => {
+    await OkHiNativeModule.initialize(JSON.stringify(configuration));
+    okhiApplicationConfiguration = configuration;
   });
 }
 
