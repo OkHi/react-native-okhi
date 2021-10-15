@@ -1,4 +1,5 @@
 import { NativeModules } from 'react-native';
+import type { OkVerifyStartConfiguration } from '../OkVerify/types';
 
 type OkHiNativeModuleType = {
   multiply(a: number, b: number): Promise<number>;
@@ -17,7 +18,8 @@ type OkHiNativeModuleType = {
     phoneNumber: string,
     locationId: string,
     lat: Number,
-    lon: Number
+    lon: Number,
+    configuration?: OkVerifyStartConfiguration
   ): Promise<string>;
   stopAddressVerification(
     phoneNumber: string,
