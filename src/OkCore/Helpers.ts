@@ -63,22 +63,16 @@ const requestBackgroundLocationPermissionAndroid =
   async (): Promise<boolean> => {
     const sdkVersion = await OkHiNativeModule.getSystemVersion();
     if (sdkVersion < 23) return true;
-    const state = await requestLocationPermission();
-    if (state) {
-      if (sdkVersion >= 29) {
-        const permissions: any = [
-          PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
-        ];
-        const status: any = await PermissionsAndroid.requestMultiple(
-          permissions
-        );
-        return (
-          status['android.permission.ACCESS_BACKGROUND_LOCATION'] === 'granted'
-        );
-      }
-      return true;
+    if (sdkVersion >= 29) {
+      const permissions: any = [
+        PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
+      ];
+      const status: any = await PermissionsAndroid.requestMultiple(permissions);
+      return (
+        status['android.permission.ACCESS_BACKGROUND_LOCATION'] === 'granted'
+      );
     } else {
-      return false;
+      return await requestLocationPermissionAndroid();
     }
   };
 
@@ -97,7 +91,7 @@ export const requestBackgroundLocationPermission =
     );
   };
 
-export const requestEnableLocationServices = (): Promise<boolean> => {
+export const requestEnableLocationServices = (): Promise<boolean | null> => {
   return isValidPlatform(OkHiNativeModule.requestEnableLocationServices);
 };
 
