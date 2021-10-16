@@ -8,12 +8,12 @@ import {
   requestBackgroundLocationPermission,
   requestEnableGooglePlayServices,
   requestEnableLocationServices,
-} from '..';
+} from '../';
 import { errorHandler, isValidPlatform } from '../OkCore/_helpers';
 import { OkHiNativeModule } from '../OkHiNativeModule';
 import type { OkVerifyStartConfiguration } from './types';
 
-export const startVerification = (
+export const start = (
   phoneNumber: string,
   locationId: string,
   lat: number,
@@ -31,7 +31,7 @@ export const startVerification = (
   });
 };
 
-export const startAddressVerification = async (
+export const startVerification = async (
   response: OkCollectSuccessResponse,
   configuration?: OkVerifyStartConfiguration
 ) => {
@@ -57,10 +57,7 @@ export const startAddressVerification = async (
   });
 };
 
-export const stopAddressVerification = (
-  phoneNumber: string,
-  locationId: string
-) => {
+export const stopVerification = (phoneNumber: string, locationId: string) => {
   return isValidPlatform(() =>
     OkHiNativeModule.stopAddressVerification(phoneNumber, locationId)
   );
@@ -84,7 +81,7 @@ export const isForegroundServiceRunning = () => {
   );
 };
 
-export const canStartAddressVerification = (configuration?: {
+export const canStartVerification = (configuration?: {
   requestServices?: boolean;
 }): Promise<boolean> => {
   return new Promise(async (resolve, reject) => {

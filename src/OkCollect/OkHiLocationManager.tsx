@@ -15,7 +15,7 @@ import {
 import { getApplicationConfiguration, OkHiException } from '../OkCore';
 import { OkHiAuth } from '../OkCore/OkHiAuth';
 import type { AuthApplicationConfig } from '../OkCore/_types';
-import { startVerification as sv } from '../OkVerify';
+import { start as sv } from '../OkVerify';
 import type { OkVerifyStartConfiguration } from '../OkVerify/types';
 /**
  * The OkHiLocationManager React Component is used to display an in app modal, enabling the user to quickly create an accurate OkHi address.
