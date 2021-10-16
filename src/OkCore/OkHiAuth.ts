@@ -46,7 +46,6 @@ export class OkHiAuth {
     return new Promise(async (resolve, reject) => {
       try {
         const config = await getApplicationConfiguration();
-        console.log(config);
         if (config === null || !config.auth || !config.auth.token) {
           reject(
             new OkHiException({
