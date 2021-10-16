@@ -1,4 +1,14 @@
-import { OkCollectSuccessResponse, OkHiException } from '..';
+import { Platform } from 'react-native';
+import {
+  isBackgroundLocationPermissionGranted,
+  isGooglePlayServicesAvailable,
+  isLocationServicesEnabled,
+  OkCollectSuccessResponse,
+  OkHiException,
+  requestBackgroundLocationPermission,
+  requestEnableGooglePlayServices,
+  requestEnableLocationServices,
+} from '..';
 import { errorHandler, isValidPlatform } from '../OkCore/_helpers';
 import { OkHiNativeModule } from '../OkHiNativeModule';
 import type { OkVerifyStartConfiguration } from './types';
@@ -64,8 +74,52 @@ export const startForegroundService = () => {
 };
 
 export const stopForegroundService = () => {
+  return isValidPlatform(OkHiNativeModule.stopForegroundService, 'android');
+};
+
+export const isForegroundServiceRunning = () => {
   return isValidPlatform(
-    () => errorHandler(OkHiNativeModule.stopForegroundService),
+    OkHiNativeModule.isForegroundServiceRunning,
     'android'
   );
+};
+
+export const canStartAddressVerification = (configuration?: {
+  requestServices?: boolean;
+}): Promise<boolean> => {
+  return new Promise(async (resolve, reject) => {
+    const requestServices = configuration && configuration.requestServices;
+    const locationServicesStatus = await isLocationServicesEnabled();
+    const googlePlayServices =
+      Platform.OS === 'android' ? await isGooglePlayServicesAvailable() : true;
+    const backgroundLocationPerm =
+      await isBackgroundLocationPermissionGranted();
+    if (!requestServices) {
+      resolve(
+        locationServicesStatus && googlePlayServices && backgroundLocationPerm
+      );
+    }
+    if (!locationServicesStatus && Platform.OS === 'ios') {
+      reject(
+        new OkHiException({
+          code: OkHiException.SERVICE_UNAVAILABLE_CODE,
+          message: 'Location services is unavailable',
+        })
+      );
+    } else {
+      const locationServicesRequestStatus =
+        (await requestEnableLocationServices()) as boolean;
+      const googlePlayServicesRequestStatus =
+        Platform.OS === 'android'
+          ? await requestEnableGooglePlayServices()
+          : true;
+      const backgroundLocationRequestStatus =
+        await requestBackgroundLocationPermission();
+      resolve(
+        locationServicesRequestStatus &&
+          googlePlayServicesRequestStatus &&
+          backgroundLocationRequestStatus
+      );
+    }
+  });
 };
