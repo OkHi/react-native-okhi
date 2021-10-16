@@ -20,7 +20,7 @@ import type { OkVerifyStartConfiguration } from '../OkVerify/types';
 /**
  * The OkHiLocationManager React Component is used to display an in app modal, enabling the user to quickly create an accurate OkHi address.
  */
-const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
+export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
   const [token, setToken] = useState<string | null>(null);
   const [applicationConfiguration, setApplicationConfiguration] =
     useState<AuthApplicationConfig | null>(null);
@@ -93,7 +93,6 @@ const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
       if (error instanceof Error) {
         errorMessage = error.message;
       }
-      console.log(errorMessage);
       onError(
         new OkHiException({
           code: OkHiException.UNKNOWN_ERROR_CODE,
