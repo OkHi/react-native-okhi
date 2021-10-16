@@ -59,7 +59,7 @@ class Okhi: NSObject {
     
     @objc func requestEnableLocationServices(_ resolve: RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
         UIApplication.shared.open(URL(string:UIApplication.openSettingsURLString)!)
-        resolve(true)
+        resolve(NSNull())
     }
     
     @objc func getAuthToken(_ branchId: String, clientKey: String, resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
