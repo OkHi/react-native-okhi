@@ -237,6 +237,12 @@ public class OkhiModule extends ReactContextBaseJavaModule {
     promise.resolve(true);
   }
 
+  @ReactMethod
+  public void isForegroundServiceRunning(Promise promise) {
+    Boolean result = OkVerify.isForegroundServiceRunning(getReactApplicationContext());
+    promise.resolve(result);
+  }
+
   private Dynamic getConfig(ReadableMap map, String prop) {
     if (map != null && map.hasKey("android")) {
       ReadableMap config = map.getMap("android");
