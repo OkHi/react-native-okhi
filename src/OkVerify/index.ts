@@ -21,13 +21,22 @@ export const start = (
   configuration?: OkVerifyStartConfiguration
 ) => {
   return isValidPlatform(() => {
-    return OkHiNativeModule.startAddressVerification(
-      phoneNumber,
-      locationId,
-      lat,
-      lon,
-      configuration
-    );
+    if (Platform.OS === 'android') {
+      return OkHiNativeModule.startAddressVerification(
+        phoneNumber,
+        locationId,
+        lat,
+        lon,
+        configuration
+      );
+    } else {
+      return OkHiNativeModule.startAddressVerification(
+        phoneNumber,
+        locationId,
+        lat,
+        lon
+      );
+    }
   });
 };
 
@@ -38,14 +47,24 @@ export const startVerification = async (
   return new Promise((resolve, reject) => {
     const { location, user } = response;
     if (location.id) {
-      const result = OkHiNativeModule.startAddressVerification(
-        user.phone,
-        location.id,
-        location.lat,
-        location.lon,
-        configuration
-      );
-      resolve(result);
+      if (Platform.OS === 'android') {
+        const result = OkHiNativeModule.startAddressVerification(
+          user.phone,
+          location.id,
+          location.lat,
+          location.lon,
+          configuration
+        );
+        resolve(result);
+      } else {
+        const result = OkHiNativeModule.startAddressVerification(
+          user.phone,
+          location.id,
+          location.lat,
+          location.lon
+        );
+        resolve(result);
+      }
     } else {
       reject(
         new OkHiException({
@@ -105,7 +124,9 @@ export const canStartVerification = (configuration?: {
       );
     } else {
       const locationServicesRequestStatus =
-        (await requestEnableLocationServices()) as boolean;
+        Platform.OS === 'ios'
+          ? true
+          : ((await requestEnableLocationServices()) as boolean);
       const googlePlayServicesRequestStatus =
         Platform.OS === 'android'
           ? await requestEnableGooglePlayServices()
