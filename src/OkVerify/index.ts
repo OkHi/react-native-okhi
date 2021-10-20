@@ -13,7 +13,7 @@ import { OkHiNativeModule } from '../OkHiNativeModule';
 import type { OkVerifyStartConfiguration } from './types';
 import type { OkCollectSuccessResponse } from '../OkCollect/types';
 import { OkHiException } from '../OkCore/OkHiException';
-
+export * from './types';
 /**
  * Starts verification for a particular address
  * @param {string} phoneNumber A users phone number
