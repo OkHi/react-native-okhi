@@ -15,7 +15,7 @@ import {
   OkHiLocationManager,
   // OkHiException,
   OkHiUser,
-  stopAddressVerification,
+  stopVerification,
   startForegroundService,
   stopForegroundService,
 } from 'react-native-okhi';
@@ -108,7 +108,7 @@ const App = () => {
         title="Stop Verification"
         onPress={() => {
           if (locationId) {
-            stopAddressVerification(USER.phone, locationId).then((result) =>
+            stopVerification(USER.phone, locationId).then((result) =>
               console.log(`stopped verification for: ${result}`)
             );
           }

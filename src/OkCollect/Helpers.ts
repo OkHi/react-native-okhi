@@ -3,11 +3,11 @@ import {
   isLocationServicesEnabled,
   isLocationPermissionGranted,
   isGooglePlayServicesAvailable,
-  OkHiException,
   requestEnableLocationServices,
   requestEnableGooglePlayServices,
-} from '../OkCore';
-import { requestLocationPermission } from '../OkCore';
+  requestLocationPermission,
+} from '../OkCore/Helpers';
+import { OkHiException } from '../OkCore/OkHiException';
 
 /**
  * Checks whether all necessary permissions and services are available in order to start the address creation process.

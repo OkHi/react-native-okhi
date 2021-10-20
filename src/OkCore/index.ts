@@ -10,6 +10,11 @@ export * from './Helpers';
 
 let okhiApplicationConfiguration: OkHiApplicationConfiguration | undefined;
 
+/**
+ * Starts verification for a particular address
+ * @param {Object} configuration A configuration object with your OkHi credentials as well as library settings
+ * @returns {Promise<void>} A promise that resolves when initialization is successful
+ */
 export function initialize(
   configuration: OkHiApplicationConfiguration
 ): Promise<void> {
@@ -19,6 +24,10 @@ export function initialize(
   });
 }
 
+/**
+ * Obtains your current running configuration
+ * @returns {Promise<void>} A promise that resolves with your application configuration
+ */
 export async function getApplicationConfiguration(): Promise<AuthApplicationConfig | null> {
   try {
     if (typeof okhiApplicationConfiguration === 'object') {

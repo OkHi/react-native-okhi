@@ -3,16 +3,16 @@ import {
   isBackgroundLocationPermissionGranted,
   isGooglePlayServicesAvailable,
   isLocationServicesEnabled,
-  OkCollectSuccessResponse,
-  OkHiException,
   requestBackgroundLocationPermission,
   requestEnableGooglePlayServices,
   requestEnableLocationServices,
-} from '../';
+} from '../OkCore/Helpers';
 import { requestLocationPermission } from '../../lib/typescript';
 import { errorHandler, isValidPlatform } from '../OkCore/_helpers';
 import { OkHiNativeModule } from '../OkHiNativeModule';
 import type { OkVerifyStartConfiguration } from './types';
+import type { OkCollectSuccessResponse } from '../OkCollect/types';
+import { OkHiException } from '../OkCore/OkHiException';
 
 /**
  * Starts verification for a particular address

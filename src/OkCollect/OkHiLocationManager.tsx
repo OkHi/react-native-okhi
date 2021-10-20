@@ -12,11 +12,12 @@ import {
   generateStartDataPayload,
   parseOkHiLocation,
 } from './Util';
-import { getApplicationConfiguration, OkHiException } from '../OkCore';
+import { OkHiException } from '../OkCore/OkHiException';
 import { OkHiAuth } from '../OkCore/OkHiAuth';
 import type { AuthApplicationConfig } from '../OkCore/_types';
 import { start as sv } from '../OkVerify';
 import type { OkVerifyStartConfiguration } from '../OkVerify/types';
+import { getApplicationConfiguration } from '../OkCore';
 /**
  * The OkHiLocationManager React Component is used to display an in app modal, enabling the user to quickly create an accurate OkHi address.
  */

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { OkHiMode } from './OkHiMode';
 import { OkHiException } from './OkHiException';
 import type { OkHiAccessScope } from './_types';
-import { getApplicationConfiguration } from '.';
+import { getApplicationConfiguration } from './';
 
 /**
  * @ignore
