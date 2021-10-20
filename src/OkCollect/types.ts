@@ -1,5 +1,6 @@
 import type { ViewStyle } from 'react-native';
-import type { OkHiUser, OkHiLocation, OkHiException } from '../OkCore';
+import type { OkHiException } from '../OkCore/OkHiException';
+import type { OkHiUser, OkHiLocation } from '../OkCore/types';
 import type { OkVerifyStartConfiguration } from '../OkVerify/types';
 
 /**
@@ -16,6 +17,9 @@ export interface OkCollectSuccessResponse {
    */
   location: OkHiLocation;
 
+  /**
+   * Starts address verification
+   */
   startAddressVerification: (
     config?: OkVerifyStartConfiguration
   ) => Promise<string>;

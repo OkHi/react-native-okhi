@@ -1,5 +1,5 @@
 import { Platform, PlatformOSType } from 'react-native';
-import { OkHiException } from './';
+import { OkHiException } from './OkHiException';
 
 const SUPPORTED_PLATFORMS = ['ios', 'android'];
 
