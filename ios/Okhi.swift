@@ -1,6 +1,7 @@
 import OkCore
 import OkVerify
 import UIKit
+import CoreLocation
 
 @objc(Okhi)
 class Okhi: NSObject {
