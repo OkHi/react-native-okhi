@@ -117,11 +117,10 @@ class Okhi: NSObject {
     
     @objc func stopAddressVerification(_ phoneNumber: String, locationId: String, resolve:@escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         let user = OkHiUser(phoneNumber: phoneNumber)
-        self.resolve = resolve
-        self.reject = reject
         okVerify = OkHiVerify(user: user)
         okVerify?.delegate = self
         okVerify?.stop(locationId: locationId)
+        resolve(locationId)
     }
     
     private func _isBackgroundLocationPermissionGranted() -> Bool {
