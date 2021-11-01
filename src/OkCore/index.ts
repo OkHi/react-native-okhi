@@ -11,7 +11,7 @@ export * from './Helpers';
 let okhiApplicationConfiguration: OkHiApplicationConfiguration | undefined;
 
 /**
- * Starts verification for a particular address
+ * Initializes the OkHi library with provided API keys
  * @param {Object} configuration A configuration object with your OkHi credentials as well as library settings
  * @returns {Promise<void>} A promise that resolves when initialization is successful
  */

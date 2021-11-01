@@ -22,7 +22,7 @@ export * from './types';
  * @param {number} lon The longitude of the created address
  * @param {Object} configuration Configures how verification will start on different platforms
  * @param {Object} configuration.android Specifices how verification will start on Android platforms
- * @param {boolean} configuration.android.withForeground Specifices if the foreground service will be turned on to speed up rate of verification
+ * @param {boolean} configuration.android.withForeground Specifices if the foreground service will be turned on to speed up rate of verification, default is true
  * @returns {Promise<string>} A promise that resolves to a string value of the location identifier
  */
 export const start = (

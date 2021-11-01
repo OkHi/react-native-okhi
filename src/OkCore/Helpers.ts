@@ -112,7 +112,7 @@ export const requestBackgroundLocationPermission =
   };
 
 /**
- * Requests the user to enable location services by showing an in app modal on android, an opening location settings on iOS
+ * Requests the user to enable location services by showing an in app modal on android and opening location settings on iOS
  * @returns {Promise<boolean>} A promise that resolves to either a boolean value on android or null on iOS
  */
 export const requestEnableLocationServices = (): Promise<boolean | null> => {

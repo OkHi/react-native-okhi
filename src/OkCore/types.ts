@@ -46,7 +46,7 @@ export interface OkHiAppContext {
     build: number;
   };
   /**
-   * Meta information about the current developer. Can only be okhi | external.
+   * Meta information about the current developer.
    */
   developer?: string;
 }
