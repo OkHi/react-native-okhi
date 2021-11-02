@@ -61,9 +61,7 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
         onSuccess({
           ...response.payload,
           location: parseOkHiLocation(response.payload.location),
-          startAddressVerification: function (
-            config?: OkVerifyStartConfiguration
-          ) {
+          startVerification: function (config?: OkVerifyStartConfiguration) {
             const createdUser = { ...this.user };
             const location = { ...this.location };
             return new Promise((resolve, reject) => {
