@@ -151,17 +151,20 @@ extension Okhi: OkHiLocationServiceDelegate {
 // MARK: - OkVerify Delegate
 extension Okhi: OkVerifyDelegate {
     func verify(_ okVerify: OkHiVerify, didEncounterError error: OkHiError) {
-        guard let reject = reject else { return }
-        reject(error.code, error.message, nil)
+        guard let rej = reject else { return }
+        rej(error.code, error.message, nil)
+        reject = nil
     }
     
     func verify(_ okVerify: OkHiVerify, didStart locationId: String) {
-        guard let resolve = resolve else { return }
-        resolve(locationId)
+        guard let res = resolve else { return }
+        res(locationId)
+        resolve = nil
     }
     
     func verify(_ okVerify: OkHiVerify, didEnd locationId: String) {
-        guard let resolve = resolve else { return }
-        resolve(locationId)
+        guard let res = resolve else { return }
+        res(locationId)
+        resolve = nil
     }
 }
