@@ -20,9 +20,7 @@ export interface OkCollectSuccessResponse {
   /**
    * Starts address verification
    */
-  startAddressVerification: (
-    config?: OkVerifyStartConfiguration
-  ) => Promise<string>;
+  startVerification: (config?: OkVerifyStartConfiguration) => Promise<string>;
 }
 
 /**

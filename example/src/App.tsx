@@ -30,7 +30,7 @@ const App = () => {
   const [launch, setLaunch] = useState(false);
   const [locationId, setLocationId] = useState<string | null>(null);
   const handleOnSuccess = (response: OkCollectSuccessResponse) => {
-    response.startAddressVerification().then(console.log).catch(console.error);
+    response.startVerification().then(console.log).catch(console.error);
     if (response.location.id) {
       setLocationId(response.location.id);
     }
