@@ -45,11 +45,13 @@ If you're targeting Android versions >= 8 and you're using the OkVerify library 
 
 ### Enable background mode in your application
 
-OkHi obtains verification signals in the background, to enable this make sure to add "Location updates" and "Background fetch" yo your Background Modes under Signing & Capabilities of your target
+OkHi obtains verification signals in the background, to enable this make sure to add "Location updates" and "Background fetch" to your Background Modes under Signing & Capabilities of your target.
+
+![background modes](https://storage.googleapis.com/okhi-cdn/files/Screenshot%202021-11-02%20at%2008.01.13.png)
 
 ### Add necessary permissions to your `Info.plist`
 
-```plist
+```xml
 <key>NSLocationWhenInUseUsageDescription</key>
 <string>String that explains why you need when in use location permission</string>
 <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
