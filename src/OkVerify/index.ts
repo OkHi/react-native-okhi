@@ -158,7 +158,9 @@ export const canStartVerification = (configuration?: {
       resolve(
         locationServicesStatus && googlePlayServices && backgroundLocationPerm
       );
+      return;
     }
+    console.log('here..', requestServices);
     if (!locationServicesStatus && Platform.OS === 'ios') {
       reject(
         new OkHiException({
@@ -171,19 +173,17 @@ export const canStartVerification = (configuration?: {
         Platform.OS === 'ios'
           ? true
           : ((await requestEnableLocationServices()) as boolean);
-      const googlePlayServicesRequestStatus =
-        Platform.OS === 'android'
-          ? await requestEnableGooglePlayServices()
-          : true;
-      const whenInUseLocationRequestStatus = await requestLocationPermission();
-      const backgroundLocationRequestStatus =
-        await requestBackgroundLocationPermission();
-      resolve(
-        locationServicesRequestStatus &&
-          googlePlayServicesRequestStatus &&
-          whenInUseLocationRequestStatus &&
-          backgroundLocationRequestStatus
-      );
+      const gPlayServices =
+        Platform.OS === 'ios' ? true : await requestEnableGooglePlayServices();
+      let perm = false;
+      if (Platform.OS === 'ios') {
+        perm = await requestBackgroundLocationPermission();
+      } else {
+        perm =
+          (await requestLocationPermission()) &&
+          (await requestBackgroundLocationPermission());
+      }
+      resolve(locationServicesRequestStatus && gPlayServices && perm);
     }
   });
 };
