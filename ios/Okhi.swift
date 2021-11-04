@@ -49,6 +49,7 @@ class Okhi: NSObject {
         okhiLocationService.delegate = self
         self.resolve = resolve
         locationPermissionRequestType = .whenInUse
+        okhiLocationService.requestLocationPermission(withBackgroundLocationPermission: false)
     }
     
     @objc func requestBackgroundLocationPermission(_ resolve:@escaping RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {

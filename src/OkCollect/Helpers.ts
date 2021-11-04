@@ -26,6 +26,7 @@ export const canStartAddressCreation = (configuration?: {
     const locationPerm = await isLocationPermissionGranted();
     if (!requestServices) {
       resolve(locationServicesStatus && googlePlayServices && locationPerm);
+      return;
     }
     if (!locationServicesStatus && Platform.OS === 'ios') {
       reject(
@@ -36,16 +37,16 @@ export const canStartAddressCreation = (configuration?: {
       );
     } else {
       const locationServicesRequestStatus =
-        (await requestEnableLocationServices()) as boolean;
-      const googlePlayServicesRequestStatus =
+        Platform.OS === 'ios'
+          ? true
+          : ((await requestEnableLocationServices()) as boolean);
+      const gPlayServices =
         Platform.OS === 'android'
           ? await requestEnableGooglePlayServices()
           : true;
       const locationPermStatus = await requestLocationPermission();
       resolve(
-        locationServicesRequestStatus &&
-          googlePlayServicesRequestStatus &&
-          locationPermStatus
+        locationServicesRequestStatus && gPlayServices && locationPermStatus
       );
     }
   });
