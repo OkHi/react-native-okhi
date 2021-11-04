@@ -18,6 +18,8 @@ import {
   stopVerification,
   startForegroundService,
   stopForegroundService,
+  canStartVerification,
+  canStartAddressCreation,
 } from 'react-native-okhi';
 
 const USER: OkHiUser = {
@@ -93,6 +95,22 @@ const App = () => {
         title="google play services request"
         onPress={() => {
           requestEnableGooglePlayServices()
+            .then(console.log)
+            .catch(console.log);
+        }}
+      />
+      <Button
+        title="Can start verification"
+        onPress={() => {
+          canStartVerification({ requestServices: true })
+            .then(console.log)
+            .catch(console.log);
+        }}
+      />
+      <Button
+        title="Can start address creation"
+        onPress={() => {
+          canStartAddressCreation({ requestServices: true })
             .then(console.log)
             .catch(console.log);
         }}
