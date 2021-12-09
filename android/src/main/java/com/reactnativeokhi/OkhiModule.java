@@ -161,20 +161,24 @@ public class OkhiModule extends ReactContextBaseJavaModule {
       String developer = config.getJSONObject("context").optString("developer", "external");
       OkHiAppContext context = new OkHiAppContext(getReactApplicationContext(), mode, "react-native", developer);
       auth = new OkHiAuth(getReactApplicationContext(), branchId, clientKey, context);
-      okVerify = new OkVerify.Builder(getCurrentActivity(), auth).build();
-      if (config.has("notification")) {
-        JSONObject notificationConfig = config.getJSONObject("notification");
-        int importance = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? NotificationManager.IMPORTANCE_DEFAULT : 3;
-        OkVerify.init(getReactApplicationContext(), new OkHiNotification(
-          notificationConfig.optString("title", "Verification in progress"),
-          notificationConfig.optString("text", "Address Verification in progress"),
-          notificationConfig.optString("channelId", "okhi"),
-          notificationConfig.optString("channelName", "OkHi Channel"),
-          notificationConfig.optString("channelDescription", "OkHi verification alerts"),
-          importance
-        ));
+      if (getCurrentActivity() != null && getCurrentActivity().getApplicationContext() != null) {
+        okVerify = new OkVerify.Builder(getCurrentActivity(), auth).build();
+        if (config.has("notification")) {
+          JSONObject notificationConfig = config.getJSONObject("notification");
+          int importance = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? NotificationManager.IMPORTANCE_DEFAULT : 3;
+          OkVerify.init(getReactApplicationContext(), new OkHiNotification(
+            notificationConfig.optString("title", "Verification in progress"),
+            notificationConfig.optString("text", "Address Verification in progress"),
+            notificationConfig.optString("channelId", "okhi"),
+            notificationConfig.optString("channelName", "OkHi Channel"),
+            notificationConfig.optString("channelDescription", "OkHi verification alerts"),
+            importance
+          ));
+        }
+        promise.resolve(true);
+      } else {
+        promise.resolve(false);
       }
-      promise.resolve(true);
     } catch (Exception e) {
       e.printStackTrace();
       promise.reject("unauthorized", "unable to parse credentials", e);
@@ -184,7 +188,7 @@ public class OkhiModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void startAddressVerification(String phoneNumber, String locationId, Float lat, Float lon, ReadableMap config, Promise promise) {
     if (okVerify == null) {
-      promise.reject("unauthorized", "failed to initialise okhi with credentials");
+      promise.reject("unauthorized", "failed to initialise okhi");
       return;
     }
     OkHiUser user = new OkHiUser.Builder(phoneNumber).build();
