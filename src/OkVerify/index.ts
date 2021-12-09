@@ -160,7 +160,6 @@ export const canStartVerification = (configuration?: {
       );
       return;
     }
-    console.log('here..', requestServices);
     if (!locationServicesStatus && Platform.OS === 'ios') {
       reject(
         new OkHiException({
