@@ -5,8 +5,8 @@ import * as OkHi from 'react-native-okhi';
 
 OkHi.initialize({
   credentials: {
-    branchId: '',
-    clientKey: '',
+    branchId: 'j6FX93TMPE',
+    clientKey: '4e230b36-3fc9-4742-ab63-d521070ba012',
   },
   context: {
     mode: 'dev' as any,
