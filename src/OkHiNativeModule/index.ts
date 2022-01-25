@@ -28,6 +28,11 @@ type OkHiNativeModuleType = {
   startForegroundService(): Promise<boolean>;
   stopForegroundService(): Promise<boolean>;
   isForegroundServiceRunning(): Promise<boolean>;
+  initializeIOS(
+    branchId: string,
+    clientKey: string,
+    environment: string
+  ): Promise<boolean>;
 };
 
 export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi;

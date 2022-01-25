@@ -8,6 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		65EDEB844862F66710D9416F /* libPods-Okhi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 170C66738D71F8E47CCAE826 /* libPods-Okhi.a */; };
+		6D03C503279A4C150088BBAB /* OkVerifyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D03C502279A4C150088BBAB /* OkVerifyError.swift */; };
+		6D03C505279A82DD0088BBAB /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D03C504279A82DD0088BBAB /* Enums.swift */; };
+		6D03C509279A832E0088BBAB /* OkVerifyModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6D03C507279A832E0088BBAB /* OkVerifyModel.xcdatamodeld */; };
+		6D03C50C279A84A70088BBAB /* OkVerifyGeofenceTransition+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D03C50A279A84A70088BBAB /* OkVerifyGeofenceTransition+CoreDataClass.swift */; };
+		6D03C50D279A84A70088BBAB /* OkVerifyGeofenceTransition+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D03C50B279A84A70088BBAB /* OkVerifyGeofenceTransition+CoreDataProperties.swift */; };
+		6D03C510279A84BD0088BBAB /* OkVerifyUser+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D03C50E279A84BD0088BBAB /* OkVerifyUser+CoreDataClass.swift */; };
+		6D03C511279A84BD0088BBAB /* OkVerifyUser+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D03C50F279A84BD0088BBAB /* OkVerifyUser+CoreDataProperties.swift */; };
+		6D03C513279AA3A00088BBAB /* OkVerifyCoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D03C512279AA3A00088BBAB /* OkVerifyCoreDataManager.swift */; };
+		6D03C515279AA8130088BBAB /* OkVerifyGeofenceTransition+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D03C514279AA8130088BBAB /* OkVerifyGeofenceTransition+CoreDataProperties.swift */; };
+		6D03C518279AEC630088BBAB /* OkVerifyGeofence+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D03C516279AEC630088BBAB /* OkVerifyGeofence+CoreDataClass.swift */; };
+		6D03C519279AEC630088BBAB /* OkVerifyGeofence+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D03C517279AEC630088BBAB /* OkVerifyGeofence+CoreDataProperties.swift */; };
+		6D03C51B279AF1D20088BBAB /* OkVerifyGeofence+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D03C51A279AF1D20088BBAB /* OkVerifyGeofence+CoreDataProperties.swift */; };
+		6D826BC92799ABE600000686 /* OkVerifyGeofenceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D826BC82799ABE600000686 /* OkVerifyGeofenceConfiguration.swift */; };
+		6D826BCD2799AC4300000686 /* OkVerifyUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D826BCC2799AC4300000686 /* OkVerifyUrl.swift */; };
+		6D826BCF2799AC7900000686 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D826BCE2799AC7900000686 /* Extensions.swift */; };
+		6D826BD32799B2E400000686 /* OkVerifyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D826BD22799B2E400000686 /* OkVerifyUtils.swift */; };
+		6DD18840279E82B300E97B0B /* OkVerifyUser+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DD1883F279E82B300E97B0B /* OkVerifyUser+CoreDataProperties.swift */; };
+		6DD18842279E82CB00E97B0B /* OkVerifyGeofence+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DD18841279E82CB00E97B0B /* OkVerifyGeofence+CoreDataProperties.swift */; };
+		6DD1884427A0451900E97B0B /* OkVerifyGeofenceTransition+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DD1884327A0451900E97B0B /* OkVerifyGeofenceTransition+CoreDataProperties.swift */; };
+		6DE0537A27956A9F00B0B1A2 /* OkVerify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DE0537927956A9F00B0B1A2 /* OkVerify.swift */; };
 		F4FF95D7245B92E800C19C63 /* Okhi.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /* Okhi.swift */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +46,26 @@
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libOkhi.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOkhi.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		170C66738D71F8E47CCAE826 /* libPods-Okhi.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Okhi.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6D03C502279A4C150088BBAB /* OkVerifyError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OkVerifyError.swift; sourceTree = "<group>"; };
+		6D03C504279A82DD0088BBAB /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
+		6D03C508279A832E0088BBAB /* OkVerifyModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = OkVerifyModel.xcdatamodel; sourceTree = "<group>"; };
+		6D03C50A279A84A70088BBAB /* OkVerifyGeofenceTransition+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OkVerifyGeofenceTransition+CoreDataClass.swift"; sourceTree = "<group>"; };
+		6D03C50B279A84A70088BBAB /* OkVerifyGeofenceTransition+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OkVerifyGeofenceTransition+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		6D03C50E279A84BD0088BBAB /* OkVerifyUser+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OkVerifyUser+CoreDataClass.swift"; sourceTree = "<group>"; };
+		6D03C50F279A84BD0088BBAB /* OkVerifyUser+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OkVerifyUser+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		6D03C512279AA3A00088BBAB /* OkVerifyCoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OkVerifyCoreDataManager.swift; sourceTree = "<group>"; };
+		6D03C514279AA8130088BBAB /* OkVerifyGeofenceTransition+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OkVerifyGeofenceTransition+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		6D03C516279AEC630088BBAB /* OkVerifyGeofence+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OkVerifyGeofence+CoreDataClass.swift"; sourceTree = "<group>"; };
+		6D03C517279AEC630088BBAB /* OkVerifyGeofence+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OkVerifyGeofence+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		6D03C51A279AF1D20088BBAB /* OkVerifyGeofence+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OkVerifyGeofence+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		6D826BC82799ABE600000686 /* OkVerifyGeofenceConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OkVerifyGeofenceConfiguration.swift; sourceTree = "<group>"; };
+		6D826BCC2799AC4300000686 /* OkVerifyUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OkVerifyUrl.swift; sourceTree = "<group>"; };
+		6D826BCE2799AC7900000686 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		6D826BD22799B2E400000686 /* OkVerifyUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OkVerifyUtils.swift; sourceTree = "<group>"; };
+		6DD1883F279E82B300E97B0B /* OkVerifyUser+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OkVerifyUser+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		6DD18841279E82CB00E97B0B /* OkVerifyGeofence+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OkVerifyGeofence+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		6DD1884327A0451900E97B0B /* OkVerifyGeofenceTransition+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OkVerifyGeofenceTransition+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		6DE0537927956A9F00B0B1A2 /* OkVerify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OkVerify.swift; sourceTree = "<group>"; };
 		9AC598260B86BDE618FEDC44 /* Pods-Okhi.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Okhi.debug.xcconfig"; path = "Target Support Files/Pods-Okhi/Pods-Okhi.debug.xcconfig"; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* Okhi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Okhi.m; sourceTree = "<group>"; };
 		D065C9FE4594C7F1A2C82304 /* Pods-Okhi.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Okhi.release.xcconfig"; path = "Target Support Files/Pods-Okhi/Pods-Okhi.release.xcconfig"; sourceTree = "<group>"; };
@@ -59,13 +99,13 @@
 				9AC598260B86BDE618FEDC44 /* Pods-Okhi.debug.xcconfig */,
 				D065C9FE4594C7F1A2C82304 /* Pods-Okhi.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				6DE0537827956A8900B0B1A2 /* OkVerify */,
 				F4FF95D6245B92E800C19C63 /* Okhi.swift */,
 				B3E7B5891CC2AC0600A0062D /* Okhi.m */,
 				F4FF95D5245B92E700C19C63 /* Okhi-Bridging-Header.h */,
@@ -73,6 +113,49 @@
 				1D74A8B99575604223785C10 /* Pods */,
 				E82590BD637540CF278F8B63 /* Frameworks */,
 			);
+			sourceTree = "<group>";
+		};
+		6D03C506279A830D0088BBAB /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				6D03C51A279AF1D20088BBAB /* OkVerifyGeofence+CoreDataProperties.swift */,
+				6DD1884327A0451900E97B0B /* OkVerifyGeofenceTransition+CoreDataProperties.swift */,
+				6DD18841279E82CB00E97B0B /* OkVerifyGeofence+CoreDataProperties.swift */,
+				6DD1883F279E82B300E97B0B /* OkVerifyUser+CoreDataProperties.swift */,
+				6D03C516279AEC630088BBAB /* OkVerifyGeofence+CoreDataClass.swift */,
+				6D03C517279AEC630088BBAB /* OkVerifyGeofence+CoreDataProperties.swift */,
+				6D03C514279AA8130088BBAB /* OkVerifyGeofenceTransition+CoreDataProperties.swift */,
+				6D03C50E279A84BD0088BBAB /* OkVerifyUser+CoreDataClass.swift */,
+				6D03C50F279A84BD0088BBAB /* OkVerifyUser+CoreDataProperties.swift */,
+				6D03C50A279A84A70088BBAB /* OkVerifyGeofenceTransition+CoreDataClass.swift */,
+				6D03C50B279A84A70088BBAB /* OkVerifyGeofenceTransition+CoreDataProperties.swift */,
+				6D03C507279A832E0088BBAB /* OkVerifyModel.xcdatamodeld */,
+				6D03C512279AA3A00088BBAB /* OkVerifyCoreDataManager.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
+		6D826BC72799A0D000000686 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				6D826BC82799ABE600000686 /* OkVerifyGeofenceConfiguration.swift */,
+				6D826BCC2799AC4300000686 /* OkVerifyUrl.swift */,
+				6D826BCE2799AC7900000686 /* Extensions.swift */,
+				6D826BD22799B2E400000686 /* OkVerifyUtils.swift */,
+				6D03C502279A4C150088BBAB /* OkVerifyError.swift */,
+				6D03C504279A82DD0088BBAB /* Enums.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		6DE0537827956A8900B0B1A2 /* OkVerify */ = {
+			isa = PBXGroup;
+			children = (
+				6D03C506279A830D0088BBAB /* CoreData */,
+				6D826BC72799A0D000000686 /* Models */,
+				6DE0537927956A9F00B0B1A2 /* OkVerify.swift */,
+			);
+			path = OkVerify;
 			sourceTree = "<group>";
 		};
 		E82590BD637540CF278F8B63 /* Frameworks */ = {
@@ -166,7 +249,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D826BC92799ABE600000686 /* OkVerifyGeofenceConfiguration.swift in Sources */,
+				6D03C515279AA8130088BBAB /* OkVerifyGeofenceTransition+CoreDataProperties.swift in Sources */,
+				6D826BCF2799AC7900000686 /* Extensions.swift in Sources */,
+				6D03C519279AEC630088BBAB /* OkVerifyGeofence+CoreDataProperties.swift in Sources */,
+				6DE0537A27956A9F00B0B1A2 /* OkVerify.swift in Sources */,
+				6D03C50D279A84A70088BBAB /* OkVerifyGeofenceTransition+CoreDataProperties.swift in Sources */,
+				6D826BCD2799AC4300000686 /* OkVerifyUrl.swift in Sources */,
+				6D03C513279AA3A00088BBAB /* OkVerifyCoreDataManager.swift in Sources */,
+				6D826BD32799B2E400000686 /* OkVerifyUtils.swift in Sources */,
+				6D03C510279A84BD0088BBAB /* OkVerifyUser+CoreDataClass.swift in Sources */,
+				6DD18842279E82CB00E97B0B /* OkVerifyGeofence+CoreDataProperties.swift in Sources */,
+				6DD18840279E82B300E97B0B /* OkVerifyUser+CoreDataProperties.swift in Sources */,
 				F4FF95D7245B92E800C19C63 /* Okhi.swift in Sources */,
+				6DD1884427A0451900E97B0B /* OkVerifyGeofenceTransition+CoreDataProperties.swift in Sources */,
+				6D03C505279A82DD0088BBAB /* Enums.swift in Sources */,
+				6D03C511279A84BD0088BBAB /* OkVerifyUser+CoreDataProperties.swift in Sources */,
+				6D03C503279A4C150088BBAB /* OkVerifyError.swift in Sources */,
+				6D03C51B279AF1D20088BBAB /* OkVerifyGeofence+CoreDataProperties.swift in Sources */,
+				6D03C509279A832E0088BBAB /* OkVerifyModel.xcdatamodeld in Sources */,
+				6D03C518279AEC630088BBAB /* OkVerifyGeofence+CoreDataClass.swift in Sources */,
+				6D03C50C279A84A70088BBAB /* OkVerifyGeofenceTransition+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,6 +430,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		6D03C507279A832E0088BBAB /* OkVerifyModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				6D03C508279A832E0088BBAB /* OkVerifyModel.xcdatamodel */,
+			);
+			currentVersion = 6D03C508279A832E0088BBAB /* OkVerifyModel.xcdatamodel */;
+			path = OkVerifyModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 58B511D31A9E6C8500147676 /* Project object */;
 }

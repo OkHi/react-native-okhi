@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { OkHiNativeModule } from '../OkHiNativeModule';
 import type { OkHiApplicationConfiguration } from './types';
 import { errorHandler } from './_helpers';
@@ -19,7 +20,15 @@ export function initialize(
   configuration: OkHiApplicationConfiguration
 ): Promise<void> {
   return errorHandler(async () => {
-    await OkHiNativeModule.initialize(JSON.stringify(configuration));
+    if (Platform.OS === 'android') {
+      await OkHiNativeModule.initialize(JSON.stringify(configuration));
+    } else {
+      await OkHiNativeModule.initializeIOS(
+        configuration.credentials.branchId,
+        configuration.credentials.clientKey,
+        configuration.context.mode
+      );
+    }
     okhiApplicationConfiguration = configuration;
   });
 }

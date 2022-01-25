@@ -32,6 +32,7 @@ const App = () => {
   const [launch, setLaunch] = useState(false);
   const [locationId, setLocationId] = useState<string | null>(null);
   const handleOnSuccess = (response: OkCollectSuccessResponse) => {
+    console.log(response);
     response.startVerification().then(console.log).catch(console.error);
     if (response.location.id) {
       setLocationId(response.location.id);
@@ -135,17 +136,19 @@ const App = () => {
       <Button
         title="Start Foreground Service"
         onPress={() =>
-          startForegroundService().then((result) =>
-            console.log(`start foreground service: ${result}`)
-          )
+          startForegroundService()
+            .then((result) =>
+              console.log(`start foreground service: ${result}`)
+            )
+            .catch(console.log)
         }
       />
       <Button
         title="Stop Foreground Service"
         onPress={() =>
-          stopForegroundService().then((result) =>
-            console.log(`stop foreground service: ${result}`)
-          )
+          stopForegroundService()
+            .then((result) => console.log(`stop foreground service: ${result}`))
+            .catch(console.log)
         }
       />
       <OkHiLocationManager

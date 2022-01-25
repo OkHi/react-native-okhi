@@ -357,12 +357,10 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-OkhiExample/Pods-OkhiExample-frameworks.sh",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OkCore/OkCore.framework/OkCore",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OkVerify/OkVerify.framework/OkVerify",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OkCore.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OkVerify.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -413,10 +411,12 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-OkhiExample/Pods-OkhiExample-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+				"${PODS_ROOT}/../../../ios/OkVerify/CoreData/OkVerifyModel.xcdatamodeld",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/OkVerifyModel.momd",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
