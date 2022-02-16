@@ -6,7 +6,6 @@
  */
 
 #import "AppDelegate.h"
-@import react_native_okhi;
 
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
@@ -34,7 +33,7 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  self.okverify = [[OkVerify alloc] init];
+  self.okverify = [[OkHiVerify alloc] init];
   if ([launchOptions objectForKey:UIApplicationLaunchOptionsLocationKey])
     [self.okverify startMonitoring];
   
