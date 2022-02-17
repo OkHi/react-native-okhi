@@ -5,11 +5,11 @@ import * as OkHi from 'react-native-okhi';
 
 OkHi.initialize({
   credentials: {
-    branchId: 'j6FX93TMPE',
-    clientKey: '4e230b36-3fc9-4742-ab63-d521070ba012',
+    branchId: '',
+    clientKey: '',
   },
   context: {
-    mode: 'dev' as any,
+    mode: 'sandbox',
   },
   notification: {
     title: 'Address verification in progress',
