@@ -139,7 +139,6 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
       payload: generateStartDataPayload(props, token, applicationConfiguration),
     });
 
-    console.log('render');
     return (
       <SafeAreaView style={style}>
         <WebView
