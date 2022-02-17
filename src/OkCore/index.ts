@@ -20,6 +20,7 @@ export function initialize(
   configuration: OkHiApplicationConfiguration
 ): Promise<void> {
   return errorHandler(async () => {
+    okhiApplicationConfiguration = configuration;
     if (Platform.OS === 'android') {
       await OkHiNativeModule.initialize(JSON.stringify(configuration));
     } else {
@@ -29,7 +30,6 @@ export function initialize(
         configuration.context.mode
       );
     }
-    okhiApplicationConfiguration = configuration;
   });
 }
 
