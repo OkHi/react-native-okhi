@@ -33,17 +33,36 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
   const { user, onSuccess, onCloseRequest, onError, loader, launch } = props;
 
   useEffect(() => {
-    if (user.phone) {
-      const auth = new OkHiAuth();
-      auth
-        .anonymousSignInWithPhoneNumber(user.phone, ['address'])
-        .then(setToken)
-        .catch(onError);
+    if (applicationConfiguration == null && token == null && user.phone) {
       getApplicationConfiguration()
-        .then(setApplicationConfiguration)
-        .catch(onError);
+        .then((config) => {
+          if (!config && launch) {
+            onError(
+              new OkHiException({
+                code: OkHiException.UNAUTHORIZED_CODE,
+                message: OkHiException.UNAUTHORIZED_MESSAGE,
+              })
+            );
+          } else if (config) {
+            setApplicationConfiguration(config);
+            const auth = new OkHiAuth();
+            auth
+              .anonymousSignInWithPhoneNumber(user.phone, ['address'], config)
+              .then(setToken)
+              .catch((error) => {
+                if (launch) {
+                  onError(error);
+                }
+              });
+          }
+        })
+        .catch((error) => {
+          if (launch) {
+            onError(error);
+          }
+        });
     }
-  }, [onError, user.phone]);
+  }, [onError, user.phone, launch, applicationConfiguration, token]);
 
   const handleOnMessage = ({ nativeEvent: { data } }: WebViewMessageEvent) => {
     try {
@@ -120,6 +139,7 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
       payload: generateStartDataPayload(props, token, applicationConfiguration),
     });
 
+    console.log('render');
     return (
       <SafeAreaView style={style}>
         <WebView
