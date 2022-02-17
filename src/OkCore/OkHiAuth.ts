@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { OkHiMode } from './OkHiMode';
 import { OkHiException } from './OkHiException';
-import type { OkHiAccessScope } from './_types';
+import type { AuthApplicationConfig, OkHiAccessScope } from './_types';
 import { getApplicationConfiguration } from './';
 
 /**
@@ -18,11 +18,14 @@ export class OkHiAuth {
     this.ANONYMOUS_SIGN_IN_ENDPOINT;
   private readonly PROD_BASE_URL =
     `https://api.okhi.io/${this.API_VERSION}` + this.ANONYMOUS_SIGN_IN_ENDPOINT;
+  private config: AuthApplicationConfig | null = null;
 
   anonymousSignInWithPhoneNumber(
     phone: string,
-    scopes: Array<OkHiAccessScope>
+    scopes: Array<OkHiAccessScope>,
+    config: AuthApplicationConfig
   ) {
+    this.config = config;
     return this.anonymousSignIn({
       scopes,
       phone,
@@ -45,7 +48,7 @@ export class OkHiAuth {
   }): Promise<string> {
     return new Promise(async (resolve, reject) => {
       try {
-        const config = await getApplicationConfiguration();
+        const config = this.config || (await getApplicationConfiguration());
         if (config === null || !config.auth || !config.auth.token) {
           reject(
             new OkHiException({
