@@ -7,10 +7,10 @@
 
 #import <React/RCTBridgeDelegate.h>
 #import <UIKit/UIKit.h>
-@import OkVerify;
+@import OkHi;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
-@property (strong, nonatomic) OkHiVerify *okverify;
+@property (strong, nonatomic) OkVerify *okverify;
 @end

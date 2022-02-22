@@ -1,5 +1,5 @@
 import UIKit
-import OkVerify
+import OkHi
 import CoreLocation
 
 @objc(Okhi)
@@ -11,10 +11,10 @@ class Okhi: NSObject {
     private var currentLocationPermissionRequestType: LocationPermissionRequestType = .always
     private var resolve: RCTPromiseResolveBlock?
     private var reject: RCTPromiseRejectBlock?
-    private var okVerify: OkHiVerify
+    private var okVerify: OkVerify
     
     override init() {
-        okVerify = OkHiVerify()
+        okVerify = OkVerify()
         super.init()
         okVerify.delegate = self
     }
@@ -57,7 +57,7 @@ class Okhi: NSObject {
     }
     
     @objc func requestEnableLocationServices(_ resolve: RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
-        OkHiVerify.openAppSettings()
+        OkVerify.openAppSettings()
         resolve(NSNull())
     }
     
@@ -97,7 +97,7 @@ extension Okhi {
 
 // MARK: - OkVerify Delegates
 extension Okhi: OkVerifyDelegate {
-    func verify(_ okverify: OkHiVerify, didChangeLocationPermissionStatus requestType: OkVerifyLocationPermissionRequestType, status: Bool) {
+    func verify(_ okverify: OkVerify, didChangeLocationPermissionStatus requestType: OkVerifyLocationPermissionRequestType, status: Bool) {
         if let resolve = self.resolve {
             if currentLocationPermissionRequestType == .whenInUse && requestType == .whenInUse {
                 resolve(status)
@@ -109,25 +109,25 @@ extension Okhi: OkVerifyDelegate {
         }
     }
 
-    func verify(_ okverify: OkHiVerify, didInitialize result: Bool) {
+    func verify(_ okverify: OkVerify, didInitialize result: Bool) {
         guard let resolve = resolve else { return }
         resolve(result)
         self.resolve = nil
     }
 
-    func verify(_ okverify: OkHiVerify, didEncounterError error: OkVerifyError) {
+    func verify(_ okverify: OkVerify, didEncounterError error: OkVerifyError) {
         guard let reject = reject else { return }
         reject(error.code, error.message, error)
         self.reject = nil
     }
 
-    func verify(_ okverify: OkHiVerify, didStartAddressVerificationFor locationId: String) {
+    func verify(_ okverify: OkVerify, didStartAddressVerificationFor locationId: String) {
         guard let resolve = resolve else { return }
         resolve(locationId)
         self.resolve = nil
     }
 
-    func verify(_ okverify: OkHiVerify, didStopVerificationFor locationId: String) {
+    func verify(_ okverify: OkVerify, didStopVerificationFor locationId: String) {
         guard let resolve = resolve else { return }
         resolve(locationId)
         self.resolve = nil

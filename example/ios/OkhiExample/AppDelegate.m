@@ -33,7 +33,7 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  self.okverify = [[OkHiVerify alloc] init];
+  self.okverify = [[OkVerify alloc] init];
   if ([launchOptions objectForKey:UIApplicationLaunchOptionsLocationKey])
     [self.okverify startMonitoring];
   
