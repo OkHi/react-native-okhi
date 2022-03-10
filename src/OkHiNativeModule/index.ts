@@ -1,4 +1,4 @@
-import { NativeModules } from 'react-native';
+import { NativeModules, NativeEventEmitter } from 'react-native';
 import type { OkVerifyStartConfiguration } from '../OkVerify/types';
 
 type OkHiNativeModuleType = {
@@ -36,3 +36,5 @@ type OkHiNativeModuleType = {
 };
 
 export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi;
+
+export const OkHiNativeEvents = new NativeEventEmitter(NativeModules.Okhi);
