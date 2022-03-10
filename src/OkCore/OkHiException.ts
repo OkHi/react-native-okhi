@@ -6,6 +6,15 @@ import type { OkHiError } from './types';
  */
 export class OkHiException extends Error {
   /**
+   * Error is thrown when location services is unavailable.
+   */
+  static LOCATION_SERVICES_UNAVAILABLE_CODE = 'location_services_unavailable';
+
+  /**
+   * Error is thrown when play services is unavailable.
+   */
+  static PLAY_SERVICES_UNAVAILABLE_CODE = 'play_services_unavailable';
+  /**
    * Error is thrown when the device can't connect to OkHi's servers.
    */
   static NETWORK_ERROR_CODE = 'network_error';
