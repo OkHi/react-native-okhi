@@ -1,5 +1,5 @@
-import { OkHiNativeModule } from '../OkHiNativeModule';
-import { PermissionsAndroid, Platform } from 'react-native';
+import { OkHiNativeModule, OkHiNativeEvents } from '../OkHiNativeModule';
+import { Alert, PermissionsAndroid, Platform } from 'react-native';
 import { errorHandler, isValidPlatform } from './_helpers';
 
 /**
@@ -66,6 +66,7 @@ const requestLocationPermissionIOS = (): Promise<boolean> => {
  * @returns {Promise<boolean>} A promise that resolves to a boolen value indicating whether the permission is granted
  */
 export const requestLocationPermission = async (): Promise<boolean> => {
+  console.log('yooo');
   const isGranted = await isLocationPermissionGranted();
   if (isGranted) return isGranted;
   return errorHandler(
@@ -147,3 +148,77 @@ export const requestEnableGooglePlayServices = (): Promise<boolean> => {
  */
 export const getSystemVersion = (): Promise<string | number> =>
   isValidPlatform(OkHiNativeModule.getSystemVersion);
+
+type LocationPermissionStatus =
+  | 'notDetermined'
+  | 'restricted'
+  | 'denied'
+  | 'authorizedAlways'
+  | 'authorizedWhenInUse'
+  | 'authorized'
+  | 'unknown';
+
+type LocationPermissionType = 'whenInUse' | 'always';
+
+type LocationPermissionCallback = (status: LocationPermissionStatus) => any;
+
+export const request = (
+  locationPermissionType: LocationPermissionType,
+  rationale: {
+    title: string;
+    text: string;
+    successButton?: { label: string };
+  } | null,
+  callback: LocationPermissionCallback
+) => {
+  if (Platform.OS === 'ios') {
+    OkHiNativeEvents.removeAllListeners('onLocationPermissionStatusUpdate');
+    OkHiNativeEvents.addListener('onLocationPermissionStatusUpdate', callback);
+    if (locationPermissionType === 'whenInUse') {
+      OkHiNativeModule.requestLocationPermission();
+    } else {
+      OkHiNativeModule.requestBackgroundLocationPermission();
+    }
+  } else {
+    if (locationPermissionType === 'whenInUse') {
+      requestLocationPermissionAndroid().then((result) =>
+        callback(result ? 'authorizedWhenInUse' : 'denied')
+      );
+    } else {
+      requestLocationPermissionAndroid().then(async (whenInUseResult) => {
+        if (whenInUseResult) {
+          const version = await getSystemVersion();
+          if (version >= 30 && rationale) {
+            Alert.alert(
+              rationale.title,
+              rationale.text,
+              [
+                {
+                  text: rationale.successButton
+                    ? rationale.successButton.label
+                    : 'Okay',
+                  onPress: async () => {
+                    const result = await requestBackgroundLocationPermission();
+                    callback(
+                      result ? 'authorizedAlways' : 'authorizedWhenInUse'
+                    );
+                  },
+                },
+              ],
+              {
+                onDismiss: () => {
+                  callback('authorizedWhenInUse');
+                },
+              }
+            );
+          } else {
+            const permission = await requestBackgroundLocationPermission();
+            callback(permission ? 'authorizedAlways' : 'authorizedWhenInUse');
+          }
+        } else {
+          callback('denied');
+        }
+      });
+    }
+  }
+};
