@@ -178,3 +178,18 @@ export type OkHiApplicationConfiguration = {
     channelDescription: string;
   };
 };
+
+export type LocationPermissionStatus =
+  | 'notDetermined'
+  | 'restricted'
+  | 'denied'
+  | 'authorizedAlways'
+  | 'authorizedWhenInUse'
+  | 'authorized'
+  | 'unknown';
+
+export type LocationRequestPermissionType = 'whenInUse' | 'always';
+
+export type LocationPermissionCallback = (
+  status: LocationPermissionStatus
+) => any;

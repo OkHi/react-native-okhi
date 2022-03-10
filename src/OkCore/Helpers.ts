@@ -1,6 +1,11 @@
 import { OkHiNativeModule, OkHiNativeEvents } from '../OkHiNativeModule';
 import { Alert, PermissionsAndroid, Platform } from 'react-native';
 import { errorHandler, isValidPlatform } from './_helpers';
+import type {
+  LocationPermissionCallback,
+  LocationPermissionStatus,
+  LocationRequestPermissionType,
+} from './types';
 
 /**
  * Checks whether location services are enabled
@@ -149,21 +154,8 @@ export const requestEnableGooglePlayServices = (): Promise<boolean> => {
 export const getSystemVersion = (): Promise<string | number> =>
   isValidPlatform(OkHiNativeModule.getSystemVersion);
 
-type LocationPermissionStatus =
-  | 'notDetermined'
-  | 'restricted'
-  | 'denied'
-  | 'authorizedAlways'
-  | 'authorizedWhenInUse'
-  | 'authorized'
-  | 'unknown';
-
-type LocationPermissionType = 'whenInUse' | 'always';
-
-type LocationPermissionCallback = (status: LocationPermissionStatus) => any;
-
 export const request = (
-  locationPermissionType: LocationPermissionType,
+  locationPermissionType: LocationRequestPermissionType,
   rationale: {
     title: string;
     text: string;
@@ -226,3 +218,13 @@ export const request = (
 export const openAppSettings = () => {
   OkHiNativeModule.openAppSettings();
 };
+
+export const retriveLocationPermissionStatus =
+  async (): Promise<LocationPermissionStatus> => {
+    const alwaysPerm = await isBackgroundLocationPermissionGranted();
+    if (alwaysPerm) {
+      return 'authorizedAlways';
+    }
+    const whenInUsePerm = await isLocationPermissionGranted();
+    return whenInUsePerm ? 'authorizedWhenInUse' : 'denied';
+  };
