@@ -222,3 +222,7 @@ export const request = (
     }
   }
 };
+
+export const openAppSettings = () => {
+  OkHiNativeModule.openAppSettings();
+};

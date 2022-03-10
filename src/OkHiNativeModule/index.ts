@@ -33,6 +33,7 @@ type OkHiNativeModuleType = {
     clientKey: string,
     environment: string
   ): Promise<boolean>;
+  openAppSettings(): Promise<void>;
 };
 
 export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi;

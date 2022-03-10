@@ -3,7 +3,9 @@ package com.reactnativeokhi;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.Base64;
 
 import androidx.annotation.NonNull;
@@ -245,6 +247,15 @@ public class OkhiModule extends ReactContextBaseJavaModule {
   public void isForegroundServiceRunning(Promise promise) {
     Boolean result = OkVerify.isForegroundServiceRunning(getReactApplicationContext());
     promise.resolve(result);
+  }
+
+  @ReactMethod
+  public void openAppSettings(Promise promise) {
+    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+    Uri uri = Uri.fromParts("package", getReactApplicationContext().getPackageName(), null);
+    intent.setData(uri);
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    getReactApplicationContext().startActivity(intent);
   }
 
   private Dynamic getConfig(ReadableMap map, String prop) {
