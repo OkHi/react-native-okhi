@@ -3,7 +3,7 @@ import OkHi
 import CoreLocation
 
 @objc(Okhi)
-class Okhi: NSObject {
+class Okhi: RCTEventEmitter {
     private enum LocationPermissionRequestType: String {
         case whenInUse = "whenInUse"
         case always = "always"
@@ -19,7 +19,7 @@ class Okhi: NSObject {
         okVerify.delegate = self
     }
     
-    @objc static func requiresMainQueueSetup() -> Bool {
+    override static func requiresMainQueueSetup() -> Bool {
         return false
     }
     
@@ -82,6 +82,10 @@ class Okhi: NSObject {
         self.reject = reject
         okVerify.stopAddressVerification(locationId: locationId)
     }
+    
+    override func supportedEvents() -> [String]! {
+        return ["onLocationPermissionStatusUpdate"]
+    }
 }
 
 // MARK: - OkHi Utils
@@ -97,6 +101,27 @@ extension Okhi {
 
 // MARK: - OkVerify Delegates
 extension Okhi: OkVerifyDelegate {
+    func verify(_ okverify: OkVerify, didUpdateLocationPermissionStatus status: CLAuthorizationStatus) {
+        var str: String = ""
+        switch status {
+        case .notDetermined:
+            str = "notDetermined"
+        case .restricted:
+            str = "restricted"
+        case .denied:
+            str = "denied"
+        case .authorizedAlways:
+            str = "authorizedAlways"
+        case .authorizedWhenInUse:
+            str = "authorizedWhenInUse"
+        case .authorized:
+            str = "authorized"
+        @unknown default:
+            str = "unknown"
+        }
+        sendEvent(withName: "onLocationPermissionStatusUpdate", body: str)
+    }
+    
     func verify(_ okverify: OkVerify, didChangeLocationPermissionStatus requestType: OkVerifyLocationPermissionRequestType, status: Bool) {
         if let resolve = self.resolve {
             if currentLocationPermissionRequestType == .whenInUse && requestType == .whenInUse {
