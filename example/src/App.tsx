@@ -21,6 +21,7 @@ import {
   canStartVerification,
   canStartAddressCreation,
   request,
+  openAppSettings,
 } from 'react-native-okhi';
 
 const USER: OkHiUser = {
@@ -139,6 +140,7 @@ const App = () => {
           getSystemVersion().then(console.log).catch(console.log);
         }}
       />
+      <Button title="open app settings" onPress={openAppSettings} />
       <Button title="Create Address" onPress={() => setLaunch(true)} />
       <Button
         title="Stop Verification"

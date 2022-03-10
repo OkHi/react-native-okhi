@@ -57,6 +57,13 @@ class Okhi: RCTEventEmitter {
     }
     
     @objc func requestEnableLocationServices(_ resolve: RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+        if let url = URL.init(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
+        resolve(NSNull())
+    }
+    
+    @objc func openAppSettings(_ resolve: RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
         OkVerify.openAppSettings()
         resolve(NSNull())
     }
