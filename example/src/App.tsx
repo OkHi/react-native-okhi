@@ -20,6 +20,7 @@ import {
   stopForegroundService,
   canStartVerification,
   canStartAddressCreation,
+  request,
 } from 'react-native-okhi';
 
 const USER: OkHiUser = {
@@ -76,6 +77,22 @@ const App = () => {
         title="request location permission"
         onPress={() => {
           requestLocationPermission().then(console.log).catch(console.log);
+        }}
+      />
+      <Button
+        title="request me"
+        onPress={() => {
+          request(
+            'always',
+            {
+              title: 'Location Permission',
+              text: 'Please grant',
+              successButton: { label: 'GRANT' },
+            },
+            (status) => {
+              console.log(status);
+            }
+          );
         }}
       />
       <Button
