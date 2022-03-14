@@ -71,7 +71,6 @@ const requestLocationPermissionIOS = (): Promise<boolean> => {
  * @returns {Promise<boolean>} A promise that resolves to a boolen value indicating whether the permission is granted
  */
 export const requestLocationPermission = async (): Promise<boolean> => {
-  console.log('yooo');
   const isGranted = await isLocationPermissionGranted();
   if (isGranted) return isGranted;
   return errorHandler(
