@@ -39,3 +39,5 @@ type OkHiNativeModuleType = {
 export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi;
 
 export const OkHiNativeEvents = new NativeEventEmitter(NativeModules.Okhi);
+
+OkHiNativeEvents.addListener('onLocationPermissionStatusUpdate', () => null);
