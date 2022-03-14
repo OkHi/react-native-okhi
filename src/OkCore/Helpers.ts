@@ -220,6 +220,9 @@ export const openAppSettings = () => {
 
 export const retriveLocationPermissionStatus =
   async (): Promise<LocationPermissionStatus> => {
+    if (Platform.OS === 'ios') {
+      return OkHiNativeModule.retriveLocationPermissionStatus() as Promise<LocationPermissionStatus>;
+    }
     const alwaysPerm = await isBackgroundLocationPermissionGranted();
     if (alwaysPerm) {
       return 'authorizedAlways';
