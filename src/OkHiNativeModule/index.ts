@@ -34,6 +34,7 @@ type OkHiNativeModuleType = {
     environment: string
   ): Promise<boolean>;
   openAppSettings(): Promise<void>;
+  retriveLocationPermissionStatus(): Promise<string>;
 };
 
 export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi;
