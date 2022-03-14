@@ -49,11 +49,7 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
             auth
               .anonymousSignInWithPhoneNumber(user.phone, ['address'], config)
               .then(setToken)
-              .catch((error) => {
-                if (launch) {
-                  onError(error);
-                }
-              });
+              .catch(onError);
           }
         })
         .catch((error) => {
