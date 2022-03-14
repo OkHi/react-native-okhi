@@ -93,25 +93,17 @@ class Okhi: RCTEventEmitter {
         okVerify.stopAddressVerification(locationId: locationId)
     }
     
+    @objc func retriveLocationPermissionStatus(_ resolve: RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+        let manager = CLLocationManager()
+        let status = fetchLocationPermissionStatus(status: getLocationAuthorizationStatus(manager: manager))
+        resolve(status)
+    }
+    
     override func supportedEvents() -> [String]! {
         return ["onLocationPermissionStatusUpdate"]
     }
-}
-
-// MARK: - OkHi Utils
-extension Okhi {
-    func getLocationAuthorizationStatus(manager: CLLocationManager) -> CLAuthorizationStatus {
-        if #available(iOS 14.0, *) {
-            return manager.authorizationStatus
-        } else {
-            return CLLocationManager.authorizationStatus()
-        }
-    }
-}
-
-// MARK: - OkVerify Delegates
-extension Okhi: OkVerifyDelegate {
-    func verify(_ okverify: OkVerify, didUpdateLocationPermissionStatus status: CLAuthorizationStatus) {
+    
+    private func fetchLocationPermissionStatus(status: CLAuthorizationStatus) -> String {
         var str: String = ""
         switch status {
         case .notDetermined:
@@ -129,7 +121,25 @@ extension Okhi: OkVerifyDelegate {
         @unknown default:
             str = "unknown"
         }
-        sendEvent(withName: "onLocationPermissionStatusUpdate", body: str)
+        return str
+    }
+}
+
+// MARK: - OkHi Utils
+extension Okhi {
+    func getLocationAuthorizationStatus(manager: CLLocationManager) -> CLAuthorizationStatus {
+        if #available(iOS 14.0, *) {
+            return manager.authorizationStatus
+        } else {
+            return CLLocationManager.authorizationStatus()
+        }
+    }
+}
+
+// MARK: - OkVerify Delegates
+extension Okhi: OkVerifyDelegate {
+    func verify(_ okverify: OkVerify, didUpdateLocationPermissionStatus status: CLAuthorizationStatus) {
+        sendEvent(withName: "onLocationPermissionStatusUpdate", body: fetchLocationPermissionStatus(status: status))
     }
     
     func verify(_ okverify: OkVerify, didChangeLocationPermissionStatus requestType: OkVerifyLocationPermissionRequestType, status: Bool) {
