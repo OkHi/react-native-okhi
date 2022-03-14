@@ -35,4 +35,6 @@ RCT_EXTERN_METHOD(startAddressVerification:(NSString *)phoneNumber locationId:(N
 
 RCT_EXTERN_METHOD(stopAddressVerification:(NSString *)phoneNumber locationId:(NSString *)locationId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(retriveLocationPermissionStatus: (RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
 @end

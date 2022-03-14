@@ -22,6 +22,7 @@ import {
   canStartAddressCreation,
   request,
   openAppSettings,
+  retriveLocationPermissionStatus,
 } from 'react-native-okhi';
 
 const USER: OkHiUser = {
@@ -108,6 +109,15 @@ const App = () => {
         title="google play services check"
         onPress={() => {
           isGooglePlayServicesAvailable().then(console.log).catch(console.log);
+        }}
+      />
+      <Button
+        title="request status"
+        onPress={() => {
+          retriveLocationPermissionStatus()
+            .then(console.log)
+            .catch(console.log);
+          // isGooglePlayServicesAvailable().then(console.log).catch(console.log);
         }}
       />
       <Button
