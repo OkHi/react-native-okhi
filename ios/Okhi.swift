@@ -11,7 +11,10 @@ class Okhi: RCTEventEmitter {
     private var currentLocationPermissionRequestType: LocationPermissionRequestType = .always
     private var resolve: RCTPromiseResolveBlock?
     private var reject: RCTPromiseRejectBlock?
+    private var initResolve: RCTPromiseResolveBlock?
+    private var initReject: RCTPromiseRejectBlock?
     private var okVerify: OkVerify
+    
     
     override init() {
         okVerify = OkVerify()
@@ -73,8 +76,8 @@ class Okhi: RCTEventEmitter {
     }
     
     @objc func initializeIOS(_ branchId: String, clientKey: String, environment: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        self.resolve = resolve
-        self.reject = reject
+        self.initResolve = resolve
+        self.initReject = reject
         okVerify.initialize(with: branchId, clientKey: clientKey, environment: environment)
     }
     
@@ -142,15 +145,22 @@ extension Okhi: OkVerifyDelegate {
     }
 
     func verify(_ okverify: OkVerify, didInitialize result: Bool) {
-        guard let resolve = resolve else { return }
+        guard let resolve = initResolve else { return }
         resolve(result)
-        self.resolve = nil
+        self.initResolve = nil
+        self.initReject = nil
     }
 
     func verify(_ okverify: OkVerify, didEncounterError error: OkVerifyError) {
-        guard let reject = reject else { return }
-        reject(error.code, error.message, error)
-        self.reject = nil
+        if let initReject = initReject {
+            initReject(error.code, error.message, error)
+            self.initResolve = nil
+            self.initReject = nil
+        } else {
+            guard let reject = reject else { return }
+            reject(error.code, error.message, error)
+            self.reject = nil
+        }
     }
 
     func verify(_ okverify: OkVerify, didStartAddressVerificationFor locationId: String) {
