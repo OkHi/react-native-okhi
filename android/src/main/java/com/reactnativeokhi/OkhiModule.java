@@ -258,6 +258,16 @@ public class OkhiModule extends ReactContextBaseJavaModule {
     getReactApplicationContext().startActivity(intent);
   }
 
+  @ReactMethod
+  public void addListener(String eventName) {
+    // Keep: Required for RN built in Event Emitter Calls.
+  }
+
+  @ReactMethod
+  public void removeListeners(Integer count) {
+    // Keep: Required for RN built in Event Emitter Calls.
+  }
+
   private Dynamic getConfig(ReadableMap map, String prop) {
     if (map != null && map.hasKey("android")) {
       ReadableMap config = map.getMap("android");
