@@ -19,9 +19,10 @@ import { start as sv } from '../OkVerify';
 import type { OkVerifyStartConfiguration } from '../OkVerify/types';
 import {
   getApplicationConfiguration,
+  LocationPermissionStatus,
   retriveLocationPermissionStatus,
 } from '../OkCore';
-import type { LocationPermissionStatus } from '../../lib/typescript';
+
 /**
  * The OkHiLocationManager React Component is used to display an in app modal, enabling the user to quickly create an accurate OkHi address.
  */
