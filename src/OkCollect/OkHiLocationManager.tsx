@@ -17,11 +17,17 @@ import { OkHiAuth } from '../OkCore/OkHiAuth';
 import type { AuthApplicationConfig } from '../OkCore/_types';
 import { start as sv } from '../OkVerify';
 import type { OkVerifyStartConfiguration } from '../OkVerify/types';
-import { getApplicationConfiguration } from '../OkCore';
+import {
+  getApplicationConfiguration,
+  retriveLocationPermissionStatus,
+} from '../OkCore';
+import type { LocationPermissionStatus } from '../../lib/typescript';
 /**
  * The OkHiLocationManager React Component is used to display an in app modal, enabling the user to quickly create an accurate OkHi address.
  */
 export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
+  const [locationPermissionStatus, setLocationPermissionStatus] =
+    useState<null | LocationPermissionStatus>(null);
   const [token, setToken] = useState<string | null>(null);
   const [applicationConfiguration, setApplicationConfiguration] =
     useState<AuthApplicationConfig | null>(null);
@@ -125,14 +131,29 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     );
   };
 
+  const fetchLocationPermissionStatus = async () => {
+    const status = await retriveLocationPermissionStatus();
+    setLocationPermissionStatus(status);
+  };
+
   const renderContent = () => {
     if (token === null || applicationConfiguration == null) {
       return loader || <Spinner />;
     }
 
+    if (Platform.OS === 'ios' && locationPermissionStatus === null) {
+      fetchLocationPermissionStatus();
+      return loader || <Spinner />;
+    }
+
     const { jsAfterLoad, jsBeforeLoad } = generateJavaScriptStartScript({
       message: 'select_location',
-      payload: generateStartDataPayload(props, token, applicationConfiguration),
+      payload: generateStartDataPayload(
+        props,
+        token,
+        applicationConfiguration,
+        locationPermissionStatus
+      ),
     });
 
     return (
