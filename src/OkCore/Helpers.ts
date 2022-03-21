@@ -160,6 +160,7 @@ export const request = (
     title: string;
     text: string;
     successButton?: { label: string };
+    denyButton?: { label: string };
   } | null,
   callback: LocationPermissionCallback
 ) => {
@@ -192,7 +193,8 @@ export const request = (
   const handleRationaleAlert = (alertRationale: {
     title: string;
     text: string;
-    successButton?: { label: string };
+    grantButton?: { label: string };
+    denyButton?: { label: string };
   }) => {
     return new Promise((resolve, _) => {
       Alert.alert(
@@ -200,12 +202,21 @@ export const request = (
         alertRationale.text,
         [
           {
-            text: alertRationale.successButton
-              ? alertRationale.successButton.label
-              : 'Okay',
+            text: alertRationale.grantButton
+              ? alertRationale.grantButton.label
+              : 'Grant',
             onPress: () => {
               resolve(true);
             },
+          },
+          {
+            text: alertRationale.denyButton
+              ? alertRationale.denyButton.label
+              : 'Deny',
+            onPress: () => {
+              resolve(false);
+            },
+            style: 'cancel',
           },
         ],
         {
@@ -222,7 +233,9 @@ export const request = (
       OkHiNativeEvents.removeAllListeners('onLocationPermissionStatusUpdate');
       OkHiNativeEvents.addListener(
         'onLocationPermissionStatusUpdate',
-        callback
+        (permissionUpdate) => {
+          callback(permissionUpdate, null);
+        }
       );
       if (locationPermissionType === 'whenInUse') {
         OkHiNativeModule.requestLocationPermission();
