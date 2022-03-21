@@ -186,10 +186,12 @@ export type LocationPermissionStatus =
   | 'authorizedAlways'
   | 'authorizedWhenInUse'
   | 'authorized'
+  | 'rationaleDissmissed'
   | 'unknown';
 
 export type LocationRequestPermissionType = 'whenInUse' | 'always';
 
 export type LocationPermissionCallback = (
-  status: LocationPermissionStatus
+  status: LocationPermissionStatus | null,
+  error: OkHiError | null
 ) => any;
