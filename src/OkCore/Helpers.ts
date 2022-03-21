@@ -6,6 +6,7 @@ import type {
   LocationPermissionStatus,
   LocationRequestPermissionType,
 } from './types';
+import { OkHiException } from './OkHiException';
 
 /**
  * Checks whether location services are enabled
@@ -162,56 +163,126 @@ export const request = (
   } | null,
   callback: LocationPermissionCallback
 ) => {
-  if (Platform.OS === 'ios') {
-    OkHiNativeEvents.removeAllListeners('onLocationPermissionStatusUpdate');
-    OkHiNativeEvents.addListener('onLocationPermissionStatusUpdate', callback);
-    if (locationPermissionType === 'whenInUse') {
-      OkHiNativeModule.requestLocationPermission();
-    } else {
-      OkHiNativeModule.requestBackgroundLocationPermission();
-    }
-  } else {
-    if (locationPermissionType === 'whenInUse') {
-      requestLocationPermissionAndroid().then((result) =>
-        callback(result ? 'authorizedWhenInUse' : 'denied')
-      );
-    } else {
-      requestLocationPermissionAndroid().then(async (whenInUseResult) => {
-        if (whenInUseResult) {
-          const version = await getSystemVersion();
-          if (version >= 30 && rationale) {
-            Alert.alert(
-              rationale.title,
-              rationale.text,
-              [
-                {
-                  text: rationale.successButton
-                    ? rationale.successButton.label
-                    : 'Okay',
-                  onPress: async () => {
-                    const result = await requestBackgroundLocationPermission();
-                    callback(
-                      result ? 'authorizedAlways' : 'authorizedWhenInUse'
-                    );
-                  },
-                },
-              ],
-              {
-                onDismiss: () => {
-                  callback('authorizedWhenInUse');
-                },
-              }
-            );
-          } else {
-            const permission = await requestBackgroundLocationPermission();
-            callback(permission ? 'authorizedAlways' : 'authorizedWhenInUse');
-          }
-        } else {
-          callback('denied');
+  const serviceError = new OkHiException({
+    code: OkHiException.SERVICE_UNAVAILABLE_CODE,
+    message:
+      'Location service is currently not available. Please enable in app settings',
+  });
+
+  const googlePlayError = new OkHiException({
+    code: OkHiException.SERVICE_UNAVAILABLE_CODE,
+    message:
+      'Google Play Services is currently unavailable. Please enable in settings',
+  });
+
+  const handleError = (error: OkHiException) => {
+    callback(null, error);
+  };
+
+  const handleGooglePlayServiceRequest = () => {
+    requestEnableGooglePlayServices().then((googlePlayStatus) => {
+      if (!googlePlayStatus) {
+        handleError(googlePlayError);
+      } else {
+        handleRationaleRequest();
+      }
+    });
+  };
+
+  const handleRationaleAlert = (alertRationale: {
+    title: string;
+    text: string;
+    successButton?: { label: string };
+  }) => {
+    return new Promise((resolve, _) => {
+      Alert.alert(
+        alertRationale.title,
+        alertRationale.text,
+        [
+          {
+            text: alertRationale.successButton
+              ? alertRationale.successButton.label
+              : 'Okay',
+            onPress: () => {
+              resolve(true);
+            },
+          },
+        ],
+        {
+          onDismiss: () => {
+            resolve(false);
+          },
         }
-      });
+      );
+    });
+  };
+
+  const handlePermissionRequest = () => {
+    if (Platform.OS === 'ios') {
+      OkHiNativeEvents.removeAllListeners('onLocationPermissionStatusUpdate');
+      OkHiNativeEvents.addListener(
+        'onLocationPermissionStatusUpdate',
+        callback
+      );
+      if (locationPermissionType === 'whenInUse') {
+        OkHiNativeModule.requestLocationPermission();
+      } else {
+        OkHiNativeModule.requestBackgroundLocationPermission();
+      }
+    } else {
+      if (locationPermissionType === 'whenInUse') {
+        requestLocationPermissionAndroid().then((whenInUseResult) =>
+          callback(whenInUseResult ? 'authorizedWhenInUse' : 'denied', null)
+        );
+      } else {
+        requestLocationPermissionAndroid().then((initialWhenInUseResult) => {
+          if (!initialWhenInUseResult) {
+            callback('denied', null);
+          } else {
+            requestBackgroundLocationPermission().then((alwaysResult) => {
+              callback(alwaysResult ? 'authorized' : 'denied', null);
+            });
+          }
+        });
+      }
     }
-  }
+  };
+  const handleRationaleRequest = async () => {
+    if (rationale) {
+      const result = await handleRationaleAlert(rationale);
+      if (!result) {
+        callback('rationaleDissmissed', null);
+      } else {
+        handlePermissionRequest();
+      }
+    } else {
+      handlePermissionRequest();
+    }
+  };
+
+  isLocationServicesEnabled()
+    .then((serviceStatus) => {
+      if (!serviceStatus && Platform.OS === 'ios') {
+        handleError(serviceError);
+      } else if (!serviceStatus && Platform.OS === 'android') {
+        requestEnableLocationServices()
+          .then((enableResult) => {
+            if (!enableResult) {
+              handleError(serviceError);
+            } else {
+              handleGooglePlayServiceRequest();
+            }
+          })
+          .catch(handleError);
+      } else {
+        if (Platform.OS === 'ios') {
+          handleRationaleRequest();
+        } else {
+          handleGooglePlayServiceRequest();
+        }
+      }
+    })
+    .catch(handleError);
 };
 
 export const openAppSettings = () => {
