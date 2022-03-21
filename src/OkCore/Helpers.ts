@@ -253,7 +253,7 @@ export const request = (
             callback('denied', null);
           } else {
             requestBackgroundLocationPermission().then((alwaysResult) => {
-              callback(alwaysResult ? 'authorized' : 'denied', null);
+              callback(alwaysResult ? 'authorizedAlways' : 'denied', null);
             });
           }
         });
