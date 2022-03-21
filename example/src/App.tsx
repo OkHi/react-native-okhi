@@ -89,10 +89,12 @@ const App = () => {
             {
               title: 'Location Permission',
               text: 'Please grant',
-              successButton: { label: 'GRANT' },
+              successButton: { label: 'Grant' },
+              denyButton: { label: 'Deny' },
             },
-            (status) => {
+            (status, error) => {
               console.log(status);
+              console.log(error);
             }
           );
         }}
