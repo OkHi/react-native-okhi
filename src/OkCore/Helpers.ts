@@ -252,8 +252,12 @@ export const request = (
           if (!initialWhenInUseResult) {
             callback('denied', null);
           } else {
+            callback('authorizedWhenInUse', null);
             requestBackgroundLocationPermission().then((alwaysResult) => {
-              callback(alwaysResult ? 'authorizedAlways' : 'denied', null);
+              callback(
+                alwaysResult ? 'authorizedAlways' : 'authorizedWhenInUse',
+                null
+              );
             });
           }
         });
