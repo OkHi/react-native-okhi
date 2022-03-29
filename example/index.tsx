@@ -9,7 +9,7 @@ OkHi.initialize({
     clientKey: '',
   },
   context: {
-    mode: 'dev' as any,
+    mode: 'sandbox',
   },
   notification: {
     title: 'Address verification in progress',

@@ -1,40 +1,46 @@
-import OkCore
-import OkVerify
 import UIKit
+import OkHi
 import CoreLocation
 
 @objc(Okhi)
-class Okhi: NSObject {
+class Okhi: RCTEventEmitter {
     private enum LocationPermissionRequestType: String {
         case whenInUse = "whenInUse"
         case always = "always"
     }
-    private var locationPermissionRequestType: LocationPermissionRequestType = .always
-    private let okhiLocationService = OkHiLocationService()
+    private var currentLocationPermissionRequestType: LocationPermissionRequestType = .always
     private var resolve: RCTPromiseResolveBlock?
     private var reject: RCTPromiseRejectBlock?
-    private var okVerify:OkHiVerify?
+    private var initResolve: RCTPromiseResolveBlock?
+    private var initReject: RCTPromiseRejectBlock?
+    private var okVerify: OkVerify
     
-    @objc static func requiresMainQueueSetup() -> Bool {
+    
+    override init() {
+        okVerify = OkVerify()
+        super.init()
+        okVerify.delegate = self
+    }
+    
+    override static func requiresMainQueueSetup() -> Bool {
         return false
     }
-
+    
     @objc(multiply:withB:withResolver:withRejecter:)
     func multiply(a: Float, b: Float, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
         resolve(a*b)
     }
     
     @objc func isLocationServicesEnabled(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
-        resolve(okhiLocationService.isLocationServicesAvailable())
+        resolve(okVerify.isLocationServicesEnabled())
     }
     
     @objc func isLocationPermissionGranted(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
-        resolve(okhiLocationService.isLocationPermissionGranted())
+        resolve(okVerify.isLocationPermissionGranted())
     }
     
     @objc func isBackgroundLocationPermissionGranted(_ resolve: RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
-        //        resolve(okhiLocationService.isBackgroundLocationPermissionGranted()) // TODO: use once implemented
-        resolve(_isBackgroundLocationPermissionGranted())
+        resolve(okVerify.isBackgroundLocationPermissionGranted())
     }
     
     @objc func getSystemVersion(_ resolve: RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
@@ -42,29 +48,26 @@ class Okhi: NSObject {
     }
     
     @objc func requestLocationPermission(_ resolve:@escaping RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
-        if okhiLocationService.isLocationPermissionGranted() {
-            resolve(true)
-            return
-        }
-        okhiLocationService.delegate = self
         self.resolve = resolve
-        locationPermissionRequestType = .whenInUse
-        okhiLocationService.requestLocationPermission(withBackgroundLocationPermission: false)
+        currentLocationPermissionRequestType = .whenInUse
+        okVerify.requestLocationPermission()
     }
     
     @objc func requestBackgroundLocationPermission(_ resolve:@escaping RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
-        if _isBackgroundLocationPermissionGranted() {
-            resolve(true)
-            return
-        }
-        okhiLocationService.delegate = self
         self.resolve = resolve
-        locationPermissionRequestType = .always
-        okhiLocationService.requestLocationPermission(withBackgroundLocationPermission: true)
+        currentLocationPermissionRequestType = .always
+        okVerify.requestBackgroundLocationPermission()
     }
     
     @objc func requestEnableLocationServices(_ resolve: RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
-        UIApplication.shared.open(URL(string:UIApplication.openSettingsURLString)!)
+        if let url = URL.init(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
+        resolve(NSNull())
+    }
+    
+    @objc func openAppSettings(_ resolve: RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+        OkVerify.openAppSettings()
         resolve(NSNull())
     }
     
@@ -72,100 +75,113 @@ class Okhi: NSObject {
         resolve("Token " + "\(branchId):\(clientKey)".toBase64())
     }
     
-    @objc func initialize(_ configuration: String, resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
-        if let data = configuration.data(using: .utf8) {
-            if let config = try? JSONDecoder().decode(RNOkHiConfiguration.self, from: data) {
-                var context = OkHiAppContext()
-                if let appName = config.app?.name, let appVersion = config.app?.version, let appBuild = config.app?.build {
-                    context = OkHiAppContext().withAppMeta(name: appName, version: appVersion, build: appBuild)
-                }
-                if config.context.mode == "dev" {
-                    let auth = OkHiAuth(
-                        branchId: config.credentials.branchId,
-                        clientKey: config.credentials.clientKey,
-                        environment: "https://dev-api.okhi.io",
-                        appContext:context
-                    )
-                    OkHiVerify.initialize(with: auth)
-                    resolve(true)
-                } else {
-                    let auth = OkHiAuth(
-                        branchId: config.credentials.branchId,
-                        clientKey: config.credentials.clientKey,
-                        environment: config.context.mode == "prod" ? .prod : .sandbox,
-                        appContext:context
-                    )
-                    OkHiVerify.initialize(with: auth)
-                    resolve(true)
-                }
-            } else {
-                reject("unauthorized", "unable to decode init configuration", nil)
-            }
-        } else {
-            reject("unauthorized", "unable to decode init data configuration", nil)
-        }
+    @objc func initializeIOS(_ branchId: String, clientKey: String, environment: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        self.initResolve = resolve
+        self.initReject = reject
+        okVerify.initialize(with: branchId, clientKey: clientKey, environment: environment)
     }
     
     @objc func startAddressVerification(_ phoneNumber: String, locationId: String, lat: Double, lon: Double, resolve:@escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        let user = OkHiUser(phoneNumber: phoneNumber)
-        let location = OkHiLocation(identifier: locationId, lat: lat, lon: lon)
         self.resolve = resolve
         self.reject = reject
-        okVerify = OkHiVerify(user: user)
-        okVerify?.delegate = self
-        okVerify?.start(location: location)
+        okVerify.startAddressVerification(phoneNumber: phoneNumber, locationId: locationId, lat: lat, lon: lon)
     }
     
     @objc func stopAddressVerification(_ phoneNumber: String, locationId: String, resolve:@escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        let user = OkHiUser(phoneNumber: phoneNumber)
-        okVerify = OkHiVerify(user: user)
-        okVerify?.delegate = self
-        okVerify?.stop(locationId: locationId)
-        resolve(locationId)
+        self.resolve = resolve
+        self.reject = reject
+        okVerify.stopAddressVerification(locationId: locationId)
     }
     
-    private func _isBackgroundLocationPermissionGranted() -> Bool {
-        if okhiLocationService.isLocationServicesAvailable() {
-            return CLLocationManager.authorizationStatus() == .authorizedAlways
+    @objc func retriveLocationPermissionStatus(_ resolve: RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+        let manager = CLLocationManager()
+        let status = fetchLocationPermissionStatus(status: getLocationAuthorizationStatus(manager: manager))
+        resolve(status)
+    }
+    
+    override func supportedEvents() -> [String]! {
+        return ["onLocationPermissionStatusUpdate"]
+    }
+    
+    private func fetchLocationPermissionStatus(status: CLAuthorizationStatus) -> String {
+        var str: String = ""
+        switch status {
+        case .notDetermined:
+            str = "notDetermined"
+        case .restricted:
+            str = "restricted"
+        case .denied:
+            str = "denied"
+        case .authorizedAlways:
+            str = "authorizedAlways"
+        case .authorizedWhenInUse:
+            str = "authorizedWhenInUse"
+        case .authorized:
+            str = "authorized"
+        @unknown default:
+            str = "unknown"
+        }
+        return str
+    }
+}
+
+// MARK: - OkHi Utils
+extension Okhi {
+    func getLocationAuthorizationStatus(manager: CLLocationManager) -> CLAuthorizationStatus {
+        if #available(iOS 14.0, *) {
+            return manager.authorizationStatus
         } else {
-            return false
+            return CLLocationManager.authorizationStatus()
         }
     }
 }
 
-// MARK: - OkHiLocationService Delegate
-extension Okhi: OkHiLocationServiceDelegate {
-    func okHiLocationService(locationService: OkHiLocationService, didChangeLocationPermissionStatus locationPermissionType: LocationPermissionType, result: Bool) {
-        guard let resolve = resolve else { return }
-        if locationPermissionRequestType == .whenInUse {
-            if locationPermissionType == .whenInUse {
-                resolve(result)
-            }
-        } else if locationPermissionRequestType == .always {
-            if locationPermissionType == .always {
-                resolve(result)
-            }
-        }
-    }
-}
-
-// MARK: - OkVerify Delegate
+// MARK: - OkVerify Delegates
 extension Okhi: OkVerifyDelegate {
-    func verify(_ okVerify: OkHiVerify, didEncounterError error: OkHiError) {
-        guard let rej = reject else { return }
-        rej(error.code, error.message, nil)
-        reject = nil
+    func verify(_ okverify: OkVerify, didUpdateLocationPermissionStatus status: CLAuthorizationStatus) {
+        sendEvent(withName: "onLocationPermissionStatusUpdate", body: fetchLocationPermissionStatus(status: status))
     }
     
-    func verify(_ okVerify: OkHiVerify, didStart locationId: String) {
-        guard let res = resolve else { return }
-        res(locationId)
-        resolve = nil
+    func verify(_ okverify: OkVerify, didChangeLocationPermissionStatus requestType: OkVerifyLocationPermissionRequestType, status: Bool) {
+        if let resolve = self.resolve {
+            if currentLocationPermissionRequestType == .whenInUse && requestType == .whenInUse {
+                resolve(status)
+            } else if currentLocationPermissionRequestType == .always && requestType == .always {
+                resolve(status)
+            } else {
+                resolve(false)
+            }
+        }
     }
-    
-    func verify(_ okVerify: OkHiVerify, didEnd locationId: String) {
-        guard let res = resolve else { return }
-        res(locationId)
-        resolve = nil
+
+    func verify(_ okverify: OkVerify, didInitialize result: Bool) {
+        guard let resolve = initResolve else { return }
+        resolve(result)
+        self.initResolve = nil
+        self.initReject = nil
+    }
+
+    func verify(_ okverify: OkVerify, didEncounterError error: OkVerifyError) {
+        if let initReject = initReject {
+            initReject(error.code, error.message, error)
+            self.initResolve = nil
+            self.initReject = nil
+        } else {
+            guard let reject = reject else { return }
+            reject(error.code, error.message, error)
+            self.reject = nil
+        }
+    }
+
+    func verify(_ okverify: OkVerify, didStartAddressVerificationFor locationId: String) {
+        guard let resolve = resolve else { return }
+        resolve(locationId)
+        self.resolve = nil
+    }
+
+    func verify(_ okverify: OkVerify, didStopVerificationFor locationId: String) {
+        guard let resolve = resolve else { return }
+        resolve(locationId)
+        self.resolve = nil
     }
 }

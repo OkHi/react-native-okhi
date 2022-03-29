@@ -7,6 +7,7 @@ import {
   requestEnableGooglePlayServices,
   requestEnableLocationServices,
   requestLocationPermission,
+  isLocationPermissionGranted,
 } from '../OkCore/Helpers';
 import { errorHandler, isValidPlatform } from '../OkCore/_helpers';
 import { OkHiNativeModule } from '../OkHiNativeModule';
@@ -154,35 +155,89 @@ export const canStartVerification = (configuration?: {
       Platform.OS === 'android' ? await isGooglePlayServicesAvailable() : true;
     const backgroundLocationPerm =
       await isBackgroundLocationPermissionGranted();
+    const whenInUseLocationPerm = await isLocationPermissionGranted();
     if (!requestServices) {
       resolve(
         locationServicesStatus && googlePlayServices && backgroundLocationPerm
       );
       return;
     }
-    if (!locationServicesStatus && Platform.OS === 'ios') {
+    if (Platform.OS === 'ios') {
+      if (!locationServicesStatus) {
+        reject(
+          new OkHiException({
+            code: OkHiException.SERVICE_UNAVAILABLE_CODE,
+            message: 'Location services is unavailable',
+          })
+        );
+        return;
+      }
+      if (backgroundLocationPerm) {
+        resolve(true);
+        return;
+      }
+      if (whenInUseLocationPerm && !backgroundLocationPerm) {
+        resolve(false);
+        return;
+      }
+      const iosPerm = await requestBackgroundLocationPermission();
+      resolve(iosPerm);
+      return;
+    } else if (Platform.OS === 'android') {
+      const locationServicesRequestStatus =
+        (await requestEnableLocationServices()) as boolean;
+      const gPlayServices = await requestEnableGooglePlayServices();
+      const androidPerm =
+        (await requestLocationPermission()) &&
+        (await requestBackgroundLocationPermission());
+      resolve(locationServicesRequestStatus && gPlayServices && androidPerm);
+    } else {
       reject(
         new OkHiException({
-          code: OkHiException.SERVICE_UNAVAILABLE_CODE,
-          message: 'Location services is unavailable',
+          code: OkHiException.UNSUPPORTED_PLATFORM_CODE,
+          message: OkHiException.UNSUPPORTED_PLATFORM_MESSAGE,
         })
       );
-    } else {
-      const locationServicesRequestStatus =
-        Platform.OS === 'ios'
-          ? true
-          : ((await requestEnableLocationServices()) as boolean);
-      const gPlayServices =
-        Platform.OS === 'ios' ? true : await requestEnableGooglePlayServices();
-      let perm = false;
-      if (Platform.OS === 'ios') {
-        perm = await requestBackgroundLocationPermission();
-      } else {
-        perm =
-          (await requestLocationPermission()) &&
-          (await requestBackgroundLocationPermission());
-      }
-      resolve(locationServicesRequestStatus && gPlayServices && perm);
     }
+  });
+};
+
+/**
+ * Checks whether all necessary permissions and services are available in order to start the address verification process
+ * @returns {Promise<boolean>} A promise that resolves to a boolean value indicating whether or not all conditions are met to start the address verification process
+ */
+export const checkVerificationStartRequirements = (): Promise<boolean> => {
+  return new Promise(async (resolve, reject) => {
+    if (Platform.OS === 'android') {
+      const isPlayServicesAvailable = await isGooglePlayServicesAvailable();
+      if (!isPlayServicesAvailable) {
+        reject(
+          new OkHiException({
+            code: OkHiException.PLAY_SERVICES_UNAVAILABLE_CODE,
+            message: 'Google Play Services is unavailable',
+          })
+        );
+        return;
+      }
+    }
+    if (!(await isLocationServicesEnabled())) {
+      reject(
+        new OkHiException({
+          code: OkHiException.LOCATION_SERVICES_UNAVAILABLE_CODE,
+          message: 'Location services unavailable',
+        })
+      );
+      return;
+    }
+    if (!(await isBackgroundLocationPermissionGranted())) {
+      reject(
+        new OkHiException({
+          code: OkHiException.PERMISSION_DENIED_CODE,
+          message: 'Background Location permission not granted',
+        })
+      );
+      return;
+    }
+    resolve(true);
   });
 };

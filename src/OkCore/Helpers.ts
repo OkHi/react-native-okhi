@@ -1,6 +1,12 @@
-import { OkHiNativeModule } from '../OkHiNativeModule';
-import { PermissionsAndroid, Platform } from 'react-native';
+import { OkHiNativeModule, OkHiNativeEvents } from '../OkHiNativeModule';
+import { Alert, PermissionsAndroid, Platform } from 'react-native';
 import { errorHandler, isValidPlatform } from './_helpers';
+import type {
+  LocationPermissionCallback,
+  LocationPermissionStatus,
+  LocationRequestPermissionType,
+} from './types';
+import { OkHiException } from './OkHiException';
 
 /**
  * Checks whether location services are enabled
@@ -147,3 +153,184 @@ export const requestEnableGooglePlayServices = (): Promise<boolean> => {
  */
 export const getSystemVersion = (): Promise<string | number> =>
   isValidPlatform(OkHiNativeModule.getSystemVersion);
+
+export const request = (
+  locationPermissionType: LocationRequestPermissionType,
+  rationale: {
+    title: string;
+    text: string;
+    successButton?: { label: string };
+    denyButton?: { label: string };
+  } | null,
+  callback: LocationPermissionCallback
+) => {
+  const serviceError = new OkHiException({
+    code: OkHiException.SERVICE_UNAVAILABLE_CODE,
+    message:
+      'Location service is currently not available. Please enable in app settings',
+  });
+
+  const googlePlayError = new OkHiException({
+    code: OkHiException.SERVICE_UNAVAILABLE_CODE,
+    message:
+      'Google Play Services is currently unavailable. Please enable in settings',
+  });
+
+  const handleError = (error: OkHiException) => {
+    callback(null, error);
+  };
+
+  const handleGooglePlayServiceRequest = () => {
+    requestEnableGooglePlayServices().then((googlePlayStatus) => {
+      if (!googlePlayStatus) {
+        handleError(googlePlayError);
+      } else {
+        handleRationaleRequest();
+      }
+    });
+  };
+
+  const handleRationaleAlert = (alertRationale: {
+    title: string;
+    text: string;
+    grantButton?: { label: string };
+    denyButton?: { label: string };
+  }) => {
+    return new Promise((resolve, _) => {
+      Alert.alert(
+        alertRationale.title,
+        alertRationale.text,
+        [
+          {
+            text: alertRationale.grantButton
+              ? alertRationale.grantButton.label
+              : 'Grant',
+            onPress: () => {
+              resolve(true);
+            },
+          },
+          {
+            text: alertRationale.denyButton
+              ? alertRationale.denyButton.label
+              : 'Deny',
+            onPress: () => {
+              resolve(false);
+            },
+            style: 'cancel',
+          },
+        ],
+        {
+          onDismiss: () => {
+            resolve(false);
+          },
+        }
+      );
+    });
+  };
+
+  const handlePermissionRequest = () => {
+    if (Platform.OS === 'ios') {
+      OkHiNativeEvents.removeAllListeners('onLocationPermissionStatusUpdate');
+      OkHiNativeEvents.addListener(
+        'onLocationPermissionStatusUpdate',
+        (permissionUpdate) => {
+          callback(permissionUpdate, null);
+        }
+      );
+      if (locationPermissionType === 'whenInUse') {
+        OkHiNativeModule.requestLocationPermission();
+      } else {
+        OkHiNativeModule.requestBackgroundLocationPermission();
+      }
+    } else {
+      if (locationPermissionType === 'whenInUse') {
+        requestLocationPermissionAndroid().then((whenInUseResult) =>
+          callback(whenInUseResult ? 'authorizedWhenInUse' : 'denied', null)
+        );
+      } else {
+        requestLocationPermissionAndroid().then((initialWhenInUseResult) => {
+          if (!initialWhenInUseResult) {
+            callback('denied', null);
+          } else {
+            callback('authorizedWhenInUse', null);
+            requestBackgroundLocationPermission().then((alwaysResult) => {
+              callback(
+                alwaysResult ? 'authorizedAlways' : 'authorizedWhenInUse',
+                null
+              );
+            });
+          }
+        });
+      }
+    }
+  };
+
+  const handleRationaleRequest = async () => {
+    const currentStatus = await retriveLocationPermissionStatus();
+    let showRationale = true;
+    if (
+      locationPermissionType === 'whenInUse' &&
+      (currentStatus === 'authorizedWhenInUse' ||
+        currentStatus === 'authorizedAlways')
+    ) {
+      showRationale = false;
+    }
+    if (
+      locationPermissionType === 'always' &&
+      currentStatus === 'authorizedAlways'
+    ) {
+      showRationale = false;
+    }
+    if (rationale && showRationale) {
+      const result = await handleRationaleAlert(rationale);
+      if (!result) {
+        callback('rationaleDissmissed', null);
+      } else {
+        handlePermissionRequest();
+      }
+    } else {
+      handlePermissionRequest();
+    }
+  };
+
+  isLocationServicesEnabled()
+    .then((serviceStatus) => {
+      if (!serviceStatus && Platform.OS === 'ios') {
+        handleError(serviceError);
+      } else if (!serviceStatus && Platform.OS === 'android') {
+        requestEnableLocationServices()
+          .then((enableResult) => {
+            if (!enableResult) {
+              handleError(serviceError);
+            } else {
+              handleGooglePlayServiceRequest();
+            }
+          })
+          .catch(handleError);
+      } else {
+        if (Platform.OS === 'ios') {
+          handleRationaleRequest();
+        } else {
+          handleGooglePlayServiceRequest();
+        }
+      }
+    })
+    .catch(handleError);
+};
+
+export const openAppSettings = () => {
+  OkHiNativeModule.openAppSettings();
+};
+
+export const retriveLocationPermissionStatus =
+  async (): Promise<LocationPermissionStatus> => {
+    if (Platform.OS === 'ios') {
+      return OkHiNativeModule.retriveLocationPermissionStatus() as Promise<LocationPermissionStatus>;
+    }
+    const alwaysPerm = await isBackgroundLocationPermissionGranted();
+    if (alwaysPerm) {
+      return 'authorizedAlways';
+    }
+    const whenInUsePerm = await isLocationPermissionGranted();
+    return whenInUsePerm ? 'authorizedWhenInUse' : 'denied';
+  };

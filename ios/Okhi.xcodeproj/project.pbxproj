@@ -59,7 +59,6 @@
 				9AC598260B86BDE618FEDC44 /* Pods-Okhi.debug.xcconfig */,
 				D065C9FE4594C7F1A2C82304 /* Pods-Okhi.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

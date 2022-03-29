@@ -7,11 +7,11 @@ export function isValidPlatform<T>(
   fn: () => Promise<T>,
   platform?: PlatformOSType
 ) {
-  const callingFunc = arguments.callee.caller.name;
+  const callingFunc = arguments?.callee?.caller?.name || 'function';
   return new Promise<T>((resolve, reject) => {
     const error = new OkHiException({
       code: OkHiException.UNSUPPORTED_PLATFORM_CODE,
-      message: callingFunc + ' is not supported in the current platform',
+      message: callingFunc + ' is not supported in ' + Platform.OS,
     });
     if (platform && Platform.OS !== platform) {
       reject(error);

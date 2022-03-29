@@ -20,6 +20,9 @@ import {
   stopForegroundService,
   canStartVerification,
   canStartAddressCreation,
+  request,
+  openAppSettings,
+  retriveLocationPermissionStatus,
 } from 'react-native-okhi';
 
 const USER: OkHiUser = {
@@ -32,6 +35,7 @@ const App = () => {
   const [launch, setLaunch] = useState(false);
   const [locationId, setLocationId] = useState<string | null>(null);
   const handleOnSuccess = (response: OkCollectSuccessResponse) => {
+    console.log(response);
     response.startVerification().then(console.log).catch(console.error);
     if (response.location.id) {
       setLocationId(response.location.id);
@@ -78,6 +82,24 @@ const App = () => {
         }}
       />
       <Button
+        title="request me"
+        onPress={() => {
+          request(
+            'always',
+            {
+              title: 'Location Permission',
+              text: 'Please grant',
+              successButton: { label: 'Grant' },
+              denyButton: { label: 'Deny' },
+            },
+            (status, error) => {
+              console.log(status);
+              console.log(error);
+            }
+          );
+        }}
+      />
+      <Button
         title="request background location permission"
         onPress={() => {
           requestBackgroundLocationPermission()
@@ -89,6 +111,15 @@ const App = () => {
         title="google play services check"
         onPress={() => {
           isGooglePlayServicesAvailable().then(console.log).catch(console.log);
+        }}
+      />
+      <Button
+        title="request status"
+        onPress={() => {
+          retriveLocationPermissionStatus()
+            .then(console.log)
+            .catch(console.log);
+          // isGooglePlayServicesAvailable().then(console.log).catch(console.log);
         }}
       />
       <Button
@@ -121,6 +152,7 @@ const App = () => {
           getSystemVersion().then(console.log).catch(console.log);
         }}
       />
+      <Button title="open app settings" onPress={openAppSettings} />
       <Button title="Create Address" onPress={() => setLaunch(true)} />
       <Button
         title="Stop Verification"
@@ -135,17 +167,19 @@ const App = () => {
       <Button
         title="Start Foreground Service"
         onPress={() =>
-          startForegroundService().then((result) =>
-            console.log(`start foreground service: ${result}`)
-          )
+          startForegroundService()
+            .then((result) =>
+              console.log(`start foreground service: ${result}`)
+            )
+            .catch(console.log)
         }
       />
       <Button
         title="Stop Foreground Service"
         onPress={() =>
-          stopForegroundService().then((result) =>
-            console.log(`stop foreground service: ${result}`)
-          )
+          stopForegroundService()
+            .then((result) => console.log(`stop foreground service: ${result}`))
+            .catch(console.log)
         }
       />
       <OkHiLocationManager

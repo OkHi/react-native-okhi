@@ -1,5 +1,5 @@
 import type { OkHiLocationManagerProps } from './types';
-import type { OkHiLocation } from '../OkCore';
+import type { LocationPermissionStatus, OkHiLocation } from '../OkCore';
 import { OkHiMode } from '../OkCore';
 import type {
   OkHiLocationManagerStartDataPayload,
@@ -7,6 +7,7 @@ import type {
 } from './types';
 import manifest from './app.json'; //TODO: fix this
 import type { AuthApplicationConfig } from '../OkCore/_types';
+import { Platform } from 'react-native';
 
 /**
  * @ignore
@@ -14,7 +15,8 @@ import type { AuthApplicationConfig } from '../OkCore/_types';
 export const generateStartDataPayload = (
   props: OkHiLocationManagerProps,
   authToken: string,
-  applicationConfiguration: AuthApplicationConfig
+  applicationConfiguration: AuthApplicationConfig,
+  locationPermissionStatus: LocationPermissionStatus | null
 ): OkHiLocationManagerStartDataPayload => {
   const payload: any = {};
   payload.style = !props.theme
@@ -60,6 +62,11 @@ export const generateStartDataPayload = (
       visible: props.config?.appBar?.visible,
     },
   };
+  if (Platform.OS === 'ios' && locationPermissionStatus) {
+    payload.context.permissions = {
+      location: locationPermissionStatus,
+    };
+  }
   return payload;
 };
 

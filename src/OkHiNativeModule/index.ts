@@ -1,4 +1,4 @@
-import { NativeModules } from 'react-native';
+import { NativeModules, NativeEventEmitter } from 'react-native';
 import type { OkVerifyStartConfiguration } from '../OkVerify/types';
 
 type OkHiNativeModuleType = {
@@ -28,6 +28,17 @@ type OkHiNativeModuleType = {
   startForegroundService(): Promise<boolean>;
   stopForegroundService(): Promise<boolean>;
   isForegroundServiceRunning(): Promise<boolean>;
+  initializeIOS(
+    branchId: string,
+    clientKey: string,
+    environment: string
+  ): Promise<boolean>;
+  openAppSettings(): Promise<void>;
+  retriveLocationPermissionStatus(): Promise<string>;
 };
 
 export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi;
+
+export const OkHiNativeEvents = new NativeEventEmitter(NativeModules.Okhi);
+
+OkHiNativeEvents.addListener('onLocationPermissionStatusUpdate', () => null);

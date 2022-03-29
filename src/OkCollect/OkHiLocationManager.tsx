@@ -17,11 +17,18 @@ import { OkHiAuth } from '../OkCore/OkHiAuth';
 import type { AuthApplicationConfig } from '../OkCore/_types';
 import { start as sv } from '../OkVerify';
 import type { OkVerifyStartConfiguration } from '../OkVerify/types';
-import { getApplicationConfiguration } from '../OkCore';
+import {
+  getApplicationConfiguration,
+  LocationPermissionStatus,
+  retriveLocationPermissionStatus,
+} from '../OkCore';
+
 /**
  * The OkHiLocationManager React Component is used to display an in app modal, enabling the user to quickly create an accurate OkHi address.
  */
 export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
+  const [locationPermissionStatus, setLocationPermissionStatus] =
+    useState<null | LocationPermissionStatus>(null);
   const [token, setToken] = useState<string | null>(null);
   const [applicationConfiguration, setApplicationConfiguration] =
     useState<AuthApplicationConfig | null>(null);
@@ -33,17 +40,32 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
   const { user, onSuccess, onCloseRequest, onError, loader, launch } = props;
 
   useEffect(() => {
-    if (user.phone) {
-      const auth = new OkHiAuth();
-      auth
-        .anonymousSignInWithPhoneNumber(user.phone, ['address'])
-        .then(setToken)
-        .catch(onError);
+    if (applicationConfiguration == null && token == null && user.phone) {
       getApplicationConfiguration()
-        .then(setApplicationConfiguration)
-        .catch(onError);
+        .then((config) => {
+          if (!config && launch) {
+            onError(
+              new OkHiException({
+                code: OkHiException.UNAUTHORIZED_CODE,
+                message: OkHiException.UNAUTHORIZED_MESSAGE,
+              })
+            );
+          } else if (config) {
+            setApplicationConfiguration(config);
+            const auth = new OkHiAuth();
+            auth
+              .anonymousSignInWithPhoneNumber(user.phone, ['address'], config)
+              .then(setToken)
+              .catch(onError);
+          }
+        })
+        .catch((error) => {
+          if (launch) {
+            onError(error);
+          }
+        });
     }
-  }, [onError, user.phone]);
+  }, [onError, user.phone, launch, applicationConfiguration, token]);
 
   const handleOnMessage = ({ nativeEvent: { data } }: WebViewMessageEvent) => {
     try {
@@ -110,14 +132,29 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     );
   };
 
+  const fetchLocationPermissionStatus = async () => {
+    const status = await retriveLocationPermissionStatus();
+    setLocationPermissionStatus(status);
+  };
+
   const renderContent = () => {
     if (token === null || applicationConfiguration == null) {
       return loader || <Spinner />;
     }
 
+    if (Platform.OS === 'ios' && locationPermissionStatus === null) {
+      fetchLocationPermissionStatus();
+      return loader || <Spinner />;
+    }
+
     const { jsAfterLoad, jsBeforeLoad } = generateJavaScriptStartScript({
       message: 'select_location',
-      payload: generateStartDataPayload(props, token, applicationConfiguration),
+      payload: generateStartDataPayload(
+        props,
+        token,
+        applicationConfiguration,
+        locationPermissionStatus
+      ),
     });
 
     return (
