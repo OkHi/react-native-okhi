@@ -264,8 +264,24 @@ export const request = (
       }
     }
   };
+
   const handleRationaleRequest = async () => {
-    if (rationale) {
+    const currentStatus = await retriveLocationPermissionStatus();
+    let showRationale = true;
+    if (
+      locationPermissionType === 'whenInUse' &&
+      (currentStatus === 'authorizedWhenInUse' ||
+        currentStatus === 'authorizedAlways')
+    ) {
+      showRationale = false;
+    }
+    if (
+      locationPermissionType === 'always' &&
+      currentStatus === 'authorizedAlways'
+    ) {
+      showRationale = false;
+    }
+    if (rationale && showRationale) {
       const result = await handleRationaleAlert(rationale);
       if (!result) {
         callback('rationaleDissmissed', null);
