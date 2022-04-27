@@ -344,6 +344,10 @@ export const retriveLocationPermissionStatus =
     return whenInUsePerm ? 'authorizedWhenInUse' : 'denied';
   };
 
+/**
+ * Requests tracking authorization from the user. iOS only, iOS version >= 14
+ * Read more: https://developer.apple.com/app-store/user-privacy-and-data-use/
+ */
 export const requestTrackingAuthorization = async (): Promise<
   string | null
 > => {
