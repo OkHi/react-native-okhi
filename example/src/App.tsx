@@ -23,6 +23,7 @@ import {
   request,
   openAppSettings,
   retriveLocationPermissionStatus,
+  requestTrackingAuthorization,
 } from 'react-native-okhi';
 
 const USER: OkHiUser = {
@@ -179,6 +180,14 @@ const App = () => {
         onPress={() =>
           stopForegroundService()
             .then((result) => console.log(`stop foreground service: ${result}`))
+            .catch(console.log)
+        }
+      />
+      <Button
+        title="Request Tracking Auth"
+        onPress={() =>
+          requestTrackingAuthorization()
+            .then((result) => console.log(`tracking auth: ${result}`))
             .catch(console.log)
         }
       />
