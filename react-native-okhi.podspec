@@ -16,5 +16,5 @@ Pod::Spec.new do |s|
   s.source_files = "ios/**/*.{h,m,mm,swift}"
 
   s.dependency "React-Core"
-  s.dependency 'OkHi', '1.7.2-beta'
+  s.dependency 'OkHi', '1.7.7'
 end
