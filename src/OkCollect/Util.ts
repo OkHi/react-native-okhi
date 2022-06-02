@@ -61,6 +61,16 @@ export const generateStartDataPayload = (
       color: props.theme?.appBar?.backgroundColor,
       visible: props.config?.appBar?.visible,
     },
+    addressTypes: {
+      home:
+        typeof props.config?.addressTypes?.home === 'boolean'
+          ? props.config?.addressTypes?.home
+          : true,
+      work:
+        typeof props.config?.addressTypes?.work === 'boolean'
+          ? props.config?.addressTypes?.work
+          : true,
+    },
   };
   if (Platform.OS === 'ios' && locationPermissionStatus) {
     payload.context.permissions = {
