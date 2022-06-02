@@ -44,7 +44,7 @@ const App = () => {
     setLaunch(false);
   };
 
-  const handleOnError = (error) => {
+  const handleOnError = (error: any) => {
     console.log(error);
     setLaunch(false); // Make sure to change the launch value onError
   };
