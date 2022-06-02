@@ -154,6 +154,9 @@ export const requestEnableGooglePlayServices = (): Promise<boolean> => {
 export const getSystemVersion = (): Promise<string | number> =>
   isValidPlatform(OkHiNativeModule.getSystemVersion);
 
+/**
+ * Requests location permission from the user. It'll also attempt to activate any disbaled services (Android Only)
+ */
 export const request = (
   locationPermissionType: LocationRequestPermissionType,
   rationale: {
@@ -318,10 +321,16 @@ export const request = (
     .catch(handleError);
 };
 
+/**
+ * Open the device's app settings.
+ */
 export const openAppSettings = () => {
   OkHiNativeModule.openAppSettings();
 };
 
+/**
+ * Retrives the location permission status from the device
+ */
 export const retriveLocationPermissionStatus =
   async (): Promise<LocationPermissionStatus> => {
     if (Platform.OS === 'ios') {
@@ -334,3 +343,16 @@ export const retriveLocationPermissionStatus =
     const whenInUsePerm = await isLocationPermissionGranted();
     return whenInUsePerm ? 'authorizedWhenInUse' : 'denied';
   };
+
+/**
+ * Requests tracking authorization from the user. iOS only, iOS version >= 14
+ * Read more: https://developer.apple.com/app-store/user-privacy-and-data-use/
+ */
+export const requestTrackingAuthorization = async (): Promise<
+  string | null
+> => {
+  return isValidPlatform(async () => {
+    const result = await OkHiNativeModule.requestTrackingAuthorization();
+    return result;
+  }, 'ios');
+};

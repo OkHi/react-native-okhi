@@ -56,7 +56,7 @@ class Okhi: RCTEventEmitter {
         okVerify.requestLocationPermission()
     }
     
-    @objc func requestBackgroundLocationPermission(_ resolve:@escaping RCTPromiseResolveBlock, reject:@escapingRCTPromiseRejectBlock) {
+    @objc func requestBackgroundLocationPermission(_ resolve:@escaping RCTPromiseResolveBlock, reject:@escaping RCTPromiseRejectBlock) {
         self.didChangeLocationPermissionStatusResolve = resolve
         self.didChangeLocationPermissionStatusReject = reject
         currentLocationPermissionRequestType = .always
@@ -101,6 +101,20 @@ class Okhi: RCTEventEmitter {
         let manager = CLLocationManager()
         let status = fetchLocationPermissionStatus(status: getLocationAuthorizationStatus(manager: manager))
         resolve(status)
+    }
+    
+    @objc func requestTrackingAuthorization(_ resolve:@escaping RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+        if #available(iOS 14.0, *) {
+            OkAnalytics.requestTrackingAuthorization { trackingId in
+                if let id = trackingId {
+                    resolve(id)
+                } else {
+                    resolve(NSNull())
+                }
+            }
+        } else {
+            resolve(NSNull())
+        }
     }
     
     override func supportedEvents() -> [String]! {
