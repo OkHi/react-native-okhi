@@ -35,6 +35,7 @@ type OkHiNativeModuleType = {
   ): Promise<boolean>;
   openAppSettings(): Promise<void>;
   retriveLocationPermissionStatus(): Promise<string>;
+  requestTrackingAuthorization(): Promise<string | null>;
 };
 
 export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi;

@@ -13,6 +13,8 @@ class Okhi: RCTEventEmitter {
     private var reject: RCTPromiseRejectBlock?
     private var initResolve: RCTPromiseResolveBlock?
     private var initReject: RCTPromiseRejectBlock?
+    private var didChangeLocationPermissionStatusResolve: RCTPromiseResolveBlock?
+    private var didChangeLocationPermissionStatusReject: RCTPromiseRejectBlock?
     private var okVerify: OkVerify
     
     
@@ -47,14 +49,16 @@ class Okhi: RCTEventEmitter {
         resolve(UIDevice.current.systemVersion)
     }
     
-    @objc func requestLocationPermission(_ resolve:@escaping RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
-        self.resolve = resolve
+    @objc func requestLocationPermission(_ resolve:@escaping RCTPromiseResolveBlock, reject:@escaping RCTPromiseRejectBlock) {
+        self.didChangeLocationPermissionStatusResolve = resolve
+        self.didChangeLocationPermissionStatusReject = reject
         currentLocationPermissionRequestType = .whenInUse
         okVerify.requestLocationPermission()
     }
     
-    @objc func requestBackgroundLocationPermission(_ resolve:@escaping RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
-        self.resolve = resolve
+    @objc func requestBackgroundLocationPermission(_ resolve:@escaping RCTPromiseResolveBlock, reject:@escaping RCTPromiseRejectBlock) {
+        self.didChangeLocationPermissionStatusResolve = resolve
+        self.didChangeLocationPermissionStatusReject = reject
         currentLocationPermissionRequestType = .always
         okVerify.requestBackgroundLocationPermission()
     }
@@ -97,6 +101,20 @@ class Okhi: RCTEventEmitter {
         let manager = CLLocationManager()
         let status = fetchLocationPermissionStatus(status: getLocationAuthorizationStatus(manager: manager))
         resolve(status)
+    }
+    
+    @objc func requestTrackingAuthorization(_ resolve:@escaping RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+        if #available(iOS 14.0, *) {
+            OkAnalytics.requestTrackingAuthorization { trackingId in
+                if let id = trackingId {
+                    resolve(id)
+                } else {
+                    resolve(NSNull())
+                }
+            }
+        } else {
+            resolve(NSNull())
+        }
     }
     
     override func supportedEvents() -> [String]! {
@@ -143,7 +161,7 @@ extension Okhi: OkVerifyDelegate {
     }
     
     func verify(_ okverify: OkVerify, didChangeLocationPermissionStatus requestType: OkVerifyLocationPermissionRequestType, status: Bool) {
-        if let resolve = self.resolve {
+        if let resolve = self.didChangeLocationPermissionStatusResolve {
             if currentLocationPermissionRequestType == .whenInUse && requestType == .whenInUse {
                 resolve(status)
             } else if currentLocationPermissionRequestType == .always && requestType == .always {
@@ -151,6 +169,8 @@ extension Okhi: OkVerifyDelegate {
             } else {
                 resolve(false)
             }
+            self.didChangeLocationPermissionStatusResolve = nil
+            self.didChangeLocationPermissionStatusReject = nil
         }
     }
 
