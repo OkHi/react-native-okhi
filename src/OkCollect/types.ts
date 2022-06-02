@@ -75,6 +75,10 @@ export interface OkHiLocationManagerProps {
     appBar?: {
       visible?: boolean;
     };
+    addressTypes?: {
+      home?: boolean;
+      work?: boolean;
+    };
   };
 }
 
