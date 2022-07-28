@@ -356,3 +356,25 @@ export const requestTrackingAuthorization = async (): Promise<
     return result;
   }, 'ios');
 };
+
+/**
+ * Checks whether current device can open "Protected Apps Settings" available in Transsion Group android devices such as Infinix and Tecno
+ * When your application is included in protected apps, verification processes are less likely to be terminated by the OS. Increasing rate of users being verified.
+ */
+export const canOpenProtectedAppsSettings = (): Promise<boolean> => {
+  return isValidPlatform(async () => {
+    const result = await OkHiNativeModule.canOpenProtectedAppsSettings();
+    return result;
+  }, 'android');
+};
+
+/**
+ * Opens "Protected Apps Settings" available in Transsion Group android devices such as Infinix and Tecno
+ * When your application is included in protected apps, verification processes are less likely to be terminated by the OS. Increasing rate of users being verified.
+ */
+export const openProtectedAppsSettings = (): Promise<boolean> => {
+  return isValidPlatform(async () => {
+    const result = await OkHiNativeModule.openProtectedAppsSettings();
+    return result;
+  }, 'android');
+};
