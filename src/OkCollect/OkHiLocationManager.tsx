@@ -5,6 +5,7 @@ import { Spinner } from './Spinner';
 import type {
   OkHiLocationManagerResponse,
   OkHiLocationManagerProps,
+  OkHiLocationManagerStartDataPayload,
 } from './types';
 import {
   getFrameUrl,
@@ -19,26 +20,24 @@ import { start as sv } from '../OkVerify';
 import type { OkVerifyStartConfiguration } from '../OkVerify/types';
 import {
   getApplicationConfiguration,
-  LocationPermissionStatus,
-  retriveLocationPermissionStatus,
+  openProtectedAppsSettings,
 } from '../OkCore';
 
 /**
  * The OkHiLocationManager React Component is used to display an in app modal, enabling the user to quickly create an accurate OkHi address.
  */
 export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
-  const [locationPermissionStatus, setLocationPermissionStatus] =
-    useState<null | LocationPermissionStatus>(null);
   const [token, setToken] = useState<string | null>(null);
   const [applicationConfiguration, setApplicationConfiguration] =
     useState<AuthApplicationConfig | null>(null);
+  const [startPayload, setStartPaylaod] =
+    useState<null | OkHiLocationManagerStartDataPayload>(null);
   const defaultStyle = { flex: 1 };
   const style = props.style
     ? { ...props.style, ...defaultStyle }
     : defaultStyle;
 
   const { user, onSuccess, onCloseRequest, onError, loader, launch } = props;
-
   useEffect(() => {
     if (applicationConfiguration == null && token == null && user.phone) {
       getApplicationConfiguration()
@@ -67,6 +66,15 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     }
   }, [onError, user.phone, launch, applicationConfiguration, token]);
 
+  useEffect(() => {
+    if (token !== null && applicationConfiguration !== null) {
+      // TODO: handle faliure
+      generateStartDataPayload(props, token, applicationConfiguration)
+        .then(setStartPaylaod)
+        .catch(console.error);
+    }
+  }, [applicationConfiguration, props, token]);
+
   const handleOnMessage = ({ nativeEvent: { data } }: WebViewMessageEvent) => {
     try {
       const response: OkHiLocationManagerResponse = JSON.parse(data);
@@ -79,6 +87,8 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
         );
       } else if (response.message === 'exit_app') {
         onCloseRequest();
+      } else if (response.message === 'request_enable_protected_apps') {
+        openProtectedAppsSettings();
       } else {
         onSuccess({
           ...response.payload,
@@ -132,29 +142,18 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     );
   };
 
-  const fetchLocationPermissionStatus = async () => {
-    const status = await retriveLocationPermissionStatus();
-    setLocationPermissionStatus(status);
-  };
-
   const renderContent = () => {
     if (token === null || applicationConfiguration == null) {
       return loader || <Spinner />;
     }
 
-    if (Platform.OS === 'ios' && locationPermissionStatus === null) {
-      fetchLocationPermissionStatus();
+    if (startPayload === null) {
       return loader || <Spinner />;
     }
 
     const { jsAfterLoad, jsBeforeLoad } = generateJavaScriptStartScript({
       message: 'select_location',
-      payload: generateStartDataPayload(
-        props,
-        token,
-        applicationConfiguration,
-        locationPermissionStatus
-      ),
+      payload: startPayload,
     });
 
     return (

@@ -1,5 +1,10 @@
 import type { OkHiLocationManagerProps } from './types';
-import type { LocationPermissionStatus, OkHiLocation } from '../OkCore';
+import {
+  canOpenProtectedAppsSettings,
+  isBackgroundLocationPermissionGranted,
+  isLocationPermissionGranted,
+  OkHiLocation,
+} from '../OkCore';
 import { OkHiMode } from '../OkCore';
 import type {
   OkHiLocationManagerStartDataPayload,
@@ -8,16 +13,16 @@ import type {
 import manifest from './app.json'; //TODO: fix this
 import type { AuthApplicationConfig } from '../OkCore/_types';
 import { Platform } from 'react-native';
+import { OkHiNativeModule } from '../OkHiNativeModule';
 
 /**
  * @ignore
  */
-export const generateStartDataPayload = (
+export const generateStartDataPayload = async (
   props: OkHiLocationManagerProps,
   authToken: string,
-  applicationConfiguration: AuthApplicationConfig,
-  locationPermissionStatus: LocationPermissionStatus | null
-): OkHiLocationManagerStartDataPayload => {
+  applicationConfiguration: AuthApplicationConfig
+): Promise<OkHiLocationManagerStartDataPayload> => {
   const payload: any = {};
   payload.style = !props.theme
     ? undefined
@@ -52,6 +57,28 @@ export const generateStartDataPayload = (
       name: 'react-native',
     },
   };
+  const hasLocationPermission = await isLocationPermissionGranted();
+  const hasBackgroundLocationPermission =
+    await isBackgroundLocationPermissionGranted();
+  payload.context.permissions = {
+    location: hasBackgroundLocationPermission
+      ? 'always'
+      : hasLocationPermission
+      ? 'whenInUse'
+      : 'denied',
+  };
+  if (Platform.OS === 'android') {
+    const canOpenProtectedApps = await canOpenProtectedAppsSettings();
+    const { manufacturer, model } = await OkHiNativeModule.retrieveDeviceInfo();
+    payload.context.device = {
+      manufacturer,
+      model,
+    };
+    payload.context.permissions = {
+      ...payload.context.permissions,
+      protectedApp: canOpenProtectedApps ? 'denied' : 'granted',
+    };
+  }
   payload.config = {
     streetView:
       typeof props.config?.streetView === 'boolean'
@@ -72,11 +99,6 @@ export const generateStartDataPayload = (
           : true,
     },
   };
-  if (Platform.OS === 'ios' && locationPermissionStatus) {
-    payload.context.permissions = {
-      location: locationPermissionStatus,
-    };
-  }
   return payload;
 };
 

@@ -136,6 +136,7 @@ export interface OkHiLocationManagerResponse {
     | 'location_created'
     | 'location_updated'
     | 'exit_app'
+    | 'request_enable_protected_apps'
     | 'fatal_exit';
   payload: { user: any; location: any };
 }
