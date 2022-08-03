@@ -21,7 +21,7 @@ export function initialize(
 ): Promise<void> {
   return errorHandler(async () => {
     okhiApplicationConfiguration = configuration;
-    if (AppState.currentState === 'active') {
+    if (AppState.currentState !== 'background') {
       if (Platform.OS === 'android') {
         await OkHiNativeModule.initialize(JSON.stringify(configuration));
       } else {
