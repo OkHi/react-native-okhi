@@ -68,7 +68,6 @@ export const generateStartDataPayload = async (
       : 'denied',
   };
   if (Platform.OS === 'android') {
-    const canOpenProtectedApps = await canOpenProtectedAppsSettings();
     const { manufacturer, model } = await OkHiNativeModule.retrieveDeviceInfo();
     payload.context.device = {
       manufacturer,
@@ -76,10 +75,13 @@ export const generateStartDataPayload = async (
     };
     payload.context.permissions = {
       ...payload.context.permissions,
-      protectedApp: canOpenProtectedApps ? 'denied' : 'granted',
     };
   }
   payload.config = {
+    protectedApps:
+      Platform.OS === 'android' && (await canOpenProtectedAppsSettings())
+        ? true
+        : false,
     streetView:
       typeof props.config?.streetView === 'boolean'
         ? props.config.streetView
