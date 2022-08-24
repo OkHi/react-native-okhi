@@ -198,7 +198,7 @@ const App = () => {
         onSuccess={handleOnSuccess}
         onCloseRequest={() => setLaunch(false)} // called when user taps on the top right close button
         onError={handleOnError}
-        config={{ addressTypes: { home: false, work: false } }}
+        config={{ addressTypes: { home: true, work: false } }}
       />
     </View>
   );

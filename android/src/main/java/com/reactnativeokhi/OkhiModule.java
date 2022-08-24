@@ -17,6 +17,8 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.module.annotations.ReactModule;
 
 import org.json.JSONObject;
@@ -27,6 +29,7 @@ import io.okhi.android_core.models.OkHiAppContext;
 import io.okhi.android_core.models.OkHiAuth;
 import io.okhi.android_core.models.OkHiException;
 import io.okhi.android_core.models.OkHiLocation;
+import io.okhi.android_core.models.OkHiPermissionService;
 import io.okhi.android_core.models.OkHiUser;
 import io.okhi.android_okverify.OkVerify;
 import io.okhi.android_okverify.interfaces.OkVerifyCallback;
@@ -256,6 +259,34 @@ public class OkhiModule extends ReactContextBaseJavaModule {
     intent.setData(uri);
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     getReactApplicationContext().startActivity(intent);
+  }
+
+  @ReactMethod
+  public void canOpenProtectedAppsSettings(Promise promise) {
+    promise.resolve(OkHiPermissionService.canOpenProtectedApps(getReactApplicationContext()));
+  }
+
+  @ReactMethod
+  public void openProtectedAppsSettings(Promise promise) {
+    try {
+      Activity activity = getCurrentActivity();
+      if (activity != null) {
+        OkHiPermissionService.openProtectedAppsSettings(getCurrentActivity(), 69);
+        promise.resolve(true);
+      } else {
+        throw new OkHiException(OkHiException.UNKNOWN_ERROR_CODE, "unable to retrieve current activity");
+      }
+    } catch (OkHiException e) {
+      promise.reject(e.getCode(), e.getMessage(), e);
+    }
+  }
+
+  @ReactMethod
+  public void retrieveDeviceInfo(Promise promise) {
+    WritableMap map = new WritableNativeMap();
+    map.putString("manufacturer", Build.MANUFACTURER);
+    map.putString("model", Build.MODEL);
+    promise.resolve(map);
   }
 
   @ReactMethod
