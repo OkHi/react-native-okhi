@@ -263,7 +263,7 @@ public class OkhiModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void canOpenProtectedAppsSettings(Promise promise) {
-    promise.resolve(OkHiPermissionService.canOpenProtectedApps());
+    promise.resolve(OkHiPermissionService.canOpenProtectedApps(getReactApplicationContext()));
   }
 
   @ReactMethod
