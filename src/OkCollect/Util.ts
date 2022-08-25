@@ -79,9 +79,7 @@ export const generateStartDataPayload = async (
   }
   payload.config = {
     protectedApps:
-      Platform.OS === 'android' && (await canOpenProtectedAppsSettings())
-        ? true
-        : false,
+      Platform.OS === 'android' && (await canOpenProtectedAppsSettings()),
     streetView:
       typeof props.config?.streetView === 'boolean'
         ? props.config.streetView
