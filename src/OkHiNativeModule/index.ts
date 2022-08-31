@@ -1,5 +1,11 @@
-import { NativeModules, NativeEventEmitter } from 'react-native';
+import { NativeModules, NativeEventEmitter, Platform } from 'react-native';
 import type { OkVerifyStartConfiguration } from '../OkVerify/types';
+
+const LINKING_ERROR =
+  `The package 'react-native-okhi' doesn't seem to be linked. Make sure: \n\n` +
+  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
+  '- You rebuilt the app after installing the package\n' +
+  '- You are not using Expo managed workflow\n';
 
 type OkHiNativeModuleType = {
   isLocationServicesEnabled(): Promise<boolean>;
@@ -40,7 +46,16 @@ type OkHiNativeModuleType = {
   retrieveDeviceInfo(): Promise<{ manufacturer: string; model: string }>;
 };
 
-export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi;
+export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi
+  ? NativeModules.Okhi
+  : new Proxy(
+      {},
+      {
+        get() {
+          throw new Error(LINKING_ERROR);
+        },
+      }
+    );
 
 export const OkHiNativeEvents = new NativeEventEmitter(NativeModules.Okhi);
 
