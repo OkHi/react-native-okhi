@@ -291,4 +291,15 @@ public class OkhiModule extends ReactContextBaseJavaModule {
     return  null;
   }
 
+  // Required for rn built in EventEmitter Calls.
+  @ReactMethod
+  public void addListener(String eventName) {
+
+  }
+
+  @ReactMethod
+  public void removeListeners(Integer count) {
+
+  }
+
 }
