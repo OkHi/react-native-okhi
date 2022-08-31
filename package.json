@@ -142,5 +142,9 @@
         }
       ]
     ]
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "react-native-webview": "^11.23.0"
   }
 }
