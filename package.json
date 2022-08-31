@@ -79,9 +79,7 @@
     ]
   },
   "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
+    "extends": []
   },
   "release-it": {
     "git": {
