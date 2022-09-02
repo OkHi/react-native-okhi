@@ -28,7 +28,8 @@
     "prepare": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
-    "bootstrap": "yarn example && yarn && yarn example pods"
+    "bootstrap": "yarn example && yarn && yarn example pods",
+    "docs": "typedoc --out ./docs ./src --tsconfig tsconfig.json --excludePrivate --excludeProtected"
   },
   "keywords": [
     "react-native",
@@ -62,6 +63,7 @@
     "react-native": "0.68.2",
     "react-native-builder-bob": "^0.18.3",
     "release-it": "^15.0.0",
+    "typedoc": "^0.23.13",
     "typescript": "^4.5.2"
   },
   "resolutions": {
