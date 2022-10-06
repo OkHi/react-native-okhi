@@ -31,6 +31,7 @@ import io.okhi.android_core.models.OkHiException;
 import io.okhi.android_core.models.OkHiLocation;
 import io.okhi.android_core.models.OkHiPermissionService;
 import io.okhi.android_core.models.OkHiUser;
+import io.okhi.android_core.models.OkPreference;
 import io.okhi.android_okverify.OkVerify;
 import io.okhi.android_okverify.interfaces.OkVerifyCallback;
 import io.okhi.android_okverify.models.OkHiNotification;
@@ -300,6 +301,17 @@ public class OkhiModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void removeListeners(Integer count) {
 
+  }
+
+  @ReactMethod
+  public void setItem(String key, String value, Promise promise) {
+    try {
+      OkPreference.setItem(key, value, getReactApplicationContext());
+      promise.resolve(true);
+    } catch (OkHiException e) {
+      promise.reject(e.getCode(), e.getMessage(), e);
+      e.printStackTrace();
+    }
   }
 
 }
