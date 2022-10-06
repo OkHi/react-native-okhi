@@ -72,6 +72,14 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
       // TODO: handle faliure
       generateStartDataPayload(props, token, applicationConfiguration)
         .then((startPayload) => {
+          OkHiNativeModule.setItem(
+            'okcollect-launch-payload',
+            JSON.stringify({
+              message: 'select_location',
+              payload: startPayload,
+              url: getFrameUrl(applicationConfiguration),
+            })
+          ).catch(console.error);
           setStartPaylaod(startPayload);
         })
         .catch(console.error);
@@ -153,14 +161,6 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     if (startPayload === null) {
       return loader || <Spinner />;
     }
-
-    OkHiNativeModule.setItem(
-      'okcollect-launch-payload',
-      JSON.stringify({
-        message: 'select_location',
-        payload: startPayload,
-      })
-    ).catch(console.error);
 
     const { jsAfterLoad, jsBeforeLoad } = generateJavaScriptStartScript({
       message: 'select_location',
