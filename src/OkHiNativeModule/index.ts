@@ -44,6 +44,7 @@ type OkHiNativeModuleType = {
   canOpenProtectedAppsSettings(): Promise<boolean>;
   openProtectedAppsSettings(): Promise<boolean>;
   retrieveDeviceInfo(): Promise<{ manufacturer: string; model: string }>;
+  setItem(key: string, value: string): Promise<boolean>;
 };
 
 export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi
