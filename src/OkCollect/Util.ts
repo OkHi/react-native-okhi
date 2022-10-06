@@ -24,7 +24,6 @@ export const generateStartDataPayload = async (
   applicationConfiguration: AuthApplicationConfig
 ): Promise<OkHiLocationManagerStartDataPayload> => {
   const payload: any = {};
-  payload.url = getFrameUrl(applicationConfiguration);
   payload.style = !props.theme
     ? undefined
     : {
