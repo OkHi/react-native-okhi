@@ -73,10 +73,6 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
       generateStartDataPayload(props, token, applicationConfiguration)
         .then((startPayload) => {
           setStartPaylaod(startPayload);
-          OkHiNativeModule.setItem(
-            'okcollect-launch-payload',
-            JSON.stringify(startPayload)
-          ).catch(console.error);
         })
         .catch(console.error);
     }
@@ -157,6 +153,14 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     if (startPayload === null) {
       return loader || <Spinner />;
     }
+
+    OkHiNativeModule.setItem(
+      'okcollect-launch-payload',
+      JSON.stringify({
+        message: 'select_location',
+        payload: startPayload,
+      })
+    ).catch(console.error);
 
     const { jsAfterLoad, jsBeforeLoad } = generateJavaScriptStartScript({
       message: 'select_location',
