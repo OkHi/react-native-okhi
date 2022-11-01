@@ -22,6 +22,7 @@ import {
   getApplicationConfiguration,
   openProtectedAppsSettings,
 } from '../OkCore';
+import { OkHiNativeModule } from '../OkHiNativeModule';
 
 /**
  * The OkHiLocationManager React Component is used to display an in app modal, enabling the user to quickly create an accurate OkHi address.
@@ -53,7 +54,7 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
             setApplicationConfiguration(config);
             const auth = new OkHiAuth();
             auth
-              .anonymousSignInWithPhoneNumber(user.phone, ['address'], config)
+              .anonymousSignInWithPhoneNumber(user.phone, ['verify'], config)
               .then(setToken)
               .catch(onError);
           }
@@ -70,7 +71,19 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     if (token !== null && applicationConfiguration !== null) {
       // TODO: handle faliure
       generateStartDataPayload(props, token, applicationConfiguration)
-        .then(setStartPaylaod)
+        .then((startPayload) => {
+          if (Platform.OS === 'android') {
+            OkHiNativeModule.setItem(
+              'okcollect-launch-payload',
+              JSON.stringify({
+                message: 'select_location',
+                payload: startPayload,
+                url: getFrameUrl(applicationConfiguration),
+              })
+            ).catch(console.error);
+          }
+          setStartPaylaod(startPayload);
+        })
         .catch(console.error);
     }
   }, [applicationConfiguration, props, token]);
