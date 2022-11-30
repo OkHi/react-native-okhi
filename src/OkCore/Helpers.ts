@@ -33,10 +33,19 @@ const isBackgroundLocationPermissionGrantedAndroid =
     if (sdkVersion < 29) {
       return await isLocationPermissionGranted();
     }
-    const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION as Permission
+    if (
+      typeof PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION !==
+      'undefined'
+    ) {
+      const hasPermission = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION as Permission
+      );
+      return hasPermission;
+    }
+    console.warn(
+      `PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION is undefined, this is an issue with the current version of RN you are running. Please consider upgrading`
     );
-    return hasPermission;
+    return false;
   };
 
 const isBackgroundLocationPermissionGrantedIOS = (): Promise<boolean> => {
