@@ -61,13 +61,17 @@ export const generateStartDataPayload = async (
   let hasLocationPermission: boolean | undefined;
   try {
     hasLocationPermission = await isLocationPermissionGranted();
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 
   let hasBackgroundLocationPermission: boolean | undefined;
   try {
     hasBackgroundLocationPermission =
       await isBackgroundLocationPermissionGranted();
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 
   if (
     typeof hasLocationPermission === 'boolean' &&
