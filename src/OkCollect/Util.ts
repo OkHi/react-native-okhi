@@ -57,16 +57,31 @@ export const generateStartDataPayload = async (
       name: 'react-native',
     },
   };
-  const hasLocationPermission = await isLocationPermissionGranted();
-  const hasBackgroundLocationPermission =
-    await isBackgroundLocationPermissionGranted();
-  payload.context.permissions = {
-    location: hasBackgroundLocationPermission
-      ? 'always'
-      : hasLocationPermission
-      ? 'whenInUse'
-      : 'denied',
-  };
+
+  let hasLocationPermission: boolean | undefined;
+  try {
+    hasLocationPermission = await isLocationPermissionGranted();
+  } catch (error) {}
+
+  let hasBackgroundLocationPermission: boolean | undefined;
+  try {
+    hasBackgroundLocationPermission =
+      await isBackgroundLocationPermissionGranted();
+  } catch (error) {}
+
+  if (
+    typeof hasLocationPermission === 'boolean' &&
+    typeof hasBackgroundLocationPermission === 'boolean'
+  ) {
+    payload.context.permissions = {
+      location: hasBackgroundLocationPermission
+        ? 'always'
+        : hasLocationPermission
+        ? 'whenInUse'
+        : 'denied',
+    };
+  }
+
   if (Platform.OS === 'android') {
     const { manufacturer, model } = await OkHiNativeModule.retrieveDeviceInfo();
     payload.context.device = {
