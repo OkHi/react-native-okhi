@@ -37,6 +37,7 @@ export const generateStartDataPayload = async (
     phone: props.user.phone,
     firstName: props.user.firstName,
     lastName: props.user.lastName,
+    email: props.user.email,
   };
   payload.auth = {
     authToken,
