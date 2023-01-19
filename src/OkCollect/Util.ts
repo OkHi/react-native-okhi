@@ -37,6 +37,7 @@ export const generateStartDataPayload = async (
     phone: props.user.phone,
     firstName: props.user.firstName,
     lastName: props.user.lastName,
+    email: props.user.email,
   };
   payload.auth = {
     authToken,
@@ -61,13 +62,17 @@ export const generateStartDataPayload = async (
   let hasLocationPermission: boolean | undefined;
   try {
     hasLocationPermission = await isLocationPermissionGranted();
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 
   let hasBackgroundLocationPermission: boolean | undefined;
   try {
     hasBackgroundLocationPermission =
       await isBackgroundLocationPermissionGranted();
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 
   if (
     typeof hasLocationPermission === 'boolean' &&

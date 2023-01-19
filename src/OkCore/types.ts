@@ -15,6 +15,10 @@ export interface OkHiUser {
    */
   lastName?: string;
   /**
+   * The user's email address.
+   */
+  email?: string;
+  /**
    * The OkHi's userId. Usually obtained after a user successfully creates an OkHi address.
    */
   id?: string;
