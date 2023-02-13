@@ -74,7 +74,8 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
       // TODO: handle faliure
       generateStartDataPayload(props, token, applicationConfiguration)
         .then((startPayload) => {
-          if (Platform.OS === 'android') {
+          setStartPaylaod(startPayload);
+          if (Platform.OS === 'android' && Platform.Version > 25) {
             OkHiNativeModule.setItem(
               'okcollect-launch-payload',
               JSON.stringify({
@@ -84,7 +85,6 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
               })
             ).catch(console.error);
           }
-          setStartPaylaod(startPayload);
         })
         .catch(console.error);
     }
