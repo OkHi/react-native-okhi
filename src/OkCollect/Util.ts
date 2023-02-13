@@ -127,10 +127,24 @@ export const generateStartDataPayload = async (
  */
 export const getFrameUrl = (
   applicationConfiguration: AuthApplicationConfig
-) => {
+): string => {
   const DEV_FRAME_URL = 'https://dev-manager-v5.okhi.io';
   const PROD_FRAME_URL = 'https://manager-v5.okhi.io';
   const SANDBOX_FRAME_URL = 'https://sandbox-manager-v5.okhi.io';
+
+  const LEGACY_DEV_FRAME_URL = 'https://dev-legacy-manager-v5.okhi.io';
+  const LEGACY_PROD_FRAME_URL = 'https://legacy-manager-v5.okhi.io';
+  const LEGACY_SANDBOX_FRAME_URL = 'https://sandbox-legacy-manager-v5.okhi.io';
+
+  if (Platform.OS === 'android' && Platform.Version < 24) {
+    if (applicationConfiguration.context.mode === OkHiMode.PROD) {
+      return LEGACY_PROD_FRAME_URL;
+    }
+    if (applicationConfiguration.context.mode === ('dev' as any)) {
+      return LEGACY_DEV_FRAME_URL;
+    }
+    return LEGACY_SANDBOX_FRAME_URL;
+  }
   if (applicationConfiguration.context.mode === OkHiMode.PROD) {
     return PROD_FRAME_URL;
   }
@@ -157,11 +171,9 @@ export const generateJavaScriptStartScript = (startPayload: {
       }
       true;
       `;
-  const jsAfterLoad = `
-      window.startOkHiLocationManager({ 
-        receiveMessage: function(data) { window.ReactNativeWebView.postMessage(data) } }, 
-        ${JSON.stringify(startPayload)})
-      `;
+  const jsAfterLoad = `window.startOkHiLocationManager({ receiveMessage: function(data) { window.ReactNativeWebView.postMessage(data) } }, ${JSON.stringify(
+    startPayload
+  )})`;
   return { jsBeforeLoad, jsAfterLoad };
 };
 
