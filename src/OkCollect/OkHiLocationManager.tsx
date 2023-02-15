@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Modal, SafeAreaView, Platform } from 'react-native';
 import { WebView, WebViewMessageEvent } from 'react-native-webview';
 import { Spinner } from './Spinner';
@@ -39,6 +39,8 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     : defaultStyle;
 
   const { user, onSuccess, onCloseRequest, onError, loader, launch } = props;
+  const webViewRef = useRef<WebView | null>(null);
+
   useEffect(() => {
     if (applicationConfiguration == null && token == null && user.phone) {
       getApplicationConfiguration()
@@ -72,7 +74,8 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
       // TODO: handle faliure
       generateStartDataPayload(props, token, applicationConfiguration)
         .then((startPayload) => {
-          if (Platform.OS === 'android') {
+          setStartPaylaod(startPayload);
+          if (Platform.OS === 'android' && Platform.Version > 25) {
             OkHiNativeModule.setItem(
               'okcollect-launch-payload',
               JSON.stringify({
@@ -82,7 +85,6 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
               })
             ).catch(console.error);
           }
-          setStartPaylaod(startPayload);
         })
         .catch(console.error);
     }
@@ -155,6 +157,10 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     );
   };
 
+  const handleModalRequestClose = () => {
+    webViewRef.current?.goBack();
+  };
+
   const renderContent = () => {
     if (token === null || applicationConfiguration == null) {
       return loader || <Spinner />;
@@ -182,13 +188,19 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
           onHttpError={handleOnError}
           geolocationEnabled={true}
           allowsBackForwardNavigationGestures={true}
+          ref={webViewRef}
         />
       </SafeAreaView>
     );
   };
 
   return (
-    <Modal animationType="slide" transparent={false} visible={launch}>
+    <Modal
+      animationType="slide"
+      transparent={false}
+      visible={launch}
+      onRequestClose={handleModalRequestClose}
+    >
       {launch ? renderContent() : null}
     </Modal>
   );
