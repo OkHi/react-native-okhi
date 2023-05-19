@@ -150,6 +150,11 @@ export interface OkHiLocation {
    * A formatted location information
    */
   displayTitle?: string;
+
+  /**
+   * A user's country code
+   */
+  countryCode?: string;
 }
 
 /**
