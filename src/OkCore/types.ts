@@ -22,6 +22,11 @@ export interface OkHiUser {
    * The OkHi's userId. Usually obtained after a user successfully creates an OkHi address.
    */
   id?: string;
+
+  /**
+   * The user's device firebase push notification token.
+   */
+  fcmPushNotificationToken?: string;
 }
 
 /**
