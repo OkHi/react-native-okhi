@@ -35,6 +35,7 @@ import io.okhi.android_core.models.OkPreference;
 import io.okhi.android_okverify.OkVerify;
 import io.okhi.android_okverify.interfaces.OkVerifyCallback;
 import io.okhi.android_okverify.models.OkHiNotification;
+import io.okhi.android_okverify.models.OkVerifyPushNotificationService;
 
 @ReactModule(name = OkhiModule.NAME)
 public class OkhiModule extends ReactContextBaseJavaModule {
@@ -314,4 +315,15 @@ public class OkhiModule extends ReactContextBaseJavaModule {
     }
   }
 
+  @ReactMethod
+  public void onNewToken(String fcmPushNotificationToken, Promise promise) {
+    OkVerifyPushNotificationService.onNewToken(fcmPushNotificationToken, getReactApplicationContext());
+    promise.resolve(true);
+  }
+
+  @ReactMethod
+  public void onMessageReceived(Promise promise) {
+    OkVerifyPushNotificationService.onMessageReceived(getReactApplicationContext());
+    promise.resolve(true);
+  }
 }
