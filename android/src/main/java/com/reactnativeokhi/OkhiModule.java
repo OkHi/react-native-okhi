@@ -182,12 +182,12 @@ public class OkhiModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void startAddressVerification(String phoneNumber, String locationId, Float lat, Float lon, ReadableMap config, Promise promise) {
+  public void startAddressVerification(String phoneNumber, String locationId, Float lat, Float lon, ReadableMap config, String fcmPushNotificationToken, Promise promise) {
     if (okVerify == null) {
       promise.reject("unauthorized", "failed to initialise okhi");
       return;
     }
-    OkHiUser user = new OkHiUser.Builder(phoneNumber).build();
+    OkHiUser user = new OkHiUser.Builder(phoneNumber).withFcmPushNotificationToken(fcmPushNotificationToken).build();
     OkHiLocation location = new OkHiLocation.Builder(locationId, lat, lon).build();
     Boolean withForeground = true;
     Dynamic foregroundConfig = getConfig(config, "withForeground");
