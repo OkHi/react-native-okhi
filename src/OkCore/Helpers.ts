@@ -27,10 +27,10 @@ export const isLocationPermissionGranted = (): Promise<boolean> => {
 const isBackgroundLocationPermissionGrantedAndroid =
   async (): Promise<boolean> => {
     const sdkVersion = await OkHiNativeModule.getSystemVersion();
-    if (sdkVersion < 23) {
+    if (Number(sdkVersion) < 23) {
       return true;
     }
-    if (sdkVersion < 29) {
+    if (Number(sdkVersion) < 29) {
       return await isLocationPermissionGranted();
     }
     if (
@@ -93,8 +93,8 @@ export const requestLocationPermission = async (): Promise<boolean> => {
 const requestBackgroundLocationPermissionAndroid =
   async (): Promise<boolean> => {
     const sdkVersion = await OkHiNativeModule.getSystemVersion();
-    if (sdkVersion < 23) return true;
-    if (sdkVersion >= 29) {
+    if (Number(sdkVersion) < 23) return true;
+    if (Number(sdkVersion) >= 29) {
       const permissions: any = [
         PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
       ];
@@ -387,3 +387,26 @@ export const openProtectedAppsSettings = (): Promise<boolean> => {
     return result;
   }, 'android');
 };
+
+export const isAndroidNotificationGranted = async (): Promise<boolean> => {
+  const sdkVersion = await OkHiNativeModule.getSystemVersion();
+  if (Number(sdkVersion) < 33) {
+    return true;
+  }
+  const hasPermission = await PermissionsAndroid.check(
+    PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS as Permission
+  );
+  return hasPermission;
+};
+
+export const requestAndroidNotificationPermission =
+  async (): Promise<boolean> => {
+    const existingPermissionStatus = await isAndroidNotificationGranted();
+    if (existingPermissionStatus) {
+      return true;
+    }
+    const status: any = PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS as Permission
+    );
+    return status['android.permission.POST_NOTIFICATIONS'] === 'granted';
+  };
