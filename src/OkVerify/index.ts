@@ -24,6 +24,7 @@ export * from './types';
  * @param {Object} configuration Configures how verification will start on different platforms
  * @param {Object} configuration.android Specifices how verification will start on Android platforms
  * @param {boolean} configuration.android.withForeground Specifices if the foreground service will be turned on to speed up rate of verification, default is true
+ * @param {string} fcmPushNotificationToken User's firebase push notification token
  * @returns {Promise<string>} A promise that resolves to a string value of the location identifier
  */
 export const start = (
@@ -31,7 +32,8 @@ export const start = (
   locationId: string,
   lat: number,
   lon: number,
-  configuration?: OkVerifyStartConfiguration
+  configuration?: OkVerifyStartConfiguration,
+  fcmPushNotificationToken?: string
 ) => {
   return isValidPlatform(() => {
     if (Platform.OS === 'android') {
@@ -40,7 +42,8 @@ export const start = (
         locationId,
         lat,
         lon,
-        configuration
+        configuration,
+        fcmPushNotificationToken
       );
     } else {
       return OkHiNativeModule.startAddressVerification(
@@ -74,7 +77,8 @@ export const startVerification = async (
           location.id,
           location.lat,
           location.lon,
-          configuration
+          configuration,
+          user.fcmPushNotificationToken
         );
         resolve(result);
       } else {
@@ -240,4 +244,27 @@ export const checkVerificationStartRequirements = (): Promise<boolean> => {
     }
     resolve(true);
   });
+};
+
+/**
+ * Android Only - Updates user's device firebase push notification token
+ * @returns {Promise<boolean>} A promise that resolves to a boolean value indicating whether the service has started successfully
+ */
+export const onNewToken = (fcmPushNotificationToken: string) => {
+  return isValidPlatform(
+    () =>
+      errorHandler(() => OkHiNativeModule.onNewToken(fcmPushNotificationToken)),
+    'android'
+  );
+};
+
+/**
+ * Android Only - Should be invoked only when push notification is received.
+ * @returns {Promise<boolean>} A promise that resolves to a boolean value indicating whether the service has started successfully
+ */
+export const onMessageReceived = () => {
+  return isValidPlatform(
+    () => errorHandler(OkHiNativeModule.onMessageReceived),
+    'android'
+  );
 };

@@ -106,7 +106,10 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
         openProtectedAppsSettings();
       } else {
         onSuccess({
-          ...response.payload,
+          user: {
+            ...response.payload.user,
+            fcmPushNotificationToken: user.fcmPushNotificationToken,
+          },
           location: parseOkHiLocation(response.payload.location),
           startVerification: function (config?: OkVerifyStartConfiguration) {
             const createdUser = { ...this.user };
@@ -125,7 +128,8 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
                   location.id,
                   location.lat,
                   location.lon,
-                  config
+                  config,
+                  createdUser.fcmPushNotificationToken
                 )
                   .then(resolve)
                   .catch(reject);
