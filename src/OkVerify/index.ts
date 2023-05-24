@@ -245,3 +245,26 @@ export const checkVerificationStartRequirements = (): Promise<boolean> => {
     resolve(true);
   });
 };
+
+/**
+ * Android Only - Updates user's device firebase push notification token
+ * @returns {Promise<boolean>} A promise that resolves to a boolean value indicating whether the service has started successfully
+ */
+export const onNewToken = (fcmPushNotificationToken: string) => {
+  return isValidPlatform(
+    () =>
+      errorHandler(() => OkHiNativeModule.onNewToken(fcmPushNotificationToken)),
+    'android'
+  );
+};
+
+/**
+ * Android Only - Should be invoked only when push notification is received.
+ * @returns {Promise<boolean>} A promise that resolves to a boolean value indicating whether the service has started successfully
+ */
+export const onMessageReceived = () => {
+  return isValidPlatform(
+    () => errorHandler(OkHiNativeModule.onMessageReceived),
+    'android'
+  );
+};
