@@ -24,7 +24,8 @@ type OkHiNativeModuleType = {
     locationId: string,
     lat: Number,
     lon: Number,
-    configuration?: OkVerifyStartConfiguration
+    configuration?: OkVerifyStartConfiguration,
+    fcmPushNotificationToken?: string
   ): Promise<string>;
   stopAddressVerification(
     phoneNumber: string,
