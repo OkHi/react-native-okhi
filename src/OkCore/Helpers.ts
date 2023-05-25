@@ -407,7 +407,7 @@ const requestAndroidNotificationPermission = async (): Promise<boolean> => {
     if (existingPermissionStatus) {
       return true;
     }
-    const status: any = PermissionsAndroid.request(
+    const status: any = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATION as Permission
     );
     return status['android.permission.POST_NOTIFICATIONS'] === 'granted';
