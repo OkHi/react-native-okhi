@@ -124,7 +124,7 @@ class Okhi: RCTEventEmitter {
     }
     
     @objc func requestNotificationPermission(_ resolve:@escaping RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
-        OkVerify.requestNotificationPermission { result in
+        OkVerify.requestNotificationPermission(registerForRemoteNotifications: false) { result in
             resolve(result)
         }
     }
