@@ -117,6 +117,18 @@ class Okhi: RCTEventEmitter {
         }
     }
     
+    @objc func isNotificationPermissionGranted(_ resolve:@escaping RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+        OkVerify.isNotificationPermissionGranted { result in
+            resolve(result)
+        }
+    }
+    
+    @objc func requestNotificationPermission(_ resolve:@escaping RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+        OkVerify.requestNotificationPermission { result in
+            resolve(result)
+        }
+    }
+    
     override func supportedEvents() -> [String]! {
         return ["onLocationPermissionStatusUpdate"]
     }
@@ -203,5 +215,9 @@ extension Okhi: OkVerifyDelegate {
         guard let resolve = resolve else { return }
         resolve(locationId)
         self.resolve = nil
+    }
+    
+    func verify(_ okverify: OkVerify, didUpdateNotificationPermissionStatus status: Bool) {
+        
     }
 }
