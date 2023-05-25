@@ -48,6 +48,8 @@ type OkHiNativeModuleType = {
   setItem(key: string, value: string): Promise<boolean>;
   onNewToken(fcmPushNotificationToken: string): Promise<boolean>;
   onMessageReceived(): Promise<boolean>;
+  isNotificationPermissionGranted(): Promise<boolean>;
+  requestNotificationPermission(): Promise<boolean>;
 };
 
 export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi

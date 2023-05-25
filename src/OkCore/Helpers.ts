@@ -388,19 +388,21 @@ export const openProtectedAppsSettings = (): Promise<boolean> => {
   }, 'android');
 };
 
-export const isAndroidNotificationGranted = async (): Promise<boolean> => {
-  const sdkVersion = await OkHiNativeModule.getSystemVersion();
-  if (Number(sdkVersion) < 33) {
-    return true;
-  }
-  const hasPermission = await PermissionsAndroid.check(
-    PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS as Permission
-  );
-  return hasPermission;
+const isAndroidNotificationGranted = async (): Promise<boolean> => {
+  return isValidPlatform(async () => {
+    const sdkVersion = await OkHiNativeModule.getSystemVersion();
+    if (Number(sdkVersion) < 33) {
+      return true;
+    }
+    const hasPermission = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS as Permission
+    );
+    return hasPermission;
+  }, 'android');
 };
 
-export const requestAndroidNotificationPermission =
-  async (): Promise<boolean> => {
+const requestAndroidNotificationPermission = async (): Promise<boolean> => {
+  return isValidPlatform(async () => {
     const existingPermissionStatus = await isAndroidNotificationGranted();
     if (existingPermissionStatus) {
       return true;
@@ -409,4 +411,53 @@ export const requestAndroidNotificationPermission =
       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS as Permission
     );
     return status['android.permission.POST_NOTIFICATIONS'] === 'granted';
-  };
+  }, 'android');
+};
+
+const isIOSNotificationGranted = async (): Promise<boolean> => {
+  return isValidPlatform(async () => {
+    return OkHiNativeModule.isNotificationPermissionGranted();
+  }, 'ios');
+};
+
+const requestIOSNotificationPermission = async (): Promise<boolean> => {
+  return isValidPlatform(async () => {
+    const existingPermissionStatus = await isIOSNotificationGranted();
+    if (existingPermissionStatus) {
+      return true;
+    }
+    return OkHiNativeModule.requestNotificationPermission();
+  }, 'ios');
+};
+
+/**
+ * Checks whether notification permission is granted on both android and ios devices
+ */
+export const isNotificationPermissionGranted = async (): Promise<boolean> => {
+  if (Platform.OS === 'android') {
+    return isAndroidNotificationGranted();
+  } else if (Platform.OS === 'ios') {
+    return isIOSNotificationGranted();
+  } else {
+    throw new OkHiException({
+      code: OkHiException.UNSUPPORTED_PLATFORM_CODE,
+      message: OkHiException.UNSUPPORTED_PLATFORM_MESSAGE,
+    });
+  }
+};
+
+/**
+ * Requests notification permission from both android and ios devices
+ */
+export const requestNotificationPermission = async (): Promise<boolean> => {
+  if (Platform.OS === 'android') {
+    return requestAndroidNotificationPermission();
+  } else if (Platform.OS === 'ios') {
+    return requestIOSNotificationPermission();
+  } else {
+    throw new OkHiException({
+      code: OkHiException.UNSUPPORTED_PLATFORM_CODE,
+      message: OkHiException.UNSUPPORTED_PLATFORM_MESSAGE,
+    });
+  }
+};
