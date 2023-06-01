@@ -323,7 +323,7 @@ public class OkhiModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void onMessageReceived(Promise promise) {
-    OkVerifyPushNotificationService.onMessageReceived(getReactApplicationContext(), "foregroundNotificationPing");
+    OkVerifyPushNotificationService.onMessageReceived(getReactApplicationContext());
     promise.resolve(true);
   }
 }
