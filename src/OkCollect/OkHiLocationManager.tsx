@@ -40,6 +40,8 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
 
   const { user, onSuccess, onCloseRequest, onError, loader, launch } = props;
   const webViewRef = useRef<WebView | null>(null);
+  const startMessage =
+    props.mode === 'create' ? 'start_app' : 'select_location';
 
   useEffect(() => {
     if (applicationConfiguration == null && token == null && user.phone) {
@@ -79,7 +81,7 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
             OkHiNativeModule.setItem(
               'okcollect-launch-payload',
               JSON.stringify({
-                message: 'select_location',
+                message: startMessage,
                 payload: startPayload,
                 url: getFrameUrl(applicationConfiguration),
               })
@@ -175,7 +177,7 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     }
 
     const { jsAfterLoad, jsBeforeLoad } = generateJavaScriptStartScript({
-      message: 'select_location',
+      message: startMessage,
       payload: startPayload,
     });
 

@@ -80,6 +80,11 @@ export interface OkHiLocationManagerProps {
       work?: boolean;
     };
   };
+
+  /**
+   * **Optional:** Enable a user to either select an existing address, or force to create a new one
+   */
+  mode?: 'create' | 'select';
 }
 
 /**
