@@ -3,6 +3,7 @@ import { OkHiMode } from './OkHiMode';
 import { OkHiException } from './OkHiException';
 import type { AuthApplicationConfig, OkHiAccessScope } from './_types';
 import { getApplicationConfiguration } from './';
+import { OkHiNativeModule } from '../OkHiNativeModule';
 
 /**
  * @ignore
@@ -70,6 +71,10 @@ export class OkHiAuth {
           const { data } = await axios.post(url, payload, {
             headers,
           });
+          await OkHiNativeModule.setItem(
+            'okhi:recent:token',
+            data.authorization_token
+          ); //TODO: move all anonymousSignIn to native code
           resolve(data.authorization_token);
         }
       } catch (error) {

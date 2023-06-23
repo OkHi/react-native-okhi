@@ -203,5 +203,6 @@ export const parseOkHiLocation = (location: any): OkHiLocation => {
     country: location?.country,
     state: location?.state,
     city: location?.city,
+    countryCode: location?.country_code,
   };
 };

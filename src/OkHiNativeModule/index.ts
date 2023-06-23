@@ -24,7 +24,8 @@ type OkHiNativeModuleType = {
     locationId: string,
     lat: Number,
     lon: Number,
-    configuration?: OkVerifyStartConfiguration
+    configuration?: OkVerifyStartConfiguration,
+    fcmPushNotificationToken?: string
   ): Promise<string>;
   stopAddressVerification(
     phoneNumber: string,
@@ -45,6 +46,10 @@ type OkHiNativeModuleType = {
   openProtectedAppsSettings(): Promise<boolean>;
   retrieveDeviceInfo(): Promise<{ manufacturer: string; model: string }>;
   setItem(key: string, value: string): Promise<boolean>;
+  onNewToken(fcmPushNotificationToken: string): Promise<boolean>;
+  onMessageReceived(): Promise<boolean>;
+  isNotificationPermissionGranted(): Promise<boolean>;
+  requestNotificationPermission(): Promise<boolean>;
 };
 
 export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi
