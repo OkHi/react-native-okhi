@@ -16,10 +16,11 @@ class Okhi: RCTEventEmitter {
     private var didChangeLocationPermissionStatusResolve: RCTPromiseResolveBlock?
     private var didChangeLocationPermissionStatusReject: RCTPromiseRejectBlock?
     private var okVerify: OkVerify
-    
+    private var okhiLocationManager: OkHiLocationManager
     
     override init() {
         okVerify = OkVerify()
+        okhiLocationManager = OkHiLocationManager()
         super.init()
         okVerify.delegate = self
     }
@@ -129,6 +130,21 @@ class Okhi: RCTEventEmitter {
         }
     }
     
+    @objc func fetchCurrentLocation(_ resolve:@escaping RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+        okhiLocationManager.getCurrentLocation { result in
+            if let location = result {
+                let locationDict: NSDictionary = [
+                    "lat": location.coordinate.latitude,
+                    "lng": location.coordinate.longitude,
+                    "accuracy": location.horizontalAccuracy
+                ]
+                resolve(locationDict)
+            } else {
+                resolve(NSNull())
+            }
+        }
+    }
+    
     override func supportedEvents() -> [String]! {
         return ["onLocationPermissionStatusUpdate"]
     }
@@ -152,6 +168,11 @@ class Okhi: RCTEventEmitter {
             str = "unknown"
         }
         return str
+    }
+    
+    @objc public func fetchIOSLocationPermissionStatus(_ resolve:@escaping RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+        let manager = CLLocationManager()
+        resolve(fetchLocationPermissionStatus(status: getLocationAuthorizationStatus(manager: manager)))
     }
 }
 
@@ -185,14 +206,14 @@ extension Okhi: OkVerifyDelegate {
             self.didChangeLocationPermissionStatusReject = nil
         }
     }
-
+    
     func verify(_ okverify: OkVerify, didInitialize result: Bool) {
         guard let resolve = initResolve else { return }
         resolve(result)
         self.initResolve = nil
         self.initReject = nil
     }
-
+    
     func verify(_ okverify: OkVerify, didEncounterError error: OkVerifyError) {
         if let initReject = initReject {
             initReject(error.code, error.message, error)
@@ -204,13 +225,13 @@ extension Okhi: OkVerifyDelegate {
             self.reject = nil
         }
     }
-
+    
     func verify(_ okverify: OkVerify, didStartAddressVerificationFor locationId: String) {
         guard let resolve = resolve else { return }
         resolve(locationId)
         self.resolve = nil
     }
-
+    
     func verify(_ okverify: OkVerify, didStopVerificationFor locationId: String) {
         guard let resolve = resolve else { return }
         resolve(locationId)
