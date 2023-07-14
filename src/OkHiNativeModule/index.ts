@@ -55,6 +55,15 @@ type OkHiNativeModuleType = {
     lng: number;
     accuracy: number;
   }>;
+  fetchIOSLocationPermissionStatus(): Promise<
+    | 'notDetermined'
+    | 'restricted'
+    | 'denied'
+    | 'authorizedAlways'
+    | 'authorizedWhenInUse'
+    | 'authorized'
+    | 'unknown'
+  >;
 };
 
 export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi
