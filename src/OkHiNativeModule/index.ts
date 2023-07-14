@@ -50,6 +50,11 @@ type OkHiNativeModuleType = {
   onMessageReceived(): Promise<boolean>;
   isNotificationPermissionGranted(): Promise<boolean>;
   requestNotificationPermission(): Promise<boolean>;
+  fetchCurrentLocation(): Promise<null | {
+    lat: number;
+    lng: number;
+    accuracy: number;
+  }>;
 };
 
 export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi
