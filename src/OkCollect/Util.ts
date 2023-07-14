@@ -3,6 +3,7 @@ import {
   canOpenProtectedAppsSettings,
   isBackgroundLocationPermissionGranted,
   isLocationPermissionGranted,
+  OkHiException,
   OkHiLocation,
 } from '../OkCore';
 import { OkHiMode } from '../OkCore';
@@ -14,6 +15,15 @@ import manifest from './app.json'; //TODO: fix this
 import type { AuthApplicationConfig } from '../OkCore/_types';
 import { Platform } from 'react-native';
 import { OkHiNativeModule } from '../OkHiNativeModule';
+
+const fetchCurrentLocation = async (): Promise<null | {
+  lat: number;
+  lng: number;
+  accuracy: number;
+}> => {
+  const result = await OkHiNativeModule.fetchCurrentLocation();
+  return result;
+};
 
 /**
  * @ignore
@@ -58,48 +68,7 @@ export const generateStartDataPayload = async (
       name: 'react-native',
     },
   };
-
-  let hasLocationPermission: boolean | undefined;
-  try {
-    hasLocationPermission = await isLocationPermissionGranted();
-  } catch (error) {
-    console.log(error);
-  }
-
-  let hasBackgroundLocationPermission: boolean | undefined;
-  try {
-    hasBackgroundLocationPermission =
-      await isBackgroundLocationPermissionGranted();
-  } catch (error) {
-    console.log(error);
-  }
-
-  if (
-    typeof hasLocationPermission === 'boolean' &&
-    typeof hasBackgroundLocationPermission === 'boolean'
-  ) {
-    payload.context.permissions = {
-      location: hasBackgroundLocationPermission
-        ? 'always'
-        : hasLocationPermission
-        ? 'whenInUse'
-        : 'denied',
-    };
-  }
-
-  if (Platform.OS === 'android') {
-    const { manufacturer, model } = await OkHiNativeModule.retrieveDeviceInfo();
-    payload.context.device = {
-      manufacturer,
-      model,
-    };
-    payload.context.permissions = {
-      ...payload.context.permissions,
-    };
-  }
   payload.config = {
-    protectedApps:
-      Platform.OS === 'android' && (await canOpenProtectedAppsSettings()),
     streetView:
       typeof props.config?.streetView === 'boolean'
         ? props.config.streetView
@@ -118,7 +87,77 @@ export const generateStartDataPayload = async (
           ? props.config?.addressTypes?.work
           : true,
     },
+    protectedApps:
+      Platform.OS === 'android' && (await canOpenProtectedAppsSettings()),
   };
+
+  if (Platform.OS === 'ios') {
+    const status = await OkHiNativeModule.fetchIOSLocationPermissionStatus();
+    if (status !== 'notDetermined') {
+      payload.context.permissions = {
+        location:
+          status === 'authorizedWhenInUse'
+            ? 'whenInUse'
+            : status === 'authorizedAlways' || status === 'authorized'
+            ? 'always'
+            : 'denided',
+      };
+      if (
+        status === 'authorized' ||
+        status === 'authorizedWhenInUse' ||
+        status === 'authorizedAlways'
+      ) {
+        const location = await fetchCurrentLocation();
+        if (location) {
+          payload.context.coordinates = {
+            currentLocation: {
+              lat: location.lat,
+              lng: location.lng,
+              accuracy: location.accuracy,
+            },
+          };
+        }
+      }
+    }
+  } else if (Platform.OS === 'android') {
+    let hasLocationPermission: boolean | undefined;
+    try {
+      hasLocationPermission = await isLocationPermissionGranted();
+    } catch (error) {
+      console.log(error);
+    }
+
+    let hasBackgroundLocationPermission: boolean | undefined;
+    try {
+      hasBackgroundLocationPermission =
+        await isBackgroundLocationPermissionGranted();
+    } catch (error) {
+      console.log(error);
+    }
+
+    if (
+      typeof hasLocationPermission === 'boolean' &&
+      typeof hasBackgroundLocationPermission === 'boolean'
+    ) {
+      payload.context.permissions = {
+        location: hasBackgroundLocationPermission
+          ? 'always'
+          : hasLocationPermission
+          ? 'whenInUse'
+          : 'denied',
+      };
+    }
+    const { manufacturer, model } = await OkHiNativeModule.retrieveDeviceInfo();
+    payload.context.device = {
+      manufacturer,
+      model,
+    };
+  } else {
+    throw new OkHiException({
+      code: OkHiException.UNSUPPORTED_PLATFORM_CODE,
+      message: OkHiException.UNAUTHORIZED_MESSAGE,
+    });
+  }
   return payload;
 };
 
