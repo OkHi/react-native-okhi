@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Button } from 'react-native';
 import {
   isLocationServicesEnabled,
@@ -23,6 +23,7 @@ import {
   openAppSettings,
   retriveLocationPermissionStatus,
   requestTrackingAuthorization,
+  initialize,
 } from 'react-native-okhi';
 
 const USER: OkHiUser = {
@@ -34,6 +35,26 @@ const USER: OkHiUser = {
 const App = () => {
   const [launch, setLaunch] = useState(false);
   const [locationId, setLocationId] = useState<string | null>(null);
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    initialize({
+      credentials: {
+        branchId: '',
+        clientKey: '',
+      },
+      context: {
+        mode: 'sandbox',
+      },
+      notification: {
+        title: 'Address verification in progress',
+        text: 'Tap here to view your verification status.',
+        channelId: 'okhi',
+        channelName: 'OkHi Channel',
+        channelDescription: 'OkHi verification alerts',
+      },
+    }).then(() => setIsReady(true));
+  }, []);
   const handleOnSuccess = (response: OkCollectSuccessResponse) => {
     console.log(response);
     response.startVerification().then(console.log).catch(console.error);
@@ -191,14 +212,16 @@ const App = () => {
             .catch(console.log)
         }
       />
-      <OkHiLocationManager
-        user={USER}
-        launch={launch}
-        onSuccess={handleOnSuccess}
-        onCloseRequest={() => setLaunch(false)} // called when user taps on the top right close button
-        onError={handleOnError}
-        config={{ addressTypes: { home: true, work: false } }}
-      />
+      {isReady ? (
+        <OkHiLocationManager
+          user={USER}
+          launch={launch}
+          onSuccess={handleOnSuccess}
+          onCloseRequest={() => setLaunch(false)} // called when user taps on the top right close button
+          onError={handleOnError}
+          config={{ addressTypes: { home: true, work: false } }}
+        />
+      ) : null}
     </View>
   );
 };
