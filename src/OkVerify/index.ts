@@ -251,11 +251,10 @@ export const checkVerificationStartRequirements = (): Promise<boolean> => {
  * @returns {Promise<boolean>} A promise that resolves to a boolean value indicating whether the service has started successfully
  */
 export const onNewToken = (fcmPushNotificationToken: string) => {
-  return isValidPlatform(
-    () =>
-      errorHandler(() => OkHiNativeModule.onNewToken(fcmPushNotificationToken)),
-    'android'
-  );
+  if (Platform.OS === 'android') {
+    return OkHiNativeModule.onNewToken(fcmPushNotificationToken);
+  }
+  return Promise.resolve(true);
 };
 
 /**
@@ -263,8 +262,8 @@ export const onNewToken = (fcmPushNotificationToken: string) => {
  * @returns {Promise<boolean>} A promise that resolves to a boolean value indicating whether the service has started successfully
  */
 export const onMessageReceived = () => {
-  return isValidPlatform(
-    () => errorHandler(OkHiNativeModule.onMessageReceived),
-    'android'
-  );
+  if (Platform.OS === 'android') {
+    return OkHiNativeModule.onMessageReceived();
+  }
+  return Promise.resolve(true);
 };
