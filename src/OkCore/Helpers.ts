@@ -395,7 +395,7 @@ const isAndroidNotificationGranted = async (): Promise<boolean> => {
       return true;
     }
     const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATION as Permission
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS as Permission
     );
     return hasPermission;
   }, 'android');
