@@ -20,8 +20,12 @@ import { start as sv } from '../OkVerify';
 import type { OkVerifyStartConfiguration } from '../OkVerify/types';
 import {
   getApplicationConfiguration,
+  isBackgroundLocationPermissionGranted,
+  isLocationServicesEnabled,
+  openAppSettings,
   openProtectedAppsSettings,
   request,
+  requestLocationPermission,
 } from '../OkCore';
 import { OkHiNativeModule } from '../OkHiNativeModule';
 
@@ -104,8 +108,10 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     level: 'whenInUse' | 'always'
   ) => {
     // using request for android because we can programmatically turn on location services, unlike yucky ios
-    request(level, null, (status, _) => {
-      if (level === 'whenInUse' && status === 'authorizedWhenInUse') {
+    request(level, null, (status, error) => {
+      if (error) {
+        onError(error);
+      } else if (level === 'whenInUse' && status === 'authorizedWhenInUse') {
         runWebViewCallback(level);
       } else if (level === 'always' && status === 'authorizedAlways') {
         runWebViewCallback(level);
@@ -116,7 +122,33 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
   const handleIOSRequestLocationPermission = async (
     level: 'whenInUse' | 'always'
   ) => {
-    // TODO: handle ios
+    const serviceError = new OkHiException({
+      code: OkHiException.SERVICE_UNAVAILABLE_CODE,
+      message:
+        'Location service is currently not available. Please enable in app settings',
+    });
+    const unknownError = new OkHiException({
+      code: OkHiException.UNKNOWN_ERROR_CODE,
+      message:
+        'Something went wrong while requesting permissions. Please try again later.',
+    });
+    try {
+      const isServiceAvailable = await isLocationServicesEnabled();
+      if (!isServiceAvailable) {
+        onError(serviceError);
+      } else if (level === 'whenInUse' && (await requestLocationPermission())) {
+        runWebViewCallback(level);
+      } else if (level === 'always') {
+        const granted = await isBackgroundLocationPermissionGranted();
+        if (granted) {
+          runWebViewCallback(level);
+        } else {
+          openAppSettings();
+        }
+      }
+    } catch (error) {
+      onError(unknownError);
+    }
   };
 
   const handleRequestLocationPermission = async ({
