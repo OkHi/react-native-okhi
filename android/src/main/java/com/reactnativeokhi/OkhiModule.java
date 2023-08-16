@@ -278,6 +278,8 @@ public class OkhiModule extends ReactContextBaseJavaModule {
     WritableMap map = new WritableNativeMap();
     map.putString("manufacturer", Build.MANUFACTURER);
     map.putString("model", Build.MODEL);
+    map.putString("osVersion", Build.VERSION.RELEASE);
+    map.putString("platform", "android");
     promise.resolve(map);
   }
 
