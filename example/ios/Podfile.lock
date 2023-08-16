@@ -301,10 +301,10 @@ PODS:
   - React-jsinspector (0.68.2)
   - React-logger (0.68.2):
     - glog
-  - react-native-okhi (1.1.2):
+  - react-native-okhi (1.2.2):
     - OkHi (= 1.9.9)
     - React-Core
-  - react-native-webview (11.23.0):
+  - react-native-webview (11.26.1):
     - React-Core
   - React-perflogger (0.68.2)
   - React-RCTActionSheet (0.68.2):
@@ -563,8 +563,8 @@ SPEC CHECKSUMS:
   React-jsiexecutor: b7b553412f2ec768fe6c8f27cd6bafdb9d8719e6
   React-jsinspector: c5989c77cb89ae6a69561095a61cce56a44ae8e8
   React-logger: a0833912d93b36b791b7a521672d8ee89107aff1
-  react-native-okhi: 3d6b00fc63f4793c6d3e79c3f3ee8a70d640b766
-  react-native-webview: e771bc375f789ebfa02a26939a57dbc6fa897336
+  react-native-okhi: 4e20c0c739cbf812480bbf32ae31cc9c4d7d0f50
+  react-native-webview: 9f111dfbcfc826084d6c507f569e5e03342ee1c1
   React-perflogger: a18b4f0bd933b8b24ecf9f3c54f9bf65180f3fe6
   React-RCTActionSheet: 547fe42fdb4b6089598d79f8e1d855d7c23e2162
   React-RCTAnimation: bc9440a1c37b06ae9ebbb532d244f607805c6034

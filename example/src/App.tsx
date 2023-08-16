@@ -12,7 +12,6 @@ import {
   getSystemVersion,
   OkCollectSuccessResponse,
   OkHiLocationManager,
-  // OkHiException,
   OkHiUser,
   stopVerification,
   startForegroundService,
@@ -55,6 +54,7 @@ const App = () => {
       },
     }).then(() => setIsReady(true));
   }, []);
+
   const handleOnSuccess = (response: OkCollectSuccessResponse) => {
     console.log(response);
     response.startVerification().then(console.log).catch(console.error);
