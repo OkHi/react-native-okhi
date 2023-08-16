@@ -138,7 +138,7 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
         onError(
           new OkHiException({
             code: OkHiException.UNKNOWN_ERROR_CODE,
-            message: response.payload.toString(),
+            message: 'Something went wrong, please try again later.',
           })
         );
       } else if (response.message === 'exit_app') {
