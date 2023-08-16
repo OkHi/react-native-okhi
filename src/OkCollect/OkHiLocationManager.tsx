@@ -21,6 +21,7 @@ import type { OkVerifyStartConfiguration } from '../OkVerify/types';
 import {
   getApplicationConfiguration,
   openProtectedAppsSettings,
+  request,
 } from '../OkCore';
 import { OkHiNativeModule } from '../OkHiNativeModule';
 
@@ -92,6 +93,44 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     }
   }, [applicationConfiguration, props, token]);
 
+  const runWebViewCallback = (value: string) => {
+    if (webViewRef.current) {
+      const jsString = `(function (){ if (typeof runOkHiLocationManagerCallback === "function") { runOkHiLocationManagerCallback("${value}") } })()`;
+      webViewRef.current.injectJavaScript(jsString);
+    }
+  };
+
+  const handleAndroidRequestLocationPermission = async (
+    level: 'whenInUse' | 'always'
+  ) => {
+    // using request for android because we can programmatically turn on location services, unlike yucky ios
+    request(level, null, (status, _) => {
+      if (level === 'whenInUse' && status === 'authorizedWhenInUse') {
+        runWebViewCallback(level);
+      } else if (level === 'always' && status === 'authorizedAlways') {
+        runWebViewCallback(level);
+      }
+    });
+  };
+
+  const handleIOSRequestLocationPermission = async (
+    level: 'whenInUse' | 'always'
+  ) => {
+    // TODO: handle ios
+  };
+
+  const handleRequestLocationPermission = async ({
+    level,
+  }: {
+    level: 'whenInUse' | 'always';
+  }) => {
+    if (Platform.OS === 'android') {
+      handleAndroidRequestLocationPermission(level);
+    } else if (Platform.OS === 'ios') {
+      handleIOSRequestLocationPermission(level);
+    }
+  };
+
   const handleOnMessage = ({ nativeEvent: { data } }: WebViewMessageEvent) => {
     try {
       const response: OkHiLocationManagerResponse = JSON.parse(data);
@@ -106,7 +145,11 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
         onCloseRequest();
       } else if (response.message === 'request_enable_protected_apps') {
         openProtectedAppsSettings();
-      } else {
+      } else if (
+        response.message === 'location_created' ||
+        response.message === 'location_selected' ||
+        response.message === 'location_updated'
+      ) {
         onSuccess({
           user: {
             ...response.payload.user,
@@ -139,6 +182,8 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
             });
           },
         });
+      } else if (response.message === 'request_location_permission') {
+        handleRequestLocationPermission(response.payload);
       }
     } catch (error) {
       let errorMessage = 'Something went wrong';
