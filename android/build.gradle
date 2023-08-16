@@ -10,6 +10,17 @@ buildscript {
   }
 }
 
+allprojects {
+  repositories {
+    google()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+    maven { // <--- add this as part of the repos
+      url "https://repo.okhi.io/artifactory/maven" 
+    }
+  }
+}
+
 def isNewArchitectureEnabled() {
   return rootProject.hasProperty("newArchEnabled") &&  rootProject.getProperty("newArchEnabled") == "true"
 }
