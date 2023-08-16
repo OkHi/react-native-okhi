@@ -145,6 +145,16 @@ class Okhi: RCTEventEmitter {
         }
     }
     
+    @objc func retrieveDeviceInfo(_ resolve:@escaping RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+        let deviceInfoDict: NSDictionary = [
+            "manufacturer": "Apple",
+            "model": UIDevice.current.modelName,
+            "osVersion": UIDevice.current.systemVersion,
+            "platform": "ios"
+        ]
+        resolve(deviceInfoDict)
+    }
+    
     override func supportedEvents() -> [String]! {
         return ["onLocationPermissionStatusUpdate"]
     }
@@ -242,3 +252,17 @@ extension Okhi: OkVerifyDelegate {
         
     }
 }
+
+extension UIDevice {
+    var modelName: String {
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let machineMirror = Mirror(reflecting: systemInfo.machine)
+        let identifier = machineMirror.children.reduce("") { identifier, element in
+            guard let value = element.value as? Int8, value != 0 else { return identifier }
+            return identifier + String(UnicodeScalar(UInt8(value)))
+        }
+        return identifier
+    }
+}
+
