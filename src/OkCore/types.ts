@@ -1,3 +1,5 @@
+import type { OkHiException } from './OkHiException';
+
 /**
  * Defines the structure of the user object requried by OkHi services and libraries.
  */
@@ -209,5 +211,5 @@ export type LocationRequestPermissionType = 'whenInUse' | 'always';
 
 export type LocationPermissionCallback = (
   status: LocationPermissionStatusCallback | null,
-  error: OkHiError | null
+  error: OkHiException | null
 ) => any;

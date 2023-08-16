@@ -105,30 +105,28 @@ export const generateStartDataPayload = async (
 
   if (Platform.OS === 'ios') {
     const status = await OkHiNativeModule.fetchIOSLocationPermissionStatus();
-    if (status !== 'notDetermined') {
-      payload.context.permissions = {
-        location:
-          status === 'authorizedWhenInUse'
-            ? 'whenInUse'
-            : status === 'authorizedAlways' || status === 'authorized'
-            ? 'always'
-            : 'denided',
-      };
-      if (
-        status === 'authorized' ||
-        status === 'authorizedWhenInUse' ||
-        status === 'authorizedAlways'
-      ) {
-        const location = await fetchCurrentLocation();
-        if (location) {
-          payload.context.coordinates = {
-            currentLocation: {
-              lat: location.lat,
-              lng: location.lng,
-              accuracy: location.accuracy,
-            },
-          };
-        }
+    payload.context.permissions = {
+      location:
+        status === 'authorizedWhenInUse'
+          ? 'whenInUse'
+          : status === 'authorizedAlways' || status === 'authorized'
+          ? 'always'
+          : 'denided',
+    };
+    if (
+      status === 'authorized' ||
+      status === 'authorizedWhenInUse' ||
+      status === 'authorizedAlways'
+    ) {
+      const location = await fetchCurrentLocation();
+      if (location) {
+        payload.context.coordinates = {
+          currentLocation: {
+            lat: location.lat,
+            lng: location.lng,
+            accuracy: location.accuracy,
+          },
+        };
       }
     }
   } else if (Platform.OS === 'android') {
