@@ -34,6 +34,8 @@ export const generateStartDataPayload = async (
   applicationConfiguration: AuthApplicationConfig
 ): Promise<OkHiLocationManagerStartDataPayload> => {
   const payload: any = {};
+  const { manufacturer, model, osVersion, platform } =
+    await OkHiNativeModule.retrieveDeviceInfo();
   payload.style = !props.theme
     ? undefined
     : {
@@ -67,6 +69,12 @@ export const generateStartDataPayload = async (
     platform: {
       name: 'react-native',
     },
+    device: {
+      manufacturer,
+      model,
+      platform,
+      osVersion,
+    },
   };
   payload.config = {
     streetView:
@@ -89,6 +97,10 @@ export const generateStartDataPayload = async (
     },
     protectedApps:
       Platform.OS === 'android' && (await canOpenProtectedAppsSettings()),
+    permissionsOnboarding:
+      typeof props.config?.permissionsOnboarding === 'boolean'
+        ? props.config.permissionsOnboarding
+        : true,
   };
 
   if (Platform.OS === 'ios') {
@@ -147,11 +159,6 @@ export const generateStartDataPayload = async (
           : 'denied',
       };
     }
-    const { manufacturer, model } = await OkHiNativeModule.retrieveDeviceInfo();
-    payload.context.device = {
-      manufacturer,
-      model,
-    };
   } else {
     throw new OkHiException({
       code: OkHiException.UNSUPPORTED_PLATFORM_CODE,
