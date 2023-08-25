@@ -111,7 +111,7 @@ export const generateStartDataPayload = async (
           ? 'whenInUse'
           : status === 'authorizedAlways' || status === 'authorized'
           ? 'always'
-          : 'denided',
+          : 'denied',
     };
     if (
       status === 'authorized' ||
