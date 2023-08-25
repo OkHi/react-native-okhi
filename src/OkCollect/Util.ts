@@ -163,6 +163,7 @@ export const generateStartDataPayload = async (
       message: OkHiException.UNAUTHORIZED_MESSAGE,
     });
   }
+  console.log(JSON.stringify(payload));
   return payload;
 };
 
