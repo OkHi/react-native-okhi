@@ -136,8 +136,9 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
       const isServiceAvailable = await isLocationServicesEnabled();
       if (!isServiceAvailable) {
         onError(serviceError);
-      } else if (level === 'whenInUse' && (await requestLocationPermission())) {
-        runWebViewCallback(level);
+      } else if (level === 'whenInUse') {
+        const result = await requestLocationPermission();
+        runWebViewCallback(result ? level : 'denied');
       } else if (level === 'always') {
         const granted = await isBackgroundLocationPermissionGranted();
         if (granted) {
