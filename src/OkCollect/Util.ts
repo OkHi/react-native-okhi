@@ -105,13 +105,16 @@ export const generateStartDataPayload = async (
 
   if (Platform.OS === 'ios') {
     const status = await OkHiNativeModule.fetchIOSLocationPermissionStatus();
+    const locationPermission =
+      status === 'notDetermined'
+        ? 'notDetermined'
+        : status === 'authorizedWhenInUse'
+        ? 'whenInUse'
+        : status === 'authorizedAlways'
+        ? 'always'
+        : 'denied';
     payload.context.permissions = {
-      location:
-        status === 'authorizedWhenInUse'
-          ? 'whenInUse'
-          : status === 'authorizedAlways' || status === 'authorized'
-          ? 'always'
-          : 'denied',
+      location: locationPermission,
     };
     if (
       status === 'authorized' ||
