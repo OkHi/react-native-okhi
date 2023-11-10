@@ -25,7 +25,6 @@ import {
   isLocationServicesEnabled,
   openAppSettings,
   openProtectedAppsSettings,
-  request,
   requestBackgroundLocationPermission,
   requestLocationPermission,
 } from '../OkCore';
