@@ -21,10 +21,12 @@ import type { OkVerifyStartConfiguration } from '../OkVerify/types';
 import {
   getApplicationConfiguration,
   isBackgroundLocationPermissionGranted,
+  isLocationPermissionGranted,
   isLocationServicesEnabled,
   openAppSettings,
   openProtectedAppsSettings,
   request,
+  requestBackgroundLocationPermission,
   requestLocationPermission,
 } from '../OkCore';
 import { OkHiNativeModule } from '../OkHiNativeModule';
@@ -43,10 +45,12 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     ? { ...props.style, ...defaultStyle }
     : defaultStyle;
 
-  const { user, onSuccess, onCloseRequest, onError, loader, launch } = props;
+  const { user, onSuccess, onCloseRequest, onError, loader, launch, config } =
+    props;
   const webViewRef = useRef<WebView | null>(null);
   const startMessage =
     props.mode === 'create' ? 'start_app' : 'select_location';
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     if (applicationConfiguration == null && token == null && user.phone) {
@@ -97,6 +101,33 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     }
   }, [applicationConfiguration, props, token]);
 
+  useEffect(() => {
+    if (launch) {
+      if (
+        typeof config?.permissionsOnboarding === 'boolean' &&
+        !config.permissionsOnboarding
+      ) {
+        isBackgroundLocationPermissionGranted().then((result) => {
+          if (!result) {
+            onError(
+              new OkHiException({
+                code: OkHiException.PERMISSION_DENIED_CODE,
+                message:
+                  'Always location permission must be granted to launch OkCollect',
+              })
+            );
+          } else {
+            setReady(true);
+          }
+        });
+      } else {
+        setReady(true);
+      }
+    } else {
+      setReady(false);
+    }
+  }, [launch, config?.permissionsOnboarding]);
+
   const runWebViewCallback = (value: string) => {
     if (webViewRef.current) {
       const jsString = `(function (){ if (typeof runOkHiLocationManagerCallback === "function") { runOkHiLocationManagerCallback("${value}") } })()`;
@@ -107,16 +138,18 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
   const handleAndroidRequestLocationPermission = async (
     level: 'whenInUse' | 'always'
   ) => {
-    // using request for android because we can programmatically turn on location services, unlike yucky ios
-    request(level, null, (status, error) => {
-      if (error) {
-        onError(error);
-      } else if (level === 'whenInUse' && status === 'authorizedWhenInUse') {
-        runWebViewCallback(level);
-      } else if (level === 'always' && status === 'authorizedAlways') {
-        runWebViewCallback(level);
+    if (level === 'whenInUse') {
+      const result = await requestLocationPermission();
+      runWebViewCallback(result ? 'whenInUse' : 'denied');
+    } else if (level === 'always') {
+      const result = await requestBackgroundLocationPermission();
+      if (result) {
+        runWebViewCallback('always');
+      } else {
+        const isWhenInUseGranted = await isLocationPermissionGranted();
+        runWebViewCallback(isWhenInUseGranted ? 'whenInUse' : 'denied');
       }
-    });
+    }
   };
 
   const handleIOSRequestLocationPermission = async (
@@ -164,9 +197,24 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     }
   };
 
+  const handleOpenAppSettings = async () => {
+    try {
+      const granted = await isBackgroundLocationPermissionGranted();
+      if (granted) {
+        runWebViewCallback('always');
+      } else {
+        await openAppSettings();
+      }
+    } catch (error) {
+      const err = error as OkHiException;
+      onError(err);
+    }
+  };
+
   const handleOnMessage = ({ nativeEvent: { data } }: WebViewMessageEvent) => {
     try {
       const response: OkHiLocationManagerResponse = JSON.parse(data);
+
       if (response.message === 'fatal_exit') {
         onError(
           new OkHiException({
@@ -217,6 +265,8 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
         });
       } else if (response.message === 'request_location_permission') {
         handleRequestLocationPermission(response.payload);
+      } else if (response.message === 'open_app_settings') {
+        handleOpenAppSettings();
       }
     } catch (error) {
       let errorMessage = 'Something went wrong';
@@ -282,10 +332,10 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     <Modal
       animationType="slide"
       transparent={false}
-      visible={launch}
+      visible={ready}
       onRequestClose={handleModalRequestClose}
     >
-      {launch ? renderContent() : null}
+      {ready ? renderContent() : null}
     </Modal>
   );
 };
