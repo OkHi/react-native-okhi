@@ -154,11 +154,6 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
   const handleIOSRequestLocationPermission = async (
     level: 'whenInUse' | 'always'
   ) => {
-    const serviceError = new OkHiException({
-      code: OkHiException.SERVICE_UNAVAILABLE_CODE,
-      message:
-        'Location service is currently not available. Please enable in app settings',
-    });
     const unknownError = new OkHiException({
       code: OkHiException.UNKNOWN_ERROR_CODE,
       message:
