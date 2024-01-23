@@ -30,6 +30,7 @@ export function initialize(
           configuration.credentials.clientKey,
           configuration.context.mode
         );
+        await OkHiNativeModule.onStart();
       }
     }
   });
