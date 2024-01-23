@@ -48,4 +48,7 @@ RCT_EXTERN_METHOD(fetchCurrentLocation: (RCTPromiseResolveBlock)resolve reject:(
 RCT_EXTERN_METHOD(fetchIOSLocationPermissionStatus: (RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(retrieveDeviceInfo: (RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(onStart: (RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
 @end

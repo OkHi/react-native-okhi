@@ -69,6 +69,7 @@ type OkHiNativeModuleType = {
     | 'authorized'
     | 'unknown'
   >;
+  onStart(): Promise<boolean>;
 };
 
 export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi
