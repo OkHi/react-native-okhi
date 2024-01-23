@@ -184,6 +184,11 @@ class Okhi: RCTEventEmitter {
         let manager = CLLocationManager()
         resolve(fetchLocationPermissionStatus(status: getLocationAuthorizationStatus(manager: manager)))
     }
+    
+    @objc public func onStart(_ resolve:@escaping RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+        OkVerify.onStart()
+        resolve(true)
+    }
 }
 
 // MARK: - OkHi Utils
