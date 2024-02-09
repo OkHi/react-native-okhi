@@ -23,6 +23,7 @@ import {
   retriveLocationPermissionStatus,
   requestTrackingAuthorization,
   initialize,
+  isNotificationPermissionGranted,
 } from 'react-native-okhi';
 
 const USER: OkHiUser = {
@@ -39,11 +40,11 @@ const App = () => {
   useEffect(() => {
     initialize({
       credentials: {
-        branchId: '',
-        clientKey: '',
+        branchId: 'UD3tyqVt50',
+        clientKey: 'bcb6e880-5294-4045-b0c7-5303cc1a9983',
       },
       context: {
-        mode: 'sandbox',
+        mode: 'dev' as any,
       },
       notification: {
         title: 'Address verification in progress',
@@ -87,6 +88,14 @@ const App = () => {
         title="location permission check"
         onPress={() => {
           isLocationPermissionGranted().then(console.log).catch(console.log);
+        }}
+      />
+      <Button
+        title="notification permission check"
+        onPress={() => {
+          isNotificationPermissionGranted()
+            .then(console.log)
+            .catch(console.log);
         }}
       />
       <Button
