@@ -83,7 +83,7 @@ class Okhi: RCTEventEmitter {
     @objc func initializeIOS(_ branchId: String, clientKey: String, environment: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         self.initResolve = resolve
         self.initReject = reject
-        okVerify.initialize(with: branchId, clientKey: clientKey, environment: environment)
+        okVerify.initialize(branchId: branchId, clientKey: clientKey, environment: environment)
     }
     
     @objc func startAddressVerification(_ phoneNumber: String, locationId: String, lat: Double, lon: Double, resolve:@escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
