@@ -21,7 +21,6 @@ import type { OkVerifyStartConfiguration } from '../OkVerify/types';
 import {
   getApplicationConfiguration,
   isBackgroundLocationPermissionGranted,
-  isLocationPermissionGranted,
   isLocationServicesEnabled,
   openAppSettings,
   openProtectedAppsSettings,
