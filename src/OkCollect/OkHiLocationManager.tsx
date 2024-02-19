@@ -20,7 +20,12 @@ import { start as sv } from '../OkVerify';
 import type { OkVerifyStartConfiguration } from '../OkVerify/types';
 import {
   getApplicationConfiguration,
+  isBackgroundLocationPermissionGranted,
+  isLocationServicesEnabled,
+  openAppSettings,
   openProtectedAppsSettings,
+  requestBackgroundLocationPermission,
+  requestLocationPermission,
 } from '../OkCore';
 import { OkHiNativeModule } from '../OkHiNativeModule';
 
@@ -38,10 +43,12 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     ? { ...props.style, ...defaultStyle }
     : defaultStyle;
 
-  const { user, onSuccess, onCloseRequest, onError, loader, launch } = props;
+  const { user, onSuccess, onCloseRequest, onError, loader, launch, config } =
+    props;
   const webViewRef = useRef<WebView | null>(null);
   const startMessage =
     props.mode === 'create' ? 'start_app' : 'select_location';
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     if (applicationConfiguration == null && token == null && user.phone) {
@@ -92,21 +99,126 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     }
   }, [applicationConfiguration, props, token]);
 
+  useEffect(() => {
+    if (launch) {
+      if (
+        typeof config?.permissionsOnboarding === 'boolean' &&
+        !config.permissionsOnboarding
+      ) {
+        isBackgroundLocationPermissionGranted().then((result) => {
+          if (!result) {
+            onError(
+              new OkHiException({
+                code: OkHiException.PERMISSION_DENIED_CODE,
+                message:
+                  'Always location permission must be granted to launch OkCollect',
+              })
+            );
+          } else {
+            setReady(true);
+          }
+        });
+      } else {
+        setReady(true);
+      }
+    } else {
+      setReady(false);
+    }
+  }, [launch, config?.permissionsOnboarding]);
+
+  const runWebViewCallback = (value: string) => {
+    if (webViewRef.current) {
+      const jsString = `(function (){ if (typeof runOkHiLocationManagerCallback === "function") { runOkHiLocationManagerCallback("${value}") } })()`;
+      webViewRef.current.injectJavaScript(jsString);
+    }
+  };
+
+  const handleAndroidRequestLocationPermission = async (
+    level: 'whenInUse' | 'always'
+  ) => {
+    if (level === 'whenInUse') {
+      const result = await requestLocationPermission();
+      runWebViewCallback(result ? 'whenInUse' : 'blocked');
+    } else if (level === 'always') {
+      const result = await requestBackgroundLocationPermission();
+      runWebViewCallback(result ? 'always' : 'blocked');
+    }
+  };
+
+  const handleIOSRequestLocationPermission = async (
+    level: 'whenInUse' | 'always'
+  ) => {
+    const unknownError = new OkHiException({
+      code: OkHiException.UNKNOWN_ERROR_CODE,
+      message:
+        'Something went wrong while requesting permissions. Please try again later.',
+    });
+    try {
+      const isServiceAvailable = await isLocationServicesEnabled();
+      if (!isServiceAvailable) {
+        openAppSettings();
+      } else if (level === 'whenInUse') {
+        const result = await requestLocationPermission();
+        runWebViewCallback(result ? level : 'denied');
+      } else if (level === 'always') {
+        const granted = await isBackgroundLocationPermissionGranted();
+        if (granted) {
+          runWebViewCallback(level);
+        } else {
+          openAppSettings();
+        }
+      }
+    } catch (error) {
+      onError(unknownError);
+    }
+  };
+
+  const handleRequestLocationPermission = async ({
+    level,
+  }: {
+    level: 'whenInUse' | 'always';
+  }) => {
+    if (Platform.OS === 'android') {
+      handleAndroidRequestLocationPermission(level);
+    } else if (Platform.OS === 'ios') {
+      handleIOSRequestLocationPermission(level);
+    }
+  };
+
+  const handleOpenAppSettings = async () => {
+    try {
+      const granted = await isBackgroundLocationPermissionGranted();
+      if (granted) {
+        runWebViewCallback('always');
+      } else {
+        await openAppSettings();
+      }
+    } catch (error) {
+      const err = error as OkHiException;
+      onError(err);
+    }
+  };
+
   const handleOnMessage = ({ nativeEvent: { data } }: WebViewMessageEvent) => {
     try {
       const response: OkHiLocationManagerResponse = JSON.parse(data);
+
       if (response.message === 'fatal_exit') {
         onError(
           new OkHiException({
             code: OkHiException.UNKNOWN_ERROR_CODE,
-            message: response.payload.toString(),
+            message: 'Something went wrong, please try again later.',
           })
         );
       } else if (response.message === 'exit_app') {
         onCloseRequest();
       } else if (response.message === 'request_enable_protected_apps') {
         openProtectedAppsSettings();
-      } else {
+      } else if (
+        response.message === 'location_created' ||
+        response.message === 'location_selected' ||
+        response.message === 'location_updated'
+      ) {
         onSuccess({
           user: {
             ...response.payload.user,
@@ -139,6 +251,10 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
             });
           },
         });
+      } else if (response.message === 'request_location_permission') {
+        handleRequestLocationPermission(response.payload);
+      } else if (response.message === 'open_app_settings') {
+        handleOpenAppSettings();
       }
     } catch (error) {
       let errorMessage = 'Something went wrong';
@@ -204,10 +320,10 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     <Modal
       animationType="slide"
       transparent={false}
-      visible={launch}
+      visible={ready}
       onRequestClose={handleModalRequestClose}
     >
-      {launch ? renderContent() : null}
+      {ready ? renderContent() : null}
     </Modal>
   );
 };

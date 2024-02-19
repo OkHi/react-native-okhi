@@ -44,7 +44,12 @@ type OkHiNativeModuleType = {
   requestTrackingAuthorization(): Promise<string | null>;
   canOpenProtectedAppsSettings(): Promise<boolean>;
   openProtectedAppsSettings(): Promise<boolean>;
-  retrieveDeviceInfo(): Promise<{ manufacturer: string; model: string }>;
+  retrieveDeviceInfo(): Promise<{
+    manufacturer: string;
+    model: string;
+    osVersion: string;
+    platform: 'android' | 'ios';
+  }>;
   setItem(key: string, value: string): Promise<boolean>;
   onNewToken(fcmPushNotificationToken: string): Promise<boolean>;
   onMessageReceived(): Promise<boolean>;
@@ -64,6 +69,7 @@ type OkHiNativeModuleType = {
     | 'authorized'
     | 'unknown'
   >;
+  onStart(): Promise<boolean>;
 };
 
 export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi

@@ -394,8 +394,14 @@ const isAndroidNotificationGranted = async (): Promise<boolean> => {
     if (Number(sdkVersion) < 33) {
       return true;
     }
+    const permission =
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS ||
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATION;
+    if (!permission)
+      throw new Error('Unable to request notification permission');
     const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS as Permission
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS ||
+        (PermissionsAndroid.PERMISSIONS.POST_NOTIFICATION as Permission)
     );
     return hasPermission;
   }, 'android');

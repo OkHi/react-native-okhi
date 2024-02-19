@@ -79,6 +79,7 @@ export interface OkHiLocationManagerProps {
       home?: boolean;
       work?: boolean;
     };
+    permissionsOnboarding?: boolean;
   };
 
   /**
@@ -142,6 +143,7 @@ export interface OkHiLocationManagerResponse {
     | 'location_updated'
     | 'exit_app'
     | 'request_enable_protected_apps'
-    | 'fatal_exit';
-  payload: { user: any; location: any };
+    | 'fatal_exit'
+    | 'request_location_permission';
+  payload: any;
 }

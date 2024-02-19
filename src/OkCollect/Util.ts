@@ -34,6 +34,8 @@ export const generateStartDataPayload = async (
   applicationConfiguration: AuthApplicationConfig
 ): Promise<OkHiLocationManagerStartDataPayload> => {
   const payload: any = {};
+  const { manufacturer, model, osVersion, platform } =
+    await OkHiNativeModule.retrieveDeviceInfo();
   payload.style = !props.theme
     ? undefined
     : {
@@ -67,6 +69,12 @@ export const generateStartDataPayload = async (
     platform: {
       name: 'react-native',
     },
+    device: {
+      manufacturer,
+      model,
+      platform,
+      osVersion,
+    },
   };
   payload.config = {
     streetView:
@@ -89,34 +97,39 @@ export const generateStartDataPayload = async (
     },
     protectedApps:
       Platform.OS === 'android' && (await canOpenProtectedAppsSettings()),
+    permissionsOnboarding:
+      typeof props.config?.permissionsOnboarding === 'boolean'
+        ? props.config.permissionsOnboarding
+        : true,
   };
 
   if (Platform.OS === 'ios') {
     const status = await OkHiNativeModule.fetchIOSLocationPermissionStatus();
-    if (status !== 'notDetermined') {
-      payload.context.permissions = {
-        location:
-          status === 'authorizedWhenInUse'
-            ? 'whenInUse'
-            : status === 'authorizedAlways' || status === 'authorized'
-            ? 'always'
-            : 'denided',
-      };
-      if (
-        status === 'authorized' ||
-        status === 'authorizedWhenInUse' ||
-        status === 'authorizedAlways'
-      ) {
-        const location = await fetchCurrentLocation();
-        if (location) {
-          payload.context.coordinates = {
-            currentLocation: {
-              lat: location.lat,
-              lng: location.lng,
-              accuracy: location.accuracy,
-            },
-          };
-        }
+    const locationPermission =
+      status === 'notDetermined'
+        ? 'notDetermined'
+        : status === 'authorizedWhenInUse'
+        ? 'whenInUse'
+        : status === 'authorizedAlways'
+        ? 'always'
+        : 'denied';
+    payload.context.permissions = {
+      location: locationPermission,
+    };
+    if (
+      status === 'authorized' ||
+      status === 'authorizedWhenInUse' ||
+      status === 'authorizedAlways'
+    ) {
+      const location = await fetchCurrentLocation();
+      if (location) {
+        payload.context.coordinates = {
+          currentLocation: {
+            lat: location.lat,
+            lng: location.lng,
+            accuracy: location.accuracy,
+          },
+        };
       }
     }
   } else if (Platform.OS === 'android') {
@@ -147,11 +160,6 @@ export const generateStartDataPayload = async (
           : 'denied',
       };
     }
-    const { manufacturer, model } = await OkHiNativeModule.retrieveDeviceInfo();
-    payload.context.device = {
-      manufacturer,
-      model,
-    };
   } else {
     throw new OkHiException({
       code: OkHiException.UNSUPPORTED_PLATFORM_CODE,

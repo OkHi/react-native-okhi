@@ -83,7 +83,7 @@ class Okhi: RCTEventEmitter {
     @objc func initializeIOS(_ branchId: String, clientKey: String, environment: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         self.initResolve = resolve
         self.initReject = reject
-        okVerify.initialize(with: branchId, clientKey: clientKey, environment: environment)
+        okVerify.initialize(branchId: branchId, clientKey: clientKey, environment: environment)
     }
     
     @objc func startAddressVerification(_ phoneNumber: String, locationId: String, lat: Double, lon: Double, resolve:@escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
@@ -145,6 +145,16 @@ class Okhi: RCTEventEmitter {
         }
     }
     
+    @objc func retrieveDeviceInfo(_ resolve:@escaping RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+        let deviceInfoDict: NSDictionary = [
+            "manufacturer": "Apple",
+            "model": UIDevice.current.modelName,
+            "osVersion": UIDevice.current.systemVersion,
+            "platform": "ios"
+        ]
+        resolve(deviceInfoDict)
+    }
+    
     override func supportedEvents() -> [String]! {
         return ["onLocationPermissionStatusUpdate"]
     }
@@ -173,6 +183,11 @@ class Okhi: RCTEventEmitter {
     @objc public func fetchIOSLocationPermissionStatus(_ resolve:@escaping RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
         let manager = CLLocationManager()
         resolve(fetchLocationPermissionStatus(status: getLocationAuthorizationStatus(manager: manager)))
+    }
+    
+    @objc public func onStart(_ resolve:@escaping RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+        OkVerify.onStart()
+        resolve(true)
     }
 }
 
@@ -242,3 +257,17 @@ extension Okhi: OkVerifyDelegate {
         
     }
 }
+
+extension UIDevice {
+    var modelName: String {
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let machineMirror = Mirror(reflecting: systemInfo.machine)
+        let identifier = machineMirror.children.reduce("") { identifier, element in
+            guard let value = element.value as? Int8, value != 0 else { return identifier }
+            return identifier + String(UnicodeScalar(UInt8(value)))
+        }
+        return identifier
+    }
+}
+
