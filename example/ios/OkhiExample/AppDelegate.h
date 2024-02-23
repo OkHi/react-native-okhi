@@ -5,6 +5,5 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
-@property (strong, nonatomic) OkVerify *okverify;
 
 @end

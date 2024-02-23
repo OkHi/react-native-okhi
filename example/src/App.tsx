@@ -40,11 +40,11 @@ const App = () => {
   useEffect(() => {
     initialize({
       credentials: {
-        branchId: 'UD3tyqVt50',
-        clientKey: 'bcb6e880-5294-4045-b0c7-5303cc1a9983',
+        branchId: '',
+        clientKey: '',
       },
       context: {
-        mode: 'dev' as any,
+        mode: 'prod' as any,
       },
       notification: {
         title: 'Address verification in progress',
@@ -53,15 +53,14 @@ const App = () => {
         channelName: 'OkHi Channel',
         channelDescription: 'OkHi verification alerts',
       },
-    }).then(() => setIsReady(true));
+    })
+      .then(() => setIsReady(true))
+      .catch(console.error);
   }, []);
 
-  const handleOnSuccess = (response: OkCollectSuccessResponse) => {
+  const handleOnSuccess = async (response: OkCollectSuccessResponse) => {
     console.log(response);
-    response.startVerification().then(console.log).catch(console.error);
-    if (response.location.id) {
-      setLocationId(response.location.id);
-    }
+    await response.startVerification();
     setLaunch(false);
   };
 
@@ -221,7 +220,7 @@ const App = () => {
             .catch(console.log)
         }
       />
-      {isReady ? (
+      {launch ? (
         <OkHiLocationManager
           user={USER}
           launch={launch}

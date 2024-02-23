@@ -186,8 +186,9 @@ class Okhi: RCTEventEmitter {
     }
     
     @objc public func onStart(_ resolve:@escaping RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
-        OkVerify.onStart()
-        resolve(true)
+        OkVerify.onStart { result in
+            resolve(result)
+        }
     }
 }
 

@@ -29,10 +29,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  self.okverify = [[OkVerify alloc] init]; // add this!
-    if ([launchOptions objectForKey:UIApplicationLaunchOptionsLocationKey]) // add this!
-      [self.okverify startMonitoring];
-  
+  [OkVerify startMonitoring];
   RCTAppSetupPrepareApp(application);
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
