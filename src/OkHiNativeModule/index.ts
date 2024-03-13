@@ -70,6 +70,7 @@ type OkHiNativeModuleType = {
     | 'unknown'
   >;
   onStart(): Promise<boolean>;
+  fetchRegisteredGeofences(): Promise<string | null>;
 };
 
 export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi
