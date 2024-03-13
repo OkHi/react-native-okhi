@@ -318,6 +318,21 @@ public class OkhiModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void getItem(String key, Promise promise) {
+    try {
+      promise.resolve(OkPreference.getItem(key, getReactApplicationContext()));
+    } catch (OkHiException e) {
+      promise.reject(e.getCode(), e.getMessage(), e);
+      e.printStackTrace();
+    }
+  }
+
+  @ReactMethod
+  public void fetchRegisteredGeofences(Promise promise) {
+    promise.resolve(OkVerify.fetchRegisteredGeofences(getReactApplicationContext()));
+  }
+
+  @ReactMethod
   public void onNewToken(String fcmPushNotificationToken, Promise promise) {
     OkVerifyPushNotificationService.onNewToken(fcmPushNotificationToken, getReactApplicationContext());
     promise.resolve(true);
