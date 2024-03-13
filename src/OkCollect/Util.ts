@@ -36,6 +36,10 @@ export const generateStartDataPayload = async (
   const payload: any = {};
   const { manufacturer, model, osVersion, platform } =
     await OkHiNativeModule.retrieveDeviceInfo();
+  const geofences = await OkHiNativeModule.fetchRegisteredGeofences();
+  if (geofences) {
+    payload.locations = JSON.parse(geofences);
+  }
   payload.style = !props.theme
     ? undefined
     : {
