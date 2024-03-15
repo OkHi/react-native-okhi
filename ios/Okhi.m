@@ -51,4 +51,6 @@ RCT_EXTERN_METHOD(retrieveDeviceInfo: (RCTPromiseResolveBlock)resolve reject:(RC
 
 RCT_EXTERN_METHOD(onStart: (RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(fetchRegisteredGeofences: (RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
 @end

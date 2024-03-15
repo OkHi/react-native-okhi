@@ -190,6 +190,20 @@ class Okhi: RCTEventEmitter {
             resolve(result)
         }
     }
+    
+    @objc public func fetchRegisteredGeofences(_ resolve: RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+        do {
+            let geofences: [[String: Any]] = OkVerify.fetchRegisteredGeofences()
+            let jsonData = try JSONSerialization.data(withJSONObject: geofences, options: [])
+            guard let jsonString = String(data: jsonData, encoding: .utf8) else {
+                resolve(NSNull())
+                return
+            }
+            resolve(jsonString)
+        } catch {
+            resolve(NSNull())
+        }
+    }
 }
 
 // MARK: - OkHi Utils
