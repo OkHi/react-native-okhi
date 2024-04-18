@@ -207,10 +207,11 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
       const response: OkHiLocationManagerResponse = JSON.parse(data);
 
       if (response.message === 'fatal_exit') {
+        //TODO: figure out bad phone number code
         onError(
           new OkHiException({
             code: OkHiException.UNKNOWN_ERROR_CODE,
-            message: 'Something went wrong, please try again later.',
+            message: response.payload,
           })
         );
       } else if (response.message === 'exit_app') {
