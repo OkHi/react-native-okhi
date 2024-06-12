@@ -3,6 +3,7 @@ import { OkHiNativeModule } from '../OkHiNativeModule';
 import type { OkHiApplicationConfiguration } from './types';
 import { errorHandler } from './_helpers';
 import type { AuthApplicationConfig } from './_types';
+import { OkHiException } from './OkHiException';
 
 export * from './types';
 export * from './OkHiException';
@@ -11,6 +12,20 @@ export * from './Helpers';
 
 let okhiApplicationConfiguration: OkHiApplicationConfiguration | undefined;
 
+function validateConfiguration(config: OkHiApplicationConfiguration) {
+  if (
+    typeof config !== 'object' ||
+    config === null ||
+    !config.credentials ||
+    typeof config.credentials.branchId !== 'string' ||
+    config.credentials.branchId.trim().length === 0 ||
+    typeof config.credentials.clientKey !== 'string' ||
+    config.credentials.clientKey.trim().length === 0
+  ) {
+    return false;
+  }
+  return true;
+}
 /**
  * Initializes the OkHi library with provided API keys
  * @param {Object} configuration A configuration object with your OkHi credentials as well as library settings
@@ -20,19 +35,26 @@ export function initialize(
   configuration: OkHiApplicationConfiguration
 ): Promise<void> {
   return errorHandler(async () => {
-    okhiApplicationConfiguration = configuration;
-    if (AppState.currentState !== 'background') {
-      if (Platform.OS === 'android') {
-        await OkHiNativeModule.initialize(JSON.stringify(configuration));
-      } else {
-        await OkHiNativeModule.initializeIOS(
-          configuration.credentials.branchId,
-          configuration.credentials.clientKey,
-          configuration.context.mode
-        );
+    const isValidConfig = validateConfiguration(configuration);
+    if (!isValidConfig) {
+      throw new OkHiException({
+        code: OkHiException.UNAUTHORIZED_CODE,
+        message: 'Invalid OkHi configuration provided.',
+      });
+    }
+    if (Platform.OS === 'ios') {
+      await OkHiNativeModule.initializeIOS(
+        configuration.credentials.branchId,
+        configuration.credentials.clientKey,
+        configuration.context.mode
+      );
+      if (AppState.currentState !== 'background') {
         await OkHiNativeModule.onStart();
       }
+    } else {
+      await OkHiNativeModule.initialize(JSON.stringify(configuration));
     }
+    okhiApplicationConfiguration = configuration;
   });
 }
 
