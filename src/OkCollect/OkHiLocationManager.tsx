@@ -223,6 +223,7 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
         response.message === 'location_selected' ||
         response.message === 'location_updated'
       ) {
+        setReady(false); // auto close
         onSuccess({
           user: {
             ...response.payload.user,
