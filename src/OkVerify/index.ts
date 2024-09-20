@@ -13,7 +13,7 @@ import { errorHandler, isValidPlatform } from '../OkCore/_helpers';
 import { OkHiNativeModule } from '../OkHiNativeModule';
 import type { OkCollectSuccessResponse } from '../OkCollect/types';
 import { OkHiException } from '../OkCore/OkHiException';
-import { VerificationType } from '../OkCore';
+import type { VerificationType } from '../OkCore';
 /**
  * Starts verification for a particular address
  * @param {string} phoneNumber A users phone number
