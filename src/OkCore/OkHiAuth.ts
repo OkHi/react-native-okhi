@@ -69,6 +69,7 @@ export class OkHiAuth {
             url = this.SANDBOX_BASE_URL;
           }
           const headers = { Authorization: auth.token };
+          console.log(payload);
           const { data } = await axios.post(url, payload, {
             headers,
           });
@@ -92,6 +93,10 @@ export class OkHiAuth {
         code: OkHiException.NETWORK_ERROR_CODE,
         message: OkHiException.NETWORK_ERROR_MESSAGE,
       });
+    }
+    if (axios.isAxiosError(error)) {
+      console.log(error.config.headers);
+      console.log(error.config.url);
     }
     switch (error.response.status) {
       case 400:

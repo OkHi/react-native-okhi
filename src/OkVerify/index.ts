@@ -11,20 +11,17 @@ import {
 } from '../OkCore/Helpers';
 import { errorHandler, isValidPlatform } from '../OkCore/_helpers';
 import { OkHiNativeModule } from '../OkHiNativeModule';
-import type { OkVerifyStartConfiguration } from './types';
 import type { OkCollectSuccessResponse } from '../OkCollect/types';
 import { OkHiException } from '../OkCore/OkHiException';
-export * from './types';
+import { VerificationType } from '../OkCore';
 /**
  * Starts verification for a particular address
  * @param {string} phoneNumber A users phone number
  * @param {string} locationId An OkHi location identifier obtained after successfull creation of addresses.
  * @param {number} lat The latitude of the created address
  * @param {number} lon The longitude of the created address
- * @param {Object} configuration Configures how verification will start on different platforms
- * @param {Object} configuration.android Specifices how verification will start on Android platforms
- * @param {boolean} configuration.android.withForeground Specifices if the foreground service will be turned on to speed up rate of verification, default is true
- * @param {string} fcmPushNotificationToken User's firebase push notification token
+ * @param verificationTypes - Optional. An array of verification types that specifies the mode of verification.
+ *                            Can include "physical" and/or "digital" as valid values.
  * @returns {Promise<string>} A promise that resolves to a string value of the location identifier
  */
 export const start = (
@@ -32,25 +29,27 @@ export const start = (
   locationId: string,
   lat: number,
   lon: number,
-  configuration?: OkVerifyStartConfiguration,
-  fcmPushNotificationToken?: string
+  verificationTypes?: VerificationType
 ) => {
   return isValidPlatform(() => {
+    const vtypes: VerificationType = Array.isArray(verificationTypes)
+      ? verificationTypes
+      : ['physical'];
     if (Platform.OS === 'android') {
       return OkHiNativeModule.startAddressVerification(
         phoneNumber,
         locationId,
         lat,
         lon,
-        configuration,
-        fcmPushNotificationToken
+        vtypes
       );
     } else {
       return OkHiNativeModule.startAddressVerification(
         phoneNumber,
         locationId,
         lat,
-        lon
+        lon,
+        vtypes
       );
     }
   });
@@ -59,17 +58,16 @@ export const start = (
 /**
  * Starts verification for a particular address using the response object returned by OkCollect
  * @param {Object} response Response returned by OkCollect
- * @param {Object} configuration Configures how verification will start on different platforms
- * @param {Object} configuration.android Specifices how verification will start on Android platforms
- * @param {boolean} configuration.android.withForeground Specifices if the foreground service will be turned on to speed up rate of verification
  * @returns {Promise<string>} A promise that resolves to a string value of the location identifier
  */
-export const startVerification = async (
-  response: OkCollectSuccessResponse,
-  configuration?: OkVerifyStartConfiguration
-) => {
+export const startVerification = async (response: OkCollectSuccessResponse) => {
   return new Promise((resolve, reject) => {
     const { location, user } = response;
+    const verificationTypes: VerificationType = Array.isArray(
+      response.location.verificationTypes
+    )
+      ? response.location.verificationTypes
+      : ['digital'];
     if (location.id) {
       if (Platform.OS === 'android') {
         const result = OkHiNativeModule.startAddressVerification(
@@ -77,8 +75,7 @@ export const startVerification = async (
           location.id,
           location.lat,
           location.lon,
-          configuration,
-          user.fcmPushNotificationToken
+          verificationTypes
         );
         resolve(result);
       } else {
@@ -86,7 +83,8 @@ export const startVerification = async (
           user.phone,
           location.id,
           location.lat,
-          location.lon
+          location.lon,
+          verificationTypes
         );
         resolve(result);
       }

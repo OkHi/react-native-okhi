@@ -162,6 +162,11 @@ export interface OkHiLocation {
    * A user's country code
    */
   countryCode?: string;
+
+  /**
+   * An array of verification types that specifies the mode of verification. Can include "physical" and/or "digital" as valid values.
+   */
+  verificationTypes?: VerificationType;
 }
 
 /**
@@ -213,3 +218,5 @@ export type LocationPermissionCallback = (
   status: LocationPermissionStatusCallback | null,
   error: OkHiException | null
 ) => any;
+
+export type VerificationType = Array<'physical' | 'digital'>;
