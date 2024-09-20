@@ -16,12 +16,15 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.module.annotations.ReactModule;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import io.okhi.android_core.OkHi;
 import io.okhi.android_core.interfaces.OkHiRequestHandler;
@@ -182,20 +185,23 @@ public class OkhiModule extends ReactContextBaseJavaModule {
     }
   }
 
+  private static ArrayList<String> processVerificationTypes(ReadableArray array) {
+    ArrayList<String> arrayList = new ArrayList<>();
+    for (int i = 0; i < array.size(); i++) {
+      arrayList.add(array.getString(i));
+    }
+    return arrayList;
+  }
+
   @ReactMethod
-  public void startAddressVerification(String phoneNumber, String locationId, Float lat, Float lon, ReadableMap config, String fcmPushNotificationToken, Promise promise) {
+  public void startAddressVerification(String phoneNumber, String locationId, Float lat, Float lon, ReadableArray verificationTypes, Promise promise) {
     if (okVerify == null) {
       promise.reject("unauthorized", "failed to initialise okhi");
       return;
     }
-    OkHiUser user = new OkHiUser.Builder(phoneNumber).withFcmPushNotificationToken(fcmPushNotificationToken).build();
+    OkHiUser user = new OkHiUser.Builder(phoneNumber).build();
     OkHiLocation location = new OkHiLocation.Builder(locationId, lat, lon).build();
-    Boolean withForeground = true;
-    Dynamic foregroundConfig = getConfig(config, "withForeground");
-    if(foregroundConfig != null) {
-      withForeground = foregroundConfig.asBoolean();
-    }
-    okVerify.start(user, location, withForeground, new OkVerifyCallback<String>() {
+    okVerify.start(user, location, processVerificationTypes(verificationTypes), new OkVerifyCallback<String>() {
       @Override
       public void onSuccess(String result) {
         promise.resolve(result);
