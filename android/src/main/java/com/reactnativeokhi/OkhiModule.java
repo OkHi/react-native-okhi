@@ -34,6 +34,7 @@ import io.okhi.android_core.models.OkHiException;
 import io.okhi.android_core.models.OkHiLocation;
 import io.okhi.android_core.models.OkHiPermissionService;
 import io.okhi.android_core.models.OkHiUser;
+import io.okhi.android_core.models.OkHiVerificationType;
 import io.okhi.android_core.models.OkPreference;
 import io.okhi.android_okverify.OkVerify;
 import io.okhi.android_okverify.interfaces.OkVerifyCallback;
@@ -200,8 +201,15 @@ public class OkhiModule extends ReactContextBaseJavaModule {
       return;
     }
     OkHiUser user = new OkHiUser.Builder(phoneNumber).build();
-    OkHiLocation location = new OkHiLocation.Builder(locationId, lat, lon).build();
-    okVerify.start(user, location, processVerificationTypes(verificationTypes), new OkVerifyCallback<String>() {
+    String[] verificationTypesList = new String[verificationTypes.size()];
+    for (int i = 0; i < verificationTypes.size(); i++) {
+      verificationTypesList[i] = verificationTypes.getString(i);
+    }
+    if (verificationTypesList.length == 0) {
+      verificationTypesList = new String[]{OkHiVerificationType.digital.name()};
+    }
+    OkHiLocation location = new OkHiLocation.Builder(locationId, lat, lon).setVerificationTypes(verificationTypesList).build();
+    okVerify.start(user, location, new OkVerifyCallback<String>() {
       @Override
       public void onSuccess(String result) {
         promise.resolve(result);
