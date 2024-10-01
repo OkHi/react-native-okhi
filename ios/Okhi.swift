@@ -89,7 +89,21 @@ class Okhi: RCTEventEmitter {
     @objc func startAddressVerification(_ phoneNumber: String, locationId: String, lat: Double, lon: Double, resolve:@escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         self.resolve = resolve
         self.reject = reject
-        okVerify.startAddressVerification(phoneNumber: phoneNumber, locationId: locationId, lat: lat, lon: lon)
+        okVerify.startAddressVerification(phoneNumber: phoneNumber, locationId: locationId, lat: lat, lon: lon, verificationTypes: [.physical])
+    }
+    
+    @objc func startAddressVerification(_ phoneNumber: String, locationId: String, lat: Double, lon: Double, verificationTypes: [String], resolve:@escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        self.resolve = resolve
+        self.reject = reject
+        var enumVerificationTypes: [OkHiVerificationType] = []
+        for verificationType in verificationTypes {
+            if verificationType == OkHiVerificationType.physical.rawValue {
+                enumVerificationTypes.append(.physical)
+            } else if verificationType == OkHiVerificationType.digital.rawValue {
+                enumVerificationTypes.append(.digital)
+            }
+        }
+        okVerify.startAddressVerification(phoneNumber: phoneNumber, locationId: locationId, lat: lat, lon: lon, verificationTypes: enumVerificationTypes)
     }
     
     @objc func stopAddressVerification(_ phoneNumber: String, locationId: String, resolve:@escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {

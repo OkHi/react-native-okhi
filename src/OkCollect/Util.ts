@@ -105,6 +105,7 @@ export const generateStartDataPayload = async (
       typeof props.config?.permissionsOnboarding === 'boolean'
         ? props.config.permissionsOnboarding
         : true,
+    verificationTypes: props.config?.verificationTypes || ['digital'],
   };
 
   if (Platform.OS === 'ios') {
@@ -255,5 +256,6 @@ export const parseOkHiLocation = (location: any): OkHiLocation => {
     state: location?.state,
     city: location?.city,
     countryCode: location?.country_code,
+    verificationTypes: location?.verification_types,
   };
 };

@@ -17,7 +17,6 @@ import { OkHiException } from '../OkCore/OkHiException';
 import { OkHiAuth } from '../OkCore/OkHiAuth';
 import type { AuthApplicationConfig } from '../OkCore/_types';
 import { start as sv } from '../OkVerify';
-import type { OkVerifyStartConfiguration } from '../OkVerify/types';
 import {
   getApplicationConfiguration,
   isBackgroundLocationPermissionGranted,
@@ -26,6 +25,7 @@ import {
   openProtectedAppsSettings,
   requestBackgroundLocationPermission,
   requestLocationPermission,
+  VerificationType,
 } from '../OkCore';
 import { OkHiNativeModule } from '../OkHiNativeModule';
 
@@ -230,7 +230,7 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
             fcmPushNotificationToken: user.fcmPushNotificationToken,
           },
           location: parseOkHiLocation(response.payload.location),
-          startVerification: function (config?: OkVerifyStartConfiguration) {
+          startVerification: function () {
             const createdUser = { ...this.user };
             const location = { ...this.location };
             return new Promise((resolve, reject) => {
@@ -242,13 +242,17 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
                   })
                 );
               } else {
+                const verificationTypes: VerificationType = Array.isArray(
+                  location.verificationTypes
+                )
+                  ? location.verificationTypes
+                  : ['digital'];
                 sv(
                   createdUser.phone,
                   location.id,
                   location.lat,
                   location.lon,
-                  config,
-                  createdUser.fcmPushNotificationToken
+                  verificationTypes
                 )
                   .then(resolve)
                   .catch(reject);

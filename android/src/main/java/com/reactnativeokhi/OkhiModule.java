@@ -16,12 +16,15 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.module.annotations.ReactModule;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import io.okhi.android_core.OkHi;
 import io.okhi.android_core.interfaces.OkHiRequestHandler;
@@ -31,11 +34,12 @@ import io.okhi.android_core.models.OkHiException;
 import io.okhi.android_core.models.OkHiLocation;
 import io.okhi.android_core.models.OkHiPermissionService;
 import io.okhi.android_core.models.OkHiUser;
+import io.okhi.android_core.models.OkHiVerificationType;
 import io.okhi.android_core.models.OkPreference;
 import io.okhi.android_okverify.OkVerify;
 import io.okhi.android_okverify.interfaces.OkVerifyCallback;
 import io.okhi.android_okverify.models.OkHiNotification;
-import io.okhi.android_okverify.models.OkVerifyPushNotificationService;
+import io.okhi.android_okverify.models.StartVerificationService;
 
 @ReactModule(name = OkhiModule.NAME)
 public class OkhiModule extends ReactContextBaseJavaModule {
@@ -182,20 +186,30 @@ public class OkhiModule extends ReactContextBaseJavaModule {
     }
   }
 
+  private static ArrayList<String> processVerificationTypes(ReadableArray array) {
+    ArrayList<String> arrayList = new ArrayList<>();
+    for (int i = 0; i < array.size(); i++) {
+      arrayList.add(array.getString(i));
+    }
+    return arrayList;
+  }
+
   @ReactMethod
-  public void startAddressVerification(String phoneNumber, String locationId, Float lat, Float lon, ReadableMap config, String fcmPushNotificationToken, Promise promise) {
+  public void startAddressVerification(String phoneNumber, String locationId, Float lat, Float lon, ReadableArray verificationTypes, Promise promise) {
     if (okVerify == null) {
       promise.reject("unauthorized", "failed to initialise okhi");
       return;
     }
-    OkHiUser user = new OkHiUser.Builder(phoneNumber).withFcmPushNotificationToken(fcmPushNotificationToken).build();
-    OkHiLocation location = new OkHiLocation.Builder(locationId, lat, lon).build();
-    Boolean withForeground = true;
-    Dynamic foregroundConfig = getConfig(config, "withForeground");
-    if(foregroundConfig != null) {
-      withForeground = foregroundConfig.asBoolean();
+    OkHiUser user = new OkHiUser.Builder(phoneNumber).build();
+    String[] verificationTypesList = new String[verificationTypes.size()];
+    for (int i = 0; i < verificationTypes.size(); i++) {
+      verificationTypesList[i] = verificationTypes.getString(i);
     }
-    okVerify.start(user, location, withForeground, new OkVerifyCallback<String>() {
+    if (verificationTypesList.length == 0) {
+      verificationTypesList = new String[]{OkHiVerificationType.digital.name()};
+    }
+    OkHiLocation location = new OkHiLocation.Builder(locationId, lat, lon).setVerificationTypes(verificationTypesList).build();
+    okVerify.start(user, location, new OkVerifyCallback<String>() {
       @Override
       public void onSuccess(String result) {
         promise.resolve(result);
@@ -334,13 +348,13 @@ public class OkhiModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void onNewToken(String fcmPushNotificationToken, Promise promise) {
-    OkVerifyPushNotificationService.onNewToken(fcmPushNotificationToken, getReactApplicationContext());
+    StartVerificationService.onNewToken(fcmPushNotificationToken, getReactApplicationContext());
     promise.resolve(true);
   }
 
   @ReactMethod
   public void onMessageReceived(Promise promise) {
-    OkVerifyPushNotificationService.onMessageReceived(getReactApplicationContext());
+    StartVerificationService.onMessageReceived(getReactApplicationContext());
     promise.resolve(true);
   }
 }
