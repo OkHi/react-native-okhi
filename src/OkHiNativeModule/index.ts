@@ -1,5 +1,4 @@
 import { NativeModules, NativeEventEmitter, Platform } from 'react-native';
-import type { OkVerifyStartConfiguration } from '../OkVerify/types';
 
 const LINKING_ERROR =
   `The package 'react-native-okhi' doesn't seem to be linked. Make sure: \n\n` +
@@ -24,8 +23,7 @@ type OkHiNativeModuleType = {
     locationId: string,
     lat: Number,
     lon: Number,
-    configuration?: OkVerifyStartConfiguration,
-    fcmPushNotificationToken?: string
+    verificationTypes: string[]
   ): Promise<string>;
   stopAddressVerification(
     phoneNumber: string,
