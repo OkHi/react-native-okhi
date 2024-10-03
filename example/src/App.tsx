@@ -34,8 +34,8 @@ const USER: OkHiUser = {
 
 const App = () => {
   const [launch, setLaunch] = useState(false);
-  const [locationId, setLocationId] = useState<string | null>(null);
-  const [isReady, setIsReady] = useState(false);
+  const [locationId] = useState<string | null>(null);
+  const [_, setIsReady] = useState(false);
 
   useEffect(() => {
     initialize({
