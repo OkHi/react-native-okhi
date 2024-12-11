@@ -1,6 +1,6 @@
 import type { ViewStyle } from 'react-native';
 import type { OkHiException } from '../OkCore/OkHiException';
-import type { OkHiUser, OkHiLocation, VerificationType } from '../OkCore/types';
+import type { OkHiUser, OkHiLocation, UsageType } from '../OkCore/types';
 
 /**
  * The OkCollect Success Response object contains information about the newly created user and location once an address has been successfully created.
@@ -78,8 +78,7 @@ export interface OkHiLocationManagerProps {
       home?: boolean;
       work?: boolean;
     };
-    permissionsOnboarding?: boolean;
-    verificationTypes?: VerificationType;
+    usageTypes?: UsageType;
   };
 
   /**
@@ -124,7 +123,7 @@ export interface OkHiLocationManagerStartDataPayload {
       color?: string;
       visible?: boolean;
     };
-    verificationTypes: VerificationType;
+    usageTypes: UsageType;
   };
   user: OkHiUser;
 }
