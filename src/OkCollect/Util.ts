@@ -169,6 +169,13 @@ export const generateStartDataPayload = async (
       message: OkHiException.UNAUTHORIZED_MESSAGE,
     });
   }
+
+  if (props.location?.id) {
+    payload.location = {
+      id: props.location.id,
+    };
+  }
+
   return payload;
 };
 
