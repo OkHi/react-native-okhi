@@ -41,8 +41,7 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     ? { ...props.style, ...defaultStyle }
     : defaultStyle;
 
-  const { user, onSuccess, onCloseRequest, onError, loader, launch, config } =
-    props;
+  const { user, onSuccess, onCloseRequest, onError, loader, launch } = props;
   const webViewRef = useRef<WebView | null>(null);
   const startMessage =
     props.mode === 'create' ? 'start_app' : 'select_location';
