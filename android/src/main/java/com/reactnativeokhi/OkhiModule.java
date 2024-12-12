@@ -28,13 +28,14 @@ import java.util.ArrayList;
 
 import io.okhi.android_core.OkHi;
 import io.okhi.android_core.interfaces.OkHiRequestHandler;
+import io.okhi.android_core.models.OkCollectSuccessResponse;
 import io.okhi.android_core.models.OkHiAppContext;
 import io.okhi.android_core.models.OkHiAuth;
 import io.okhi.android_core.models.OkHiException;
 import io.okhi.android_core.models.OkHiLocation;
 import io.okhi.android_core.models.OkHiPermissionService;
+import io.okhi.android_core.models.OkHiUsageType;
 import io.okhi.android_core.models.OkHiUser;
-import io.okhi.android_core.models.OkHiVerificationType;
 import io.okhi.android_core.models.OkPreference;
 import io.okhi.android_okverify.OkVerify;
 import io.okhi.android_okverify.interfaces.OkVerifyCallback;
@@ -186,34 +187,28 @@ public class OkhiModule extends ReactContextBaseJavaModule {
     }
   }
 
-  private static ArrayList<String> processVerificationTypes(ReadableArray array) {
-    ArrayList<String> arrayList = new ArrayList<>();
-    for (int i = 0; i < array.size(); i++) {
-      arrayList.add(array.getString(i));
-    }
-    return arrayList;
-  }
-
   @ReactMethod
-  public void startAddressVerification(String phoneNumber, String locationId, Float lat, Float lon, ReadableArray verificationTypes, Promise promise) {
+  public void startAddressVerification(String token, String phoneNumber, String userId, String locationId, Float lat, Float lon, ReadableArray usageTypes, Promise promise) {
     if (okVerify == null) {
       promise.reject("unauthorized", "failed to initialise okhi");
       return;
     }
-    OkHiUser user = new OkHiUser.Builder(phoneNumber).build();
-    String[] verificationTypesList = new String[verificationTypes.size()];
-    for (int i = 0; i < verificationTypes.size(); i++) {
-      verificationTypesList[i] = verificationTypes.getString(i);
+    String[] usageTypeList = new String[usageTypes.size()];
+    for (int i = 0; i < usageTypes.size(); i++) {
+      usageTypeList[i] = usageTypes.getString(i);
     }
-    if (verificationTypesList.length == 0) {
-      verificationTypesList = new String[]{OkHiVerificationType.digital.name()};
+    if (usageTypeList.length == 0) {
+      usageTypeList = new String[]{OkHiUsageType.digitalVerification.toString()};
     }
-    OkHiLocation location = new OkHiLocation.Builder(locationId, lat, lon).setVerificationTypes(verificationTypesList).build();
-    okVerify.start(user, location, new OkVerifyCallback<String>() {
+    OkHiLocation location = new OkHiLocation.Builder(locationId, lat, lon).setUsageTypes(usageTypeList).build();
+    OkHiUser user = new OkHiUser.Builder(phoneNumber).withOkHiUserId(userId).withToken(token).build();
+    OkCollectSuccessResponse response = new OkCollectSuccessResponse(user, location);
+    okVerify.start(response, new OkVerifyCallback<String>() {
       @Override
       public void onSuccess(String result) {
         promise.resolve(result);
       }
+
       @Override
       public void onError(OkHiException e) {
         promise.reject(e.getCode(), e.getMessage(), e);

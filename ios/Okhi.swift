@@ -83,27 +83,35 @@ class Okhi: RCTEventEmitter {
     @objc func initializeIOS(_ branchId: String, clientKey: String, environment: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         self.initResolve = resolve
         self.initReject = reject
-        okVerify.initialize(branchId: branchId, clientKey: clientKey, environment: environment)
+        let appDetails = getAppDetails()
+        let okHiAppContext = OkHiAppContext().withAppMeta(name: appDetails.name, version: appDetails.version, build: appDetails.version)
+        let okHiAuth = OkHiAuth(
+            branchId: branchId,
+            clientKey: clientKey,
+            environment: environment == "prod" ? .prod : .sandbox,
+            appContext: okHiAppContext
+        )
+        OkCollect.initialize(with: okHiAuth)
+        OkVerify.initialize(with: okHiAuth, launchOptions: nil)
     }
     
-    @objc func startAddressVerification(_ phoneNumber: String, locationId: String, lat: Double, lon: Double, resolve:@escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    @objc func startAddressVerification(_ token: String, phoneNumber: String, userId: String, locationId: String, lat: Double, lon: Double, usageTypes: [String], resolve:@escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         self.resolve = resolve
         self.reject = reject
-        okVerify.startAddressVerification(phoneNumber: phoneNumber, locationId: locationId, lat: lat, lon: lon, verificationTypes: [.physical])
-    }
-    
-    @objc func startAddressVerification(_ phoneNumber: String, locationId: String, lat: Double, lon: Double, verificationTypes: [String], resolve:@escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        self.resolve = resolve
-        self.reject = reject
-        var enumVerificationTypes: [OkHiVerificationType] = []
-        for verificationType in verificationTypes {
-            if verificationType == OkHiVerificationType.physical.rawValue {
-                enumVerificationTypes.append(.physical)
-            } else if verificationType == OkHiVerificationType.digital.rawValue {
-                enumVerificationTypes.append(.digital)
+        var enumUsageTypes: [OkHiUsageType] = []
+        for usageType in usageTypes {
+            if usageType == OkHiUsageType.physicalVerification.rawValue {
+                enumUsageTypes.append(.physicalVerification)
+            } else if usageType == OkHiUsageType.digitalVerification.rawValue {
+                enumUsageTypes.append(.digitalVerification)
+            } else if usageType == OkHiUsageType.addressBook.rawValue {
+                enumUsageTypes.append(.addressBook)
             }
         }
-        okVerify.startAddressVerification(phoneNumber: phoneNumber, locationId: locationId, lat: lat, lon: lon, verificationTypes: enumVerificationTypes)
+        let user = OkHiUser(phoneNumber: phoneNumber).with(token: token).with(okHiId: userId)
+        let location = OkHiLocation(identifier: locationId, lat: lat, lon: lon, usageTypes: enumUsageTypes)
+        let response = OkCollectSuccessResponse(user: user, location: location)
+        okVerify.startAddressVerification(response: response)
     }
     
     @objc func stopAddressVerification(_ phoneNumber: String, locationId: String, resolve:@escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
@@ -228,6 +236,15 @@ extension Okhi {
         } else {
             return CLLocationManager.authorizationStatus()
         }
+    }
+    
+    func getAppDetails() -> (name: String, version: String, build: String) {
+        let bundle = Bundle.main
+        let appName = bundle.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ??
+                      bundle.object(forInfoDictionaryKey: "CFBundleName") as? String ?? "Unknown App Name"
+        let version = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Unknown Version"
+        let build = bundle.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "Unknown Build"
+        return (name: appName, version: version, build: build)
     }
 }
 

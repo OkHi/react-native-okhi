@@ -27,9 +27,11 @@ import {
 } from 'react-native-okhi';
 
 const USER: OkHiUser = {
-  phone: '+254700110590',
+  phone: '',
   firstName: 'Julius',
   lastName: 'Kiano',
+  email: 'kiano@okhi.co',
+  appUserId: 'abcd1234',
 };
 
 const App = () => {
@@ -44,7 +46,7 @@ const App = () => {
         clientKey: '',
       },
       context: {
-        mode: 'prod' as any,
+        mode: 'sandbox' as any,
       },
       notification: {
         title: 'Address verification in progress',
@@ -59,9 +61,9 @@ const App = () => {
   }, []);
 
   const handleOnSuccess = async (response: OkCollectSuccessResponse) => {
-    console.log(response);
-    await response.startVerification();
+    const locationId = await response.startVerification();
     setLaunch(false);
+    console.log(locationId, '<<<');
   };
 
   const handleOnError = (error: any) => {
@@ -222,12 +224,16 @@ const App = () => {
       />
       {launch ? (
         <OkHiLocationManager
+          theme={{ colors: { primary: '#333' } }}
           user={USER}
           launch={launch}
           onSuccess={handleOnSuccess}
           onCloseRequest={() => setLaunch(false)} // called when user taps on the top right close button
           onError={handleOnError}
-          config={{ addressTypes: { home: true, work: false } }}
+          config={{
+            addressTypes: { home: true, work: false },
+            usageTypes: ['digital_verification'],
+          }}
         />
       ) : null}
     </View>

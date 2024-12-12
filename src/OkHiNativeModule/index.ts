@@ -19,11 +19,13 @@ type OkHiNativeModuleType = {
   getAuthToken(branchId: string, clientKey: string): Promise<string>;
   initialize(configuration: string): Promise<void>;
   startAddressVerification(
+    token: string,
     phoneNumber: string,
+    userId: string,
     locationId: string,
     lat: Number,
     lon: Number,
-    verificationTypes: string[]
+    usageTypes: string[]
   ): Promise<string>;
   stopAddressVerification(
     phoneNumber: string,
