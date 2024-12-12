@@ -13,45 +13,39 @@ import { errorHandler, isValidPlatform } from '../OkCore/_helpers';
 import { OkHiNativeModule } from '../OkHiNativeModule';
 import type { OkCollectSuccessResponse } from '../OkCollect/types';
 import { OkHiException } from '../OkCore/OkHiException';
-import type { VerificationType } from '../OkCore';
+import type { UsageType } from '../OkCore';
 /**
  * Starts verification for a particular address
  * @param {string} phoneNumber A users phone number
  * @param {string} locationId An OkHi location identifier obtained after successfull creation of addresses.
  * @param {number} lat The latitude of the created address
  * @param {number} lon The longitude of the created address
- * @param verificationTypes - Optional. An array of verification types that specifies the mode of verification.
+ * @param usageTypes - Optional. An array of verification types that specifies the mode of verification.
  *                            Can include "physical" and/or "digital" as valid values.
  * @returns {Promise<string>} A promise that resolves to a string value of the location identifier
  */
 export const start = (
+  token: string,
   phoneNumber: string,
+  okhiUserId: string,
   locationId: string,
   lat: number,
   lon: number,
-  verificationTypes?: VerificationType
+  usageTypes?: UsageType
 ) => {
   return isValidPlatform(() => {
-    const vtypes: VerificationType = Array.isArray(verificationTypes)
-      ? verificationTypes
-      : ['physical'];
-    if (Platform.OS === 'android') {
-      return OkHiNativeModule.startAddressVerification(
-        phoneNumber,
-        locationId,
-        lat,
-        lon,
-        vtypes
-      );
-    } else {
-      return OkHiNativeModule.startAddressVerification(
-        phoneNumber,
-        locationId,
-        lat,
-        lon,
-        vtypes
-      );
-    }
+    const utypes: UsageType = Array.isArray(usageTypes)
+      ? usageTypes
+      : ['digital_verification'];
+    return OkHiNativeModule.startAddressVerification(
+      token,
+      phoneNumber,
+      okhiUserId,
+      locationId,
+      lat,
+      lon,
+      utypes
+    );
   });
 };
 
@@ -60,41 +54,39 @@ export const start = (
  * @param {Object} response Response returned by OkCollect
  * @returns {Promise<string>} A promise that resolves to a string value of the location identifier
  */
-export const startVerification = async (response: OkCollectSuccessResponse) => {
-  return new Promise((resolve, reject) => {
-    const { location, user } = response;
-    const verificationTypes: VerificationType = Array.isArray(
-      response.location.verificationTypes
-    )
-      ? response.location.verificationTypes
-      : ['digital'];
-    if (location.id) {
-      if (Platform.OS === 'android') {
-        const result = OkHiNativeModule.startAddressVerification(
-          user.phone,
-          location.id,
-          location.lat,
-          location.lon,
-          verificationTypes
-        );
-        resolve(result);
-      } else {
-        const result = OkHiNativeModule.startAddressVerification(
-          user.phone,
-          location.id,
-          location.lat,
-          location.lon,
-          verificationTypes
-        );
-        resolve(result);
+export const startVerification = (
+  response: OkCollectSuccessResponse
+): Promise<string> => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { location, user } = response;
+      if (!user.token || !user.id) {
+        throw new OkHiException({
+          code: OkHiException.UNAUTHORIZED_CODE,
+          message: OkHiException.UNAUTHORIZED_MESSAGE,
+        });
       }
-    } else {
-      reject(
-        new OkHiException({
+      if (!location.id) {
+        throw new OkHiException({
           code: OkHiException.BAD_REQUEST_CODE,
           message: 'Missing location id from response',
-        })
+        });
+      }
+      const usageTypes: UsageType = Array.isArray(response.location.usageTypes)
+        ? response.location.usageTypes
+        : ['digital_verification'];
+      const result = await OkHiNativeModule.startAddressVerification(
+        user.token,
+        user.phone,
+        user.id,
+        location.id,
+        location.lat,
+        location.lon,
+        usageTypes
       );
+      resolve(result);
+    } catch (error) {
+      reject(error);
     }
   });
 };

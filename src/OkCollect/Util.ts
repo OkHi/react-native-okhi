@@ -30,7 +30,6 @@ const fetchCurrentLocation = async (): Promise<null | {
  */
 export const generateStartDataPayload = async (
   props: OkHiLocationManagerProps,
-  authToken: string,
   applicationConfiguration: AuthApplicationConfig
 ): Promise<OkHiLocationManagerStartDataPayload> => {
   const payload: any = {};
@@ -54,9 +53,11 @@ export const generateStartDataPayload = async (
     firstName: props.user.firstName,
     lastName: props.user.lastName,
     email: props.user.email,
+    appUserId: props.user.appUserId,
   };
   payload.auth = {
-    authToken,
+    branchId: applicationConfiguration.credentials.branchId,
+    clientKey: applicationConfiguration.credentials.clientKey,
   };
   payload.context = {
     container: {
@@ -101,11 +102,8 @@ export const generateStartDataPayload = async (
     },
     protectedApps:
       Platform.OS === 'android' && (await canOpenProtectedAppsSettings()),
-    permissionsOnboarding:
-      typeof props.config?.permissionsOnboarding === 'boolean'
-        ? props.config.permissionsOnboarding
-        : true,
-    verificationTypes: props.config?.verificationTypes || ['digital'],
+    permissionsOnboarding: true,
+    usageTypes: props.config?.usageTypes || ['digital_verification'],
   };
 
   if (Platform.OS === 'ios') {
@@ -171,6 +169,13 @@ export const generateStartDataPayload = async (
       message: OkHiException.UNAUTHORIZED_MESSAGE,
     });
   }
+
+  if (props.location?.id) {
+    payload.location = {
+      id: props.location.id,
+    };
+  }
+
   return payload;
 };
 
@@ -256,6 +261,6 @@ export const parseOkHiLocation = (location: any): OkHiLocation => {
     state: location?.state,
     city: location?.city,
     countryCode: location?.country_code,
-    verificationTypes: location?.verification_types,
+    usageTypes: location?.usage_types,
   };
 };

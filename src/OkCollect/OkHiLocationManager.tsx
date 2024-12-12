@@ -14,7 +14,6 @@ import {
   parseOkHiLocation,
 } from './Util';
 import { OkHiException } from '../OkCore/OkHiException';
-import { OkHiAuth } from '../OkCore/OkHiAuth';
 import type { AuthApplicationConfig } from '../OkCore/_types';
 import { start as sv } from '../OkVerify';
 import {
@@ -25,7 +24,7 @@ import {
   openProtectedAppsSettings,
   requestBackgroundLocationPermission,
   requestLocationPermission,
-  VerificationType,
+  UsageType,
 } from '../OkCore';
 import { OkHiNativeModule } from '../OkHiNativeModule';
 
@@ -33,7 +32,6 @@ import { OkHiNativeModule } from '../OkHiNativeModule';
  * The OkHiLocationManager React Component is used to display an in app modal, enabling the user to quickly create an accurate OkHi address.
  */
 export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
-  const [token, setToken] = useState<string | null>(null);
   const [applicationConfiguration, setApplicationConfiguration] =
     useState<AuthApplicationConfig | null>(null);
   const [startPayload, setStartPaylaod] =
@@ -51,80 +49,42 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (applicationConfiguration == null && token == null && user.phone) {
-      getApplicationConfiguration()
-        .then((config) => {
-          if (!config && launch) {
-            onError(
-              new OkHiException({
-                code: OkHiException.UNAUTHORIZED_CODE,
-                message: OkHiException.UNAUTHORIZED_MESSAGE,
-              })
-            );
-          } else if (config) {
-            setApplicationConfiguration(config);
-            const auth = new OkHiAuth();
-            auth
-              .anonymousSignInWithPhoneNumber(user.phone, ['verify'], config)
-              .then(setToken)
-              .catch(onError);
-          }
-        })
-        .catch((error) => {
-          if (launch) {
-            onError(error);
-          }
-        });
-    }
-  }, [onError, user.phone, launch, applicationConfiguration, token]);
-
-  useEffect(() => {
-    if (token !== null && applicationConfiguration !== null) {
-      // TODO: handle faliure
-      generateStartDataPayload(props, token, applicationConfiguration)
-        .then((startPayload) => {
-          setStartPaylaod(startPayload);
-          if (Platform.OS === 'android' && Platform.Version > 25) {
-            OkHiNativeModule.setItem(
-              'okcollect-launch-payload',
-              JSON.stringify({
-                message: startMessage,
-                payload: startPayload,
-                url: getFrameUrl(applicationConfiguration),
-              })
-            ).catch(console.error);
-          }
-        })
-        .catch(console.error);
-    }
-  }, [applicationConfiguration, props, token]);
-
-  useEffect(() => {
     if (launch) {
-      if (
-        typeof config?.permissionsOnboarding === 'boolean' &&
-        !config.permissionsOnboarding
-      ) {
-        isBackgroundLocationPermissionGranted().then((result) => {
-          if (!result) {
-            onError(
-              new OkHiException({
-                code: OkHiException.PERMISSION_DENIED_CODE,
-                message:
-                  'Always location permission must be granted to launch OkCollect',
-              })
-            );
-          } else {
-            setReady(true);
-          }
-        });
-      } else {
-        setReady(true);
-      }
-    } else {
-      setReady(false);
+      setReady(launch);
     }
-  }, [launch, config?.permissionsOnboarding]);
+  }, [launch]);
+
+  useEffect(() => {
+    async function startOkHiLocationManager() {
+      const appConfiguration = await getApplicationConfiguration();
+      if (!appConfiguration) {
+        throw new OkHiException({
+          code: OkHiException.UNAUTHORIZED_CODE,
+          message: OkHiException.UNAUTHORIZED_MESSAGE,
+        });
+      }
+      const startPayload = await generateStartDataPayload(
+        props,
+        appConfiguration
+      );
+      setApplicationConfiguration(appConfiguration);
+      setStartPaylaod(startPayload);
+      if (Platform.OS === 'android' && Platform.Version > 25) {
+        OkHiNativeModule.setItem(
+          'okcollect-launch-payload',
+          JSON.stringify({
+            message: startMessage,
+            payload: startPayload,
+            url: getFrameUrl(appConfiguration),
+          })
+        ).catch(console.error);
+      }
+    }
+
+    if (launch) {
+      startOkHiLocationManager();
+    }
+  }, [launch, props, onError]);
 
   const runWebViewCallback = (value: string) => {
     if (webViewRef.current) {
@@ -241,18 +201,32 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
                     message: 'Missing location id from response',
                   })
                 );
+              } else if (!createdUser.id) {
+                reject(
+                  new OkHiException({
+                    code: OkHiException.BAD_REQUEST_CODE,
+                    message: 'Missing user id from response',
+                  })
+                );
+              } else if (!createdUser.token) {
+                reject(
+                  new OkHiException({
+                    code: OkHiException.UNAUTHORIZED_CODE,
+                    message: OkHiException.UNAUTHORIZED_MESSAGE,
+                  })
+                );
               } else {
-                const verificationTypes: VerificationType = Array.isArray(
-                  location.verificationTypes
-                )
-                  ? location.verificationTypes
-                  : ['digital'];
+                const usageTypes: UsageType = Array.isArray(location.usageTypes)
+                  ? location.usageTypes
+                  : ['digital_verification'];
                 sv(
+                  createdUser.token,
                   createdUser.phone,
+                  createdUser.id,
                   location.id,
                   location.lat,
                   location.lon,
-                  verificationTypes
+                  usageTypes
                 )
                   .then(resolve)
                   .catch(reject);
@@ -293,11 +267,7 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
   };
 
   const renderContent = () => {
-    if (token === null || applicationConfiguration == null) {
-      return loader || <Spinner />;
-    }
-
-    if (startPayload === null) {
+    if (startPayload === null || applicationConfiguration == null) {
       return loader || <Spinner />;
     }
 

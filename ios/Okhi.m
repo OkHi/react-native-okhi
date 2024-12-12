@@ -31,10 +31,15 @@ RCT_EXTERN_METHOD(initializeIOS:(NSString *)branchId clientKey:(NSString *)clien
 
 RCT_EXTERN_METHOD(initialize:(NSString *)configuration resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(startAddressVerification:(NSString *)phoneNumber locationId:(NSString *)locationId lat:(double)lat lon:(double)lon resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(startAddressVerification:(NSString *)phoneNumber locationId:(NSString *)locationId lat:(double)lat lon:(double)lon verificationTypes:(NSArray<NSString *> *)verificationTypes resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-
+RCT_EXTERN_METHOD(startAddressVerification:(NSString *)token
+                  phoneNumber:(NSString *)phoneNumber
+                  userId:(NSString *)userId
+                  locationId:(NSString *)locationId
+                  lat:(double)lat
+                  lon:(double)lon
+                  usageTypes:(NSArray<NSString *> *)usageTypes
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(stopAddressVerification:(NSString *)phoneNumber locationId:(NSString *)locationId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 

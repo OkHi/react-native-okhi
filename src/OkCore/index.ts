@@ -42,6 +42,7 @@ export function initialize(
         message: 'Invalid OkHi configuration provided.',
       });
     }
+    okhiApplicationConfiguration = configuration;
     if (Platform.OS === 'ios') {
       await OkHiNativeModule.initializeIOS(
         configuration.credentials.branchId,
@@ -54,7 +55,6 @@ export function initialize(
     } else {
       await OkHiNativeModule.initialize(JSON.stringify(configuration));
     }
-    okhiApplicationConfiguration = configuration;
   });
 }
 

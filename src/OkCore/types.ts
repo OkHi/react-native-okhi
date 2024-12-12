@@ -29,6 +29,16 @@ export interface OkHiUser {
    * The user's device firebase push notification token.
    */
   fcmPushNotificationToken?: string;
+
+  /**
+   * The user's jwt token provided by OkHi after address creation.
+   */
+  token?: string;
+
+  /**
+   * Your assigned user id
+   */
+  appUserId?: string;
 }
 
 /**
@@ -164,9 +174,9 @@ export interface OkHiLocation {
   countryCode?: string;
 
   /**
-   * An array of verification types that specifies the mode of verification. Can include "physical" and/or "digital" as valid values.
+   * An array of usage types that specifies the mode of verification. Can include "physical_verification" and/or "digital_verification" as valid values.
    */
-  verificationTypes?: VerificationType;
+  usageTypes?: UsageType;
 }
 
 /**
@@ -219,4 +229,6 @@ export type LocationPermissionCallback = (
   error: OkHiException | null
 ) => any;
 
-export type VerificationType = Array<'physical' | 'digital'>;
+export type UsageType = Array<
+  'physical_verification' | 'digital_verification' | 'address_book'
+>;
