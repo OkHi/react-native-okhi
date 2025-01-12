@@ -93,6 +93,7 @@ class Okhi: RCTEventEmitter {
         )
         OkCollect.initialize(with: okHiAuth)
         OkVerify.initialize(with: okHiAuth, launchOptions: nil)
+        resolve(true)
     }
     
     @objc func startAddressVerification(_ token: String, phoneNumber: String, userId: String, locationId: String, lat: Double, lon: Double, usageTypes: [String], resolve:@escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
