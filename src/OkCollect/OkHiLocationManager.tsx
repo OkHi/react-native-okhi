@@ -12,6 +12,7 @@ import {
   generateJavaScriptStartScript,
   generateStartDataPayload,
   parseOkHiLocation,
+  fetchCurrentLocation,
 } from './Util';
 import { OkHiException } from '../OkCore/OkHiException';
 import type { AuthApplicationConfig } from '../OkCore/_types';
@@ -161,6 +162,27 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     }
   };
 
+  const handleFetchCurrentLocation = async () => {
+    try {
+      const location = await fetchCurrentLocation();
+      if (location) {
+        const jsString = `window.receiveCurrentLocation({lat: ${location.lat},lng: ${location.lng},accuracy: ${location.accuracy}})`;
+        webViewRef.current?.injectJavaScript(jsString);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // prevents ios https... is requesting for your location
+  const handleWebViewOnLoad = () => {
+    if (Platform.OS === 'ios') {
+      const jsString =
+        '(function(){navigator.geolocation.watchPosition=navigator.geolocation.getCurrentPosition=function(s,e,o){if(window.ReactNativeWebView&&typeof window.ReactNativeWebView.postMessage==="function"){window.ReactNativeWebView.postMessage(JSON.stringify({message:"fetch_current_location",payload:{}}));}window.receiveCurrentLocation=function(l){s({coords:{latitude:l.lat,longitude:l.lng,accuracy:l.accuracy,altitude:null,altitudeAccuracy:null,heading:null,speed:null},timestamp:Date.now()});};};})();';
+      webViewRef.current?.injectJavaScript(jsString);
+    }
+  };
+
   const handleOnMessage = ({ nativeEvent: { data } }: WebViewMessageEvent) => {
     try {
       const response: OkHiLocationManagerResponse = JSON.parse(data);
@@ -237,6 +259,8 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
         handleRequestLocationPermission(response.payload);
       } else if (response.message === 'open_app_settings') {
         handleOpenAppSettings();
+      } else if (response.message === 'fetch_current_location') {
+        handleFetchCurrentLocation();
       }
     } catch (error) {
       let errorMessage = 'Something went wrong';
@@ -288,6 +312,7 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
           onHttpError={handleOnError}
           geolocationEnabled={true}
           allowsBackForwardNavigationGestures={true}
+          onLoad={handleWebViewOnLoad}
           ref={webViewRef}
         />
       </SafeAreaView>
