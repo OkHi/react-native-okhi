@@ -87,7 +87,7 @@ export interface OkHiLocationManagerProps {
   mode?: 'create' | 'select';
 
   location?: {
-    id: string;
+    id?: string;
   };
 }
 
