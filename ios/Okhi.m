@@ -23,13 +23,9 @@ RCT_EXTERN_METHOD(openAppSettings: (RCTPromiseResolveBlock)resolve reject:(RCTPr
 
 RCT_EXTERN_METHOD(getSystemVersion: (RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(getApplicationConfiguration: (RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-
 RCT_EXTERN_METHOD(getAuthToken:(NSString *)branchId clientKey:(NSString *)clientKey resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(initializeIOS:(NSString *)branchId clientKey:(NSString *)clientKey environment:(NSString *)environment resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(initialize:(NSString *)configuration resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(startAddressVerification:(NSString *)token
                   phoneNumber:(NSString *)phoneNumber
