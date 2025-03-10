@@ -16,7 +16,7 @@ import type { AuthApplicationConfig } from '../OkCore/_types';
 import { Platform } from 'react-native';
 import { OkHiNativeModule } from '../OkHiNativeModule';
 
-const fetchCurrentLocation = async (): Promise<null | {
+export const fetchCurrentLocation = async (): Promise<null | {
   lat: number;
   lng: number;
   accuracy: number;
