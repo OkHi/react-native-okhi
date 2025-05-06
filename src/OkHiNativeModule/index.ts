@@ -71,6 +71,9 @@ type OkHiNativeModuleType = {
   >;
   onStart(): Promise<boolean>;
   fetchRegisteredGeofences(): Promise<string | null>;
+  getLocationAccuracyLevel(): Promise<
+    'no_permission' | 'approximate' | 'precise'
+  >;
 };
 
 export const OkHiNativeModule: OkHiNativeModuleType = NativeModules.Okhi

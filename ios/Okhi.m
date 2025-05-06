@@ -57,4 +57,6 @@ RCT_EXTERN_METHOD(onStart: (RCTPromiseResolveBlock)resolve reject:(RCTPromiseRej
 
 RCT_EXTERN_METHOD(fetchRegisteredGeofences: (RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(getLocationAccuracyLevel: (RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
 @end
