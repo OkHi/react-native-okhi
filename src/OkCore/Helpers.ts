@@ -467,3 +467,11 @@ export const requestNotificationPermission = async (): Promise<boolean> => {
     });
   }
 };
+
+/**
+ * Determines the current location accuracy level of the device
+ * @returns "no_permission" | "approximate" | "precise"
+ */
+export const getLocationAccuracyLevel = async () => {
+  return OkHiNativeModule.getLocationAccuracyLevel();
+};

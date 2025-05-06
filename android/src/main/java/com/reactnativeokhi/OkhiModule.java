@@ -33,6 +33,7 @@ import io.okhi.android_core.models.OkHiAppContext;
 import io.okhi.android_core.models.OkHiAuth;
 import io.okhi.android_core.models.OkHiException;
 import io.okhi.android_core.models.OkHiLocation;
+import io.okhi.android_core.models.OkHiLocationService;
 import io.okhi.android_core.models.OkHiPermissionService;
 import io.okhi.android_core.models.OkHiUsageType;
 import io.okhi.android_core.models.OkHiUser;
@@ -351,5 +352,11 @@ public class OkhiModule extends ReactContextBaseJavaModule {
   public void onMessageReceived(Promise promise) {
     StartVerificationService.onMessageReceived(getReactApplicationContext());
     promise.resolve(true);
+  }
+
+  @ReactMethod
+  public void getLocationAccuracyLevel(Promise promise) {
+    String level = OkHiLocationService.getLocationAccuracyLevel(getReactApplicationContext());
+    promise.resolve(level);
   }
 }
