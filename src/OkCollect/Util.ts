@@ -36,6 +36,9 @@ export const generateStartDataPayload = async (
   const { manufacturer, model, osVersion, platform } =
     await OkHiNativeModule.retrieveDeviceInfo();
   const geofences = await OkHiNativeModule.fetchRegisteredGeofences();
+  const locationAccuracyLevel =
+    await OkHiNativeModule.getLocationAccuracyLevel();
+
   if (geofences) {
     payload.locations = JSON.parse(geofences);
   }
@@ -80,6 +83,7 @@ export const generateStartDataPayload = async (
       platform,
       osVersion,
     },
+    locationAccuracyLevel,
   };
   payload.config = {
     streetView:

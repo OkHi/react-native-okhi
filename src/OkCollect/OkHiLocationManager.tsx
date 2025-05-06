@@ -20,7 +20,7 @@ import { start as sv } from '../OkVerify';
 import {
   getApplicationConfiguration,
   isBackgroundLocationPermissionGranted,
-  isLocationServicesEnabled,
+  isLocationPermissionGranted,
   openAppSettings,
   openProtectedAppsSettings,
   requestBackgroundLocationPermission,
@@ -47,6 +47,7 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
   const startMessage =
     props.mode === 'create' ? 'start_app' : 'select_location';
   const [ready, setReady] = useState(false);
+  const androidAlwaysRequested = useRef(false);
 
   useEffect(() => {
     if (launch) {
@@ -86,53 +87,110 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
     }
   }, [launch, props, onError]);
 
-  const runWebViewCallback = (value: string) => {
-    if (webViewRef.current) {
-      const jsString = `(function (){ if (typeof runOkHiLocationManagerCallback === "function") { runOkHiLocationManagerCallback("${value}") } })()`;
-      webViewRef.current.injectJavaScript(jsString);
+  const runWebViewCallback = async (result: string) => {
+    const level = await OkHiNativeModule.getLocationAccuracyLevel();
+    let callbackResult = result;
+    if (
+      (result === 'blocked' || result === 'denied') &&
+      level === 'approximate'
+    ) {
+      callbackResult = 'whenInUse';
     }
+    const update = { locationAccuracyLevel: level };
+    const jsonUpdate = JSON.stringify(update)
+      .replace(/\\/g, '\\\\')
+      .replace(/"/g, '\\"');
+    const jsString = `
+      (function (){
+        if (typeof runOkHiLocationManagerCallback === "function") {
+          runOkHiLocationManagerCallback("${callbackResult}", "${jsonUpdate}")
+        }
+      })()
+    `;
+    webViewRef.current?.injectJavaScript(jsString);
   };
 
   const handleAndroidRequestLocationPermission = async (
     level: 'whenInUse' | 'always'
   ) => {
-    if (level === 'whenInUse') {
-      const whenInUseResult = await requestLocationPermission();
-      const alwaysResult = await isBackgroundLocationPermissionGranted();
-      runWebViewCallback(
-        alwaysResult ? 'always' : whenInUseResult ? 'whenInUse' : 'blocked'
+    try {
+      const _isLocationPermissionGranted = await isLocationPermissionGranted();
+      const _isBackgroundLocationPermissionGranted =
+        await isBackgroundLocationPermissionGranted();
+      const _locationAccuracyLevel =
+        await OkHiNativeModule.getLocationAccuracyLevel();
+      if (
+        _isBackgroundLocationPermissionGranted &&
+        _locationAccuracyLevel === 'precise'
+      ) {
+        runWebViewCallback('always');
+      } else if (
+        level === 'whenInUse' &&
+        _isLocationPermissionGranted &&
+        _locationAccuracyLevel === 'precise'
+      ) {
+        runWebViewCallback('whenInUse');
+      } else if (
+        level === 'whenInUse' &&
+        _locationAccuracyLevel === 'no_permission'
+      ) {
+        const result = await requestLocationPermission();
+        runWebViewCallback(result ? 'whenInUse' : 'denied');
+      } else if (level === 'always') {
+        const result = await requestBackgroundLocationPermission();
+        runWebViewCallback(result ? 'always' : 'denied');
+        androidAlwaysRequested.current = true;
+      } else if (
+        level === 'whenInUse' &&
+        _locationAccuracyLevel === 'approximate'
+      ) {
+        const result = await requestLocationPermission();
+        runWebViewCallback(result ? 'whenInUse' : 'denied');
+      } else {
+        openAppSettings();
+      }
+    } catch (error) {
+      onError(
+        new OkHiException({
+          code: 'unknown',
+          message: 'could not request permission',
+        })
       );
-    } else if (level === 'always') {
-      const result = await requestBackgroundLocationPermission();
-      runWebViewCallback(result ? 'always' : 'blocked');
     }
   };
 
-  const handleIOSRequestLocationPermission = async (
-    level: 'whenInUse' | 'always'
-  ) => {
-    const unknownError = new OkHiException({
-      code: OkHiException.UNKNOWN_ERROR_CODE,
-      message:
-        'Something went wrong while requesting permissions. Please try again later.',
-    });
+  const handleIOSRequestLocationPermission = async (level: string) => {
     try {
-      const isServiceAvailable = await isLocationServicesEnabled();
-      if (!isServiceAvailable) {
-        openAppSettings();
-      } else if (level === 'whenInUse') {
+      const _isLocationPermissionGranted = await isLocationPermissionGranted();
+      const _isBackgroundLocationPermissionGranted =
+        await isBackgroundLocationPermissionGranted();
+      const _locationAccuracyLevel =
+        await OkHiNativeModule.getLocationAccuracyLevel();
+
+      if (
+        _isBackgroundLocationPermissionGranted &&
+        _locationAccuracyLevel === 'precise'
+      ) {
+        runWebViewCallback('always');
+      } else if (
+        level === 'whenInUse' &&
+        _isLocationPermissionGranted &&
+        _locationAccuracyLevel === 'precise'
+      ) {
+        runWebViewCallback('whenInUse');
+      } else if (level === 'whenInUse' && !_isLocationPermissionGranted) {
         const result = await requestLocationPermission();
-        runWebViewCallback(result ? level : 'denied');
-      } else if (level === 'always') {
-        const granted = await isBackgroundLocationPermissionGranted();
-        if (granted) {
-          runWebViewCallback(level);
-        } else {
-          openAppSettings();
-        }
+        runWebViewCallback(result ? 'whenInUse' : 'denied');
+      } else {
+        openAppSettings();
       }
     } catch (error) {
-      onError(unknownError);
+      onError(
+        new OkHiException({
+          code: 'unknown',
+          message: 'could not request permission',
+        })
+      );
     }
   };
 
@@ -186,7 +244,7 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
   const handleOnMessage = ({ nativeEvent: { data } }: WebViewMessageEvent) => {
     try {
       const response: OkHiLocationManagerResponse = JSON.parse(data);
-
+      console.log(response);
       if (response.message === 'fatal_exit') {
         //TODO: figure out bad phone number code
         onError(
