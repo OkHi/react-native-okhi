@@ -126,8 +126,8 @@ repositories {
 dependencies {
     //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
-  implementation 'io.okhi.android:core:1.7.38'
-  implementation 'io.okhi.android:okverify:1.9.72'
+  implementation 'io.okhi.android:core:1.7.39'
+  implementation 'io.okhi.android:okverify:1.9.73'
 // From node_modules
 }
 
