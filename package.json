@@ -1,6 +1,6 @@
 {
   "name": "react-native-okhi",
-  "version": "1.2.27-beta.1",
+  "version": "1.2.27",
   "description": "The OkHi React Native library enables you to collect and verify addresses from your users",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
