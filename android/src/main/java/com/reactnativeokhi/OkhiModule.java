@@ -161,9 +161,7 @@ public class OkhiModule extends ReactContextBaseJavaModule {
       String branchId = config.getJSONObject("credentials").getString("branchId");
       String clientKey = config.getJSONObject("credentials").getString("clientKey");
       String mode = config.getJSONObject("context").getString("mode");
-      String developer = config.getJSONObject("context").optString("developer", "external");
-      OkHiAppContext context = new OkHiAppContext(getReactApplicationContext(), mode, "react-native", developer);
-      auth = new OkHiAuth(getReactApplicationContext(), branchId, clientKey, context);
+      auth = new OkHiAuth(getReactApplicationContext(), branchId, clientKey, mode);
       if (getCurrentActivity() != null && getCurrentActivity().getApplicationContext() != null) {
         okVerify = new OkVerify.Builder(getCurrentActivity(), auth).build();
         if (config.has("notification")) {
