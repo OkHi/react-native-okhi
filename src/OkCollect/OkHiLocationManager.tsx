@@ -50,7 +50,7 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
   const androidAlwaysRequested = useRef(false);
 
   useEffect(() => {
-    if (launch) {
+    if (typeof launch === 'boolean') {
       setReady(launch);
     }
   }, [launch]);
@@ -244,7 +244,6 @@ export const OkHiLocationManager = (props: OkHiLocationManagerProps) => {
   const handleOnMessage = ({ nativeEvent: { data } }: WebViewMessageEvent) => {
     try {
       const response: OkHiLocationManagerResponse = JSON.parse(data);
-      console.log(response);
       if (response.message === 'fatal_exit') {
         //TODO: figure out bad phone number code
         onError(
