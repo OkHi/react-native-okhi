@@ -27,10 +27,10 @@ import {
 } from 'react-native-okhi';
 
 const USER: OkHiUser = {
-  phone: '',
-  firstName: 'Julius',
-  lastName: 'Kiano',
-  email: 'kiano@okhi.co',
+  phone: '+2547...',
+  firstName: 'Granson',
+  lastName: 'Oyombe',
+  email: 'granson@okhi.co',
   appUserId: 'abcd1234',
 };
 
@@ -42,8 +42,8 @@ const App = () => {
   useEffect(() => {
     initialize({
       credentials: {
-        branchId: '',
-        clientKey: '',
+        branchId: 'B0lKOrJaUN',
+        clientKey: '73957af9-faef-4c9f-ad27-e0abe969f76a',
       },
       context: {
         mode: 'sandbox' as any,
@@ -55,6 +55,13 @@ const App = () => {
         channelName: 'OkHi Channel',
         channelDescription: 'OkHi verification alerts',
       },
+      configUser: {
+        phone: '+2547...',
+        firstName: 'Granson',
+        lastName: 'Oyombe',
+        email: 'granson@okhi.co',
+        appUserId: 'abcd1234'
+      }
     })
       .then(() => setIsReady(true))
       .catch(console.error);

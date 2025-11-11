@@ -208,6 +208,15 @@ export type OkHiApplicationConfiguration = {
     channelName: string;
     channelDescription: string;
   };
+  configUser?: {
+    phone: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    id?: string;
+    token?: string;
+    appUserId?: string;
+  };
 };
 
 export type LocationPermissionStatus =
