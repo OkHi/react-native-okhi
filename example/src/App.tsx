@@ -42,8 +42,8 @@ const App = () => {
   useEffect(() => {
     initialize({
       credentials: {
-        branchId: 'B0lKOrJaUN',
-        clientKey: '73957af9-faef-4c9f-ad27-e0abe969f76a',
+        branchId: '',
+        clientKey: '',
       },
       context: {
         mode: 'sandbox' as any,
