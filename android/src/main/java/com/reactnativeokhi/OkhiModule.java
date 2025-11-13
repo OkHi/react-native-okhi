@@ -162,7 +162,7 @@ public class OkhiModule extends ReactContextBaseJavaModule {
       String branchId = config.getJSONObject("credentials").getString("branchId");
       String clientKey = config.getJSONObject("credentials").getString("clientKey");
       String mode = config.getJSONObject("context").getString("mode");
-      JSONObject configUser = config.getJSONObject("configUser");
+      JSONObject configUser = config.getJSONObject("user");
 
       auth = new OkHiAuth(getReactApplicationContext(), branchId, clientKey, mode);
       if (getCurrentActivity() != null && getCurrentActivity().getApplicationContext() != null) {
@@ -186,8 +186,9 @@ public class OkhiModule extends ReactContextBaseJavaModule {
             String email = configUser.getString("email");
             String firstName = configUser.getString("firstName");
             String lastName = configUser.getString("lastName");
+            String appUserId = configUser.getString("appUserId");
 
-            OkHiUser user = new OkHiUser.Builder(phone).withEmail(email).withFirstName(firstName).withLastName(lastName).build();
+            OkHiUser user = new OkHiUser.Builder(phone).withEmail(email).withFirstName(firstName).withLastName(lastName).withAppUserId(appUserId).build();
             OkVerifyInitConfig okVerifyInitConfig = new OkVerifyInitConfig(auth, user);
             OkVerify.init(getCurrentActivity(), notification, okVerifyInitConfig);
           } else {
