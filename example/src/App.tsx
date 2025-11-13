@@ -27,7 +27,7 @@ import {
 } from 'react-native-okhi';
 
 const USER: OkHiUser = {
-  phone: '',
+  phone: '+254700110590',
   firstName: 'Julius',
   lastName: 'Kiano',
   email: 'kiano@okhi.co',
@@ -39,26 +39,7 @@ const App = () => {
   const [locationId] = useState<string | null>(null);
   const [_, setIsReady] = useState(false);
 
-  useEffect(() => {
-    initialize({
-      credentials: {
-        branchId: '',
-        clientKey: '',
-      },
-      context: {
-        mode: 'sandbox' as any,
-      },
-      notification: {
-        title: 'Address verification in progress',
-        text: 'Tap here to view your verification status.',
-        channelId: 'okhi',
-        channelName: 'OkHi Channel',
-        channelDescription: 'OkHi verification alerts',
-      },
-    })
-      .then(() => setIsReady(true))
-      .catch(console.error);
-  }, []);
+  useEffect(() => {}, []);
 
   const handleOnSuccess = async (response: OkCollectSuccessResponse) => {
     const locationId = await response.startVerification();
@@ -73,6 +54,30 @@ const App = () => {
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Button
+        title="login"
+        onPress={() => {
+          initialize({
+            credentials: {
+              branchId: 'bWpVwm65jy',
+              clientKey: '3db1617f-b25b-4a80-8165-8077b4d1ea44',
+            },
+            context: {
+              mode: 'sandbox' as any,
+            },
+            notification: {
+              title: 'Address verification in progress',
+              text: 'Tap here to view your verification status.',
+              channelId: 'okhi',
+              channelName: 'OkHi Channel',
+              channelDescription: 'OkHi verification alerts',
+            },
+            user: USER,
+          })
+            .then(() => setIsReady(true))
+            .catch(console.error);
+        }}
+      />
       <Button
         title="location services check"
         onPress={() => {

@@ -42,6 +42,7 @@ import io.okhi.android_okverify.OkVerify;
 import io.okhi.android_okverify.interfaces.OkVerifyCallback;
 import io.okhi.android_okverify.models.OkHiNotification;
 import io.okhi.android_okverify.models.StartVerificationService;
+import io.okhi.android_okverify.models.OkVerifyInitConfig;
 
 @ReactModule(name = OkhiModule.NAME)
 public class OkhiModule extends ReactContextBaseJavaModule {
@@ -161,20 +162,38 @@ public class OkhiModule extends ReactContextBaseJavaModule {
       String branchId = config.getJSONObject("credentials").getString("branchId");
       String clientKey = config.getJSONObject("credentials").getString("clientKey");
       String mode = config.getJSONObject("context").getString("mode");
+      JSONObject configUser = config.getJSONObject("user");
+
       auth = new OkHiAuth(getReactApplicationContext(), branchId, clientKey, mode);
       if (getCurrentActivity() != null && getCurrentActivity().getApplicationContext() != null) {
         okVerify = new OkVerify.Builder(getCurrentActivity(), auth).build();
+
         if (config.has("notification")) {
           JSONObject notificationConfig = config.getJSONObject("notification");
           int importance = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? NotificationManager.IMPORTANCE_DEFAULT : 3;
-          OkVerify.init(getReactApplicationContext(), new OkHiNotification(
+
+          OkHiNotification notification = new OkHiNotification(
             notificationConfig.optString("title", "Verification in progress"),
             notificationConfig.optString("text", "Address Verification in progress"),
             notificationConfig.optString("channelId", "okhi"),
             notificationConfig.optString("channelName", "OkHi Channel"),
             notificationConfig.optString("channelDescription", "OkHi verification alerts"),
             importance
-          ));
+          );
+
+          if(configUser != null) {
+            String phone = configUser.getString("phone");
+            String email = configUser.getString("email");
+            String firstName = configUser.getString("firstName");
+            String lastName = configUser.getString("lastName");
+            String appUserId = configUser.getString("appUserId");
+
+            OkHiUser user = new OkHiUser.Builder(phone).withEmail(email).withFirstName(firstName).withLastName(lastName).withAppUserId(appUserId).build();
+            OkVerifyInitConfig okVerifyInitConfig = new OkVerifyInitConfig(auth, user);
+            OkVerify.init(getCurrentActivity(), notification, okVerifyInitConfig);
+          } else {
+            OkVerify.init(getCurrentActivity(), notification);
+          }
         }
         promise.resolve(true);
       } else {
