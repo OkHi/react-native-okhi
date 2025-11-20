@@ -162,7 +162,10 @@ public class OkhiModule extends ReactContextBaseJavaModule {
       String branchId = config.getJSONObject("credentials").getString("branchId");
       String clientKey = config.getJSONObject("credentials").getString("clientKey");
       String mode = config.getJSONObject("context").getString("mode");
-      JSONObject configUser = config.getJSONObject("user");
+      JSONObject configUser = null;
+      if (config.has("user")) {
+        configUser = config.getJSONObject("user");
+      }
 
       auth = new OkHiAuth(getReactApplicationContext(), branchId, clientKey, mode);
       if (getCurrentActivity() != null && getCurrentActivity().getApplicationContext() != null) {

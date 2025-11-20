@@ -59,11 +59,11 @@ const App = () => {
         onPress={() => {
           initialize({
             credentials: {
-              branchId: 'bWpVwm65jy',
-              clientKey: '3db1617f-b25b-4a80-8165-8077b4d1ea44',
+              branchId: '',
+              clientKey: '',
             },
             context: {
-              mode: 'sandbox' as any,
+              mode: '' as any,
             },
             notification: {
               title: 'Address verification in progress',
