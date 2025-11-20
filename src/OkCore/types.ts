@@ -26,7 +26,7 @@ export interface OkHiUser {
   id?: string;
 
   /**
-   * The user's device firebase push notification token.
+   * @deprecated This field is no longer used.
    */
   fcmPushNotificationToken?: string;
 
@@ -208,6 +208,7 @@ export type OkHiApplicationConfiguration = {
     channelName: string;
     channelDescription: string;
   };
+  user?: OkHiUser;
 };
 
 export type LocationPermissionStatus =
