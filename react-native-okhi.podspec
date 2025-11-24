@@ -28,7 +28,6 @@ Pod::Spec.new do |s|
     }
 
     s.dependency "React-Codegen"
-    s.dependency "RCT-Folly", :podspec => "../react-native/third-party-podspecs/RCT-Folly.podspec"
     s.dependency "RCTRequired"
     s.dependency "RCTTypeSafety"
     s.dependency "ReactCommon/turbomodule/core"
