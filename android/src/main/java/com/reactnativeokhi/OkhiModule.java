@@ -183,15 +183,22 @@ public class OkhiModule extends ReactContextBaseJavaModule {
             notificationConfig.optString("channelDescription", "OkHi verification alerts"),
             importance
           );
-
-          if(configUser != null) {
+          if(configUser != null && configUser.has("phone")) {
             String phone = configUser.getString("phone");
-            String email = configUser.getString("email");
-            String firstName = configUser.getString("firstName");
-            String lastName = configUser.getString("lastName");
-            String appUserId = configUser.getString("appUserId");
-
-            OkHiUser user = new OkHiUser.Builder(phone).withEmail(email).withFirstName(firstName).withLastName(lastName).withAppUserId(appUserId).build();
+            OkHiUser.Builder userBuilder = new OkHiUser.Builder(phone);
+            if (configUser.has("email")) {
+              userBuilder.withEmail(configUser.getString("email"));
+            }
+            if (configUser.has("firstName")) {
+              userBuilder.withFirstName(configUser.getString("firstName"));
+            }
+            if (configUser.has("lastName")) {
+              userBuilder.withLastName(configUser.getString("lastName"));
+            }
+            if (configUser.has("appUserId")) {
+              userBuilder.withAppUserId(configUser.getString("appUserId"));
+            }
+            OkHiUser user = userBuilder.build();
             OkVerifyInitConfig okVerifyInitConfig = new OkVerifyInitConfig(auth, user);
             OkVerify.init(getCurrentActivity(), notification, okVerifyInitConfig);
           } else {
