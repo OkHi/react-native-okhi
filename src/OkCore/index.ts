@@ -36,7 +36,7 @@ export function initialize(
 ): Promise<void> {
   if (!configuration.user || !configuration.user.phone) {
     console.warn(
-      '[OkHi] Missing user.phone. Passing a user helps verify previous addresses. See https://docs.okhi.com'
+      '[OkHi] Missing user in configuration object. Providing a user helps verify previous addresses. See https://docs.okhi.com'
     );
   }
   return errorHandler(async () => {
