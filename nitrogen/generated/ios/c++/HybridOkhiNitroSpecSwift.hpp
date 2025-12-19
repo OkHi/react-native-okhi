@@ -12,9 +12,46 @@
 // Forward declaration of `HybridOkhiNitroSpec_cxx` to properly resolve imports.
 namespace OkhiNitro { class HybridOkhiNitroSpec_cxx; }
 
+// Forward declaration of `OkHiLogin` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiLogin; }
+// Forward declaration of `OkHiAuth` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiAuth; }
+// Forward declaration of `OkHiUser` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiUser; }
+// Forward declaration of `OkHiLoginConfiguration` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiLoginConfiguration; }
+// Forward declaration of `OkHiVerificationType` to properly resolve imports.
+namespace margelo::nitro::okhinitro { enum class OkHiVerificationType; }
+// Forward declaration of `NitroOkCollect` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct NitroOkCollect; }
+// Forward declaration of `NitroOkCollectStyle` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct NitroOkCollectStyle; }
+// Forward declaration of `NitroOkCollectConfig` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct NitroOkCollectConfig; }
+// Forward declaration of `OkCollectLocationConfig` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkCollectLocationConfig; }
+// Forward declaration of `OkHiSuccessResponse` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiSuccessResponse; }
+// Forward declaration of `OkHiException` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiException; }
 
-
-
+#include "OkHiLogin.hpp"
+#include "OkHiAuth.hpp"
+#include <string>
+#include <optional>
+#include "OkHiUser.hpp"
+#include "OkHiLoginConfiguration.hpp"
+#include <vector>
+#include <functional>
+#include "OkHiVerificationType.hpp"
+#include "NitroOkCollect.hpp"
+#include "NitroOkCollectStyle.hpp"
+#include "NitroOkCollectConfig.hpp"
+#include <NitroModules/Null.hpp>
+#include "OkCollectLocationConfig.hpp"
+#include <variant>
+#include "OkHiSuccessResponse.hpp"
+#include "OkHiException.hpp"
 
 #include "OkhiNitro-Swift-Cxx-Umbrella.hpp"
 
@@ -60,13 +97,17 @@ namespace margelo::nitro::okhinitro {
 
   public:
     // Methods
-    inline double sum(double num1, double num2) override {
-      auto __result = _swiftPart.sum(std::forward<decltype(num1)>(num1), std::forward<decltype(num2)>(num2));
+    inline void login(const OkHiLogin& credentials, const std::function<void(const std::optional<std::vector<std::string>>& /* results */)>& callback) override {
+      auto __result = _swiftPart.login(std::forward<decltype(credentials)>(credentials), callback);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
-      auto __value = std::move(__result.value());
-      return __value;
+    }
+    inline void startAddressVerification(OkHiVerificationType type, const NitroOkCollect& okcollect, const std::function<void(const std::optional<OkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>& callback) override {
+      auto __result = _swiftPart.startAddressVerification(static_cast<int>(type), std::forward<decltype(okcollect)>(okcollect), callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
     }
 
   private:

@@ -14,7 +14,8 @@ namespace margelo::nitro::okhinitro {
     HybridObject::loadHybridMethods();
     // load custom methods/properties
     registerHybrids(this, [](Prototype& prototype) {
-      prototype.registerHybridMethod("sum", &HybridOkhiNitroSpec::sum);
+      prototype.registerHybridMethod("login", &HybridOkhiNitroSpec::login);
+      prototype.registerHybridMethod("startAddressVerification", &HybridOkhiNitroSpec::startAddressVerification);
     });
   }
 

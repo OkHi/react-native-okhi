@@ -45,9 +45,23 @@ abstract class HybridOkhiNitroSpec: HybridObject() {
   
 
   // Methods
+  abstract fun login(credentials: OkHiLogin, callback: (results: Array<String>?) -> Unit): Unit
+  
   @DoNotStrip
   @Keep
-  abstract fun sum(num1: Double, num2: Double): Double
+  private fun login_cxx(credentials: OkHiLogin, callback: Func_void_std__optional_std__vector_std__string__): Unit {
+    val __result = login(credentials, callback)
+    return __result
+  }
+  
+  abstract fun startAddressVerification(type: OkHiVerificationType, okcollect: NitroOkCollect, callback: (response: OkHiSuccessResponse?, error: OkHiException?) -> Unit): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun startAddressVerification_cxx(type: OkHiVerificationType, okcollect: NitroOkCollect, callback: Func_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException_): Unit {
+    val __result = startAddressVerification(type, okcollect, callback)
+    return __result
+  }
 
   private external fun initHybrid(): HybridData
 
