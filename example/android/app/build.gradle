@@ -77,9 +77,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.okhiexample"
+    namespace "com.okhinitroexample"
     defaultConfig {
-        applicationId "com.okhiexample"
+        applicationId "com.okhinitroexample"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

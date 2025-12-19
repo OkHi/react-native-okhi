@@ -16,7 +16,7 @@
   },
   "keywords": [
     "react-native",
-    "react-native-okhi"
+    "react-native-okhi-nitro"
   ],
   "files": [
     "src",
@@ -42,11 +42,11 @@
   "workspaces": [
     "example"
   ],
-  "repository": "https://github.com/jgkiano/react-native-okhi.git",
+  "repository": "https://github.com/jgkiano/react-native-okhi-nitro.git",
   "author": "jgkiano",
   "license": "MIT",
-  "bugs": "https://github.com/jgkiano/react-native-okhi/issues",
-  "homepage": "https://github.com/jgkiano/react-native-okhi#readme",
+  "bugs": "https://github.com/jgkiano/react-native-okhi-nitro/issues",
+  "homepage": "https://github.com/jgkiano/react-native-okhi-nitro#readme",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"

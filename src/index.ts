@@ -1,5 +1,5 @@
 import { NitroModules } from 'react-native-nitro-modules'
-import type { Okhi as OkhiSpec } from './specs/okhi.nitro'
+import type { OkhiNitro as OkhiNitroSpec } from './specs/okhi-nitro.nitro'
 
-export const Okhi =
-  NitroModules.createHybridObject<OkhiSpec>('Okhi')
+export const OkhiNitro =
+  NitroModules.createHybridObject<OkhiNitroSpec>('OkhiNitro')

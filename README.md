@@ -1,10 +1,10 @@
-# react-native-okhi
+# react-native-okhi-nitro
 
 The OkHi React Native library enables you to collect and verify addresses from your users
 
-[![Version](https://img.shields.io/npm/v/react-native-okhi.svg)](https://www.npmjs.com/package/react-native-okhi)
-[![Downloads](https://img.shields.io/npm/dm/react-native-okhi.svg)](https://www.npmjs.com/package/react-native-okhi)
-[![License](https://img.shields.io/npm/l/react-native-okhi.svg)](https://github.com/patrickkabwe/react-native-okhi/LICENSE)
+[![Version](https://img.shields.io/npm/v/react-native-okhi-nitro.svg)](https://www.npmjs.com/package/react-native-okhi-nitro)
+[![Downloads](https://img.shields.io/npm/dm/react-native-okhi-nitro.svg)](https://www.npmjs.com/package/react-native-okhi-nitro)
+[![License](https://img.shields.io/npm/l/react-native-okhi-nitro.svg)](https://github.com/patrickkabwe/react-native-okhi-nitro/LICENSE)
 
 ## Requirements
 
@@ -17,7 +17,7 @@ The OkHi React Native library enables you to collect and verify addresses from y
 ## Installation
 
 ```bash
-npm install react-native-okhi react-native-nitro-modules
+npm install react-native-okhi-nitro react-native-nitro-modules
 ```
 
 ## Credits

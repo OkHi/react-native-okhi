@@ -1,4 +1,4 @@
-package com.okhiexample
+package com.okhinitroexample
 
 import android.app.Application
 import com.facebook.react.PackageList

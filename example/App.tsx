@@ -1,13 +1,11 @@
 import React from 'react';
-import {Text, View, StyleSheet } from 'react-native';
-import { Okhi } from 'react-native-okhi';
+import { Text, View, StyleSheet } from 'react-native';
+import { OkhiNitro } from 'react-native-okhi';
 
 function App(): React.JSX.Element {
   return (
     <View style={styles.container}>
-        <Text style={styles.text}>
-        {Okhi.sum(1, 2)}
-        </Text>
+      <Text style={styles.text}>{OkhiNitro.sum(1, 2)}</Text>
     </View>
   );
 }
@@ -19,8 +17,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-        fontSize: 40, 
-        color: 'green'
-    }});
+    fontSize: 40,
+    color: 'green',
+  },
+});
 
 export default App;
