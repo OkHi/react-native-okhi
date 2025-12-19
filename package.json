@@ -1,116 +1,88 @@
 {
   "name": "react-native-okhi",
-  "version": "1.2.29",
+  "version": "0.1.0",
   "description": "The OkHi React Native library enables you to collect and verify addresses from your users",
-  "main": "lib/commonjs/index",
-  "module": "lib/module/index",
-  "types": "lib/typescript/index.d.ts",
+  "main": "./lib/commonjs/index.js",
+  "module": "./lib/module/index.js",
+  "types": "./lib/typescript/src/index.d.ts",
   "react-native": "src/index",
   "source": "src/index",
-  "files": [
-    "src",
-    "lib",
-    "android",
-    "ios",
-    "cpp",
-    "react-native-okhi.podspec",
-    "!lib/typescript/example",
-    "!android/build",
-    "!ios/build",
-    "!**/__tests__",
-    "!**/__fixtures__",
-    "!**/__mocks__"
-  ],
   "scripts": {
-    "test": "jest",
-    "typescript": "tsc --noEmit",
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "prepare": "bob build",
-    "release": "release-it",
-    "example": "yarn --cwd example",
-    "bootstrap": "yarn example && yarn && yarn example pods",
-    "docs": "typedoc --out ./docs ./src --tsconfig tsconfig.json --excludePrivate --excludeProtected"
+    "typecheck": "tsc --noEmit",
+    "clean": "git clean -dfX",
+    "release": "semantic-release",
+    "build": "npm run typecheck && bob build",
+    "codegen": "nitrogen --logLevel=\"debug\" && npm run build && node post-script.js"
   },
   "keywords": [
     "react-native",
-    "ios",
-    "android"
+    "react-native-okhi"
   ],
-  "repository": "https://github.com/OkHi/react-native-okhi",
-  "author": "OkHi <kiano@okhi.co> (https://okhi.com)",
+  "files": [
+    "src",
+    "react-native.config.js",
+    "lib",
+    "nitrogen",
+    "cpp",
+    "nitro.json",
+    "android/build.gradle",
+    "android/fix-prefab.gradle",
+    "android/gradle.properties",
+    "android/CMakeLists.txt",
+    "android/src",
+    "ios/**/*.h",
+    "ios/**/*.m",
+    "ios/**/*.mm",
+    "ios/**/*.cpp",
+    "ios/**/*.swift",
+    "app.plugin.js",
+    "*.podspec",
+    "README.md"
+  ],
+  "workspaces": [
+    "example"
+  ],
+  "repository": "https://github.com/jgkiano/react-native-okhi.git",
+  "author": "jgkiano",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/OkHi/react-native-okhi/issues"
-  },
-  "homepage": "https://github.com/OkHi/react-native-okhi#readme",
+  "bugs": "https://github.com/jgkiano/react-native-okhi/issues",
+  "homepage": "https://github.com/jgkiano/react-native-okhi#readme",
   "publishConfig": {
+    "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.18.2",
-    "@react-native-community/eslint-config": "^3.0.2",
-    "@release-it/conventional-changelog": "^5.0.0",
-    "@types/jest": "^28.1.2",
-    "@types/react": "~17.0.21",
-    "@types/react-native": "0.68.0",
-    "eslint": "^8.4.1",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "jest": "^28.1.1",
-    "pod-install": "^0.1.0",
-    "prettier": "^2.0.5",
-    "react": "17.0.2",
-    "react-native": "0.68.2",
-    "react-native-builder-bob": "^0.18.3",
-    "react-native-webview": "^11.26.0",
-    "release-it": "^15.0.0",
-    "typedoc": "^0.23.13",
-    "typescript": "^4.5.2"
-  },
-  "resolutions": {
-    "@types/react": "17.0.21"
+    "@jamesacarr/eslint-formatter-github-actions": "^0.2.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@types/jest": "^29.5.12",
+    "@types/react": "19.2.0",
+    "nitrogen": "0.31.10",
+    "react": "19.2.0",
+    "react-native": "0.83",
+    "react-native-builder-bob": "^0.40.17",
+    "react-native-nitro-modules": "0.31.10",
+    "conventional-changelog-conventionalcommits": "^9.1.0",
+    "semantic-release": "^25.0.2",
+    "typescript": "^5.8.3"
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
-  },
-  "jest": {
-    "preset": "react-native",
-    "modulePathIgnorePatterns": [
-      "<rootDir>/example/node_modules",
-      "<rootDir>/lib/"
-    ]
-  },
-  "commitlint": {
-    "extends": []
-  },
-  "release-it": {
-    "git": {
-      "commitMessage": "chore: release ${version}",
-      "tagName": "v${version}"
-    },
-    "npm": {
-      "publish": true
-    },
-    "github": {
-      "release": true
-    },
-    "plugins": {
-      "@release-it/conventional-changelog": {
-        "preset": "angular"
-      }
-    }
+    "react-native": "*",
+    "react-native-nitro-modules": "*"
   },
   "eslintConfig": {
     "root": true,
-    "parser": "@babel/eslint-parser",
     "extends": [
-      "@react-native-community",
+      "@react-native",
+      "prettier"
+    ],
+    "plugins": [
       "prettier"
     ],
     "rules": {
       "prettier/prettier": [
-        "error",
+        "warn",
         {
           "quoteProps": "consistent",
           "singleQuote": true,
@@ -130,7 +102,8 @@
     "singleQuote": true,
     "tabWidth": 2,
     "trailingComma": "es5",
-    "useTabs": false
+    "useTabs": false,
+    "semi": false
   },
   "react-native-builder-bob": {
     "source": "src",
@@ -141,12 +114,9 @@
       [
         "typescript",
         {
-          "project": "tsconfig.build.json"
+          "project": "tsconfig.json"
         }
       ]
     ]
-  },
-  "dependencies": {
-    "axios": "^0.27.2"
   }
 }

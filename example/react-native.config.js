@@ -1,9 +1,18 @@
-const path = require('path');
+const path = require('path')
+const pkg = require('../package.json')
 
+/**
+ * @type {import('@react-native-community/cli-types').Config}
+ */
 module.exports = {
-  dependencies: {
-    'react-native-okhi': {
-      root: path.join(__dirname, '..'),
+    project: {
+        ios: {
+            automaticPodsInstallation: true,
+        },
     },
-  },
-};
+    dependencies: {
+        [pkg.name]: {
+            root: path.join(__dirname, '..'),
+        },
+    },
+}

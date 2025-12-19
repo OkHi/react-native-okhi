@@ -1,41 +1,101 @@
 buildscript {
   repositories {
-      google()
-      mavenCentral()
-      maven { url "https://repo.okhi.io/artifactory/maven" }
+    google()
+    mavenCentral()
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:7.2.2'
+    classpath "com.android.tools.build:gradle:8.8.0"
   }
+}
+
+def reactNativeArchitectures() {
+  def value = rootProject.getProperties().get("reactNativeArchitectures")
+  return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
 }
 
 def isNewArchitectureEnabled() {
-  return rootProject.hasProperty("newArchEnabled") &&  rootProject.getProperty("newArchEnabled") == "true"
+  return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
 }
 
-apply plugin: 'com.android.library'
+apply plugin: "com.android.library"
+apply plugin: 'org.jetbrains.kotlin.android'
+apply from: '../nitrogen/generated/android/Okhi+autolinking.gradle'
+apply from: "./fix-prefab.gradle"
 
 if (isNewArchitectureEnabled()) {
-  apply plugin: 'com.facebook.react'
+  apply plugin: "com.facebook.react"
 }
 
 def getExtOrDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties['Okhi_' + name]
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["Okhi_" + name]
 }
 
 def getExtOrIntegerDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties['Okhi_' + name]).toInteger()
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["Okhi_" + name]).toInteger()
 }
 
 android {
-  compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
+  namespace "com.okhi"
+
+  ndkVersion getExtOrDefault("ndkVersion")
+  compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
 
   defaultConfig {
-    minSdkVersion getExtOrIntegerDefault('minSdkVersion')
-    targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
+    minSdkVersion getExtOrIntegerDefault("minSdkVersion")
+    targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+
+    externalNativeBuild {
+      cmake {
+        cppFlags "-frtti -fexceptions -Wall -Wextra -fstack-protector-all"
+        arguments "-DANDROID_STL=c++_shared", "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
+        abiFilters (*reactNativeArchitectures())
+
+        buildTypes {
+          debug {
+            cppFlags "-O1 -g"
+          }
+          release {
+            cppFlags "-O2"
+          }
+        }
+      }
+    }
   }
+
+  externalNativeBuild {
+    cmake {
+      path "CMakeLists.txt"
+    }
+  }
+
+  packagingOptions {
+    excludes = [
+        "META-INF",
+        "META-INF/**",
+        "**/libc++_shared.so",
+        "**/libfbjni.so",
+        "**/libjsi.so",
+        "**/libfolly_json.so",
+        "**/libfolly_runtime.so",
+        "**/libglog.so",
+        "**/libhermes.so",
+        "**/libhermes-executor-debug.so",
+        "**/libhermes_executor.so",
+        "**/libreactnative.so",
+        "**/libreactnativejni.so",
+        "**/libturbomodulejsijni.so",
+        "**/libreact_nativemodule_core.so",
+        "**/libjscexecutor.so"
+    ]
+  }
+
+  buildFeatures {
+    buildConfig true
+    prefab true
+  }
+
   buildTypes {
     release {
       minifyEnabled false
@@ -43,98 +103,46 @@ android {
   }
 
   lintOptions {
-    disable 'GradleCompatible'
+    disable "GradleCompatible"
   }
 
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
+
+  sourceSets {
+    main {
+      if (isNewArchitectureEnabled()) {
+        java.srcDirs += [
+          // React Codegen files
+          "${project.buildDir}/generated/source/codegen/java"
+        ]
+      }
+    }
+  }
 }
 
 repositories {
   mavenCentral()
   google()
-
-  def found = false
-  def defaultDir = null
-  def androidSourcesName = 'React Native sources'
-
-  if (rootProject.ext.has('reactNativeAndroidRoot')) {
-    defaultDir = rootProject.ext.get('reactNativeAndroidRoot')
-  } else {
-    defaultDir = new File(
-      projectDir,
-      '/../../../node_modules/react-native/android'
-    )
-  }
-
-  if (defaultDir.exists()) {
-    maven {
-      url defaultDir.toString()
-      name androidSourcesName
-    }
-
-    logger.info(":${project.name}:reactNativeAndroidRoot ${defaultDir.canonicalPath}")
-    found = true
-  } else {
-    def parentDir = rootProject.projectDir
-
-    1.upto(5, {
-      if (found) return true
-      parentDir = parentDir.parentFile
-
-      def androidSourcesDir = new File(
-        parentDir,
-        'node_modules/react-native'
-      )
-
-      def androidPrebuiltBinaryDir = new File(
-        parentDir,
-        'node_modules/react-native/android'
-      )
-
-      if (androidPrebuiltBinaryDir.exists()) {
-        maven {
-          url androidPrebuiltBinaryDir.toString()
-          name androidSourcesName
-        }
-
-        logger.info(":${project.name}:reactNativeAndroidRoot ${androidPrebuiltBinaryDir.canonicalPath}")
-        found = true
-      } else if (androidSourcesDir.exists()) {
-        maven {
-          url androidSourcesDir.toString()
-          name androidSourcesName
-        }
-
-        logger.info(":${project.name}:reactNativeAndroidRoot ${androidSourcesDir.canonicalPath}")
-        found = true
-      }
-    })
-  }
-
-  if (!found) {
-    throw new GradleException(
-      "${project.name}: unable to locate React Native android sources. " +
-      "Ensure you have you installed React Native as a dependency in your project and try again."
-    )
-  }
 }
 
 
 dependencies {
-    //noinspection GradleDynamicVersion
+  // For < 0.71, this will be from the local maven repo
+  // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin
+  //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
-  implementation 'io.okhi.android:core:1.7.40'
-  implementation 'io.okhi.android:okverify:1.9.82'
-// From node_modules
+
+  // Add a dependency on NitroModules
+  implementation project(":react-native-nitro-modules")
 }
 
 if (isNewArchitectureEnabled()) {
   react {
     jsRootDir = file("../src/")
     libraryName = "Okhi"
-    codegenJavaPackageName = "com.reactnativeokhi"
+    codegenJavaPackageName = "com.okhi"
   }
 }

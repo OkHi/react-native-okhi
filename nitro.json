@@ -1,0 +1,24 @@
+{
+  "$schema": "https://nitro.margelo.com/nitro.schema.json",
+  "cxxNamespace": [
+    "okhi"
+  ],
+  "ios": {
+    "iosModuleName": "Okhi"
+  },
+  "android": {
+    "androidNamespace": [
+      "okhi"
+    ],
+    "androidCxxLibName": "Okhi"
+  },
+  "autolinking": {
+    "Okhi": {
+      "swift": "HybridOkhi",
+      "kotlin": "HybridOkhi"
+    }
+  },
+  "ignorePaths": [
+    "**/node_modules"
+  ]
+}
