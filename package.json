@@ -29,7 +29,8 @@
     "release": "release-it",
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn && yarn example pods",
-    "docs": "typedoc --out ./docs ./src --tsconfig tsconfig.json --excludePrivate --excludeProtected"
+    "docs": "typedoc --out ./docs ./src --tsconfig tsconfig.json --excludePrivate --excludeProtected",
+    "beta": "npm publish --tag beta"
   },
   "keywords": [
     "react-native",
@@ -72,7 +73,8 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-webview": "*"
   },
   "jest": {
     "preset": "react-native",
