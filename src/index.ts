@@ -4,6 +4,7 @@ import type {
   NitroOkCollect,
   OkCollect,
   OkHiLogin,
+  OkHiSuccessResponse,
   OkHiVerificationType,
 } from './types'
 
@@ -21,7 +22,7 @@ async function startGenericAddressVerification(
   params?: {
     okcollect?: OkCollect
   }
-) {
+): Promise<OkHiSuccessResponse> {
   return new Promise((resolve, reject) => {
     const okcollect: NitroOkCollect = {
       configuration: {
