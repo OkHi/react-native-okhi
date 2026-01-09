@@ -54,7 +54,8 @@ namespace margelo::nitro::okhinitro {
 
   public:
     // Methods
-    double sum(double num1, double num2) override;
+    void login(const OkHiLogin& credentials, const std::function<void(const std::optional<std::vector<std::string>>& /* results */)>& callback) override;
+    void startAddressVerification(OkHiVerificationType type, const NitroOkCollect& okcollect, const std::function<void(const std::optional<OkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>& callback) override;
 
   private:
     friend HybridBase;

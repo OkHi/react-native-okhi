@@ -10,12 +10,51 @@
 // Forward declarations of C++ defined types
 // Forward declaration of `HybridOkhiNitroSpec` to properly resolve imports.
 namespace margelo::nitro::okhinitro { class HybridOkhiNitroSpec; }
+// Forward declaration of `NitroOkCollectConfig` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct NitroOkCollectConfig; }
+// Forward declaration of `NitroOkCollectStyle` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct NitroOkCollectStyle; }
+// Forward declaration of `NitroOkCollect` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct NitroOkCollect; }
+// Forward declaration of `OkCollectLocationConfig` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkCollectLocationConfig; }
+// Forward declaration of `OkHiAuth` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiAuth; }
+// Forward declaration of `OkHiException` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiException; }
+// Forward declaration of `OkHiLoginConfiguration` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiLoginConfiguration; }
+// Forward declaration of `OkHiLogin` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiLogin; }
+// Forward declaration of `OkHiSuccessResponse` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiSuccessResponse; }
+// Forward declaration of `OkHiUser` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiUser; }
+// Forward declaration of `OkHiVerificationType` to properly resolve imports.
+namespace margelo::nitro::okhinitro { enum class OkHiVerificationType; }
 
 // Include C++ defined types
 #include "HybridOkhiNitroSpec.hpp"
+#include "NitroOkCollect.hpp"
+#include "NitroOkCollectConfig.hpp"
+#include "NitroOkCollectStyle.hpp"
+#include "OkCollectLocationConfig.hpp"
+#include "OkHiAuth.hpp"
+#include "OkHiException.hpp"
+#include "OkHiLogin.hpp"
+#include "OkHiLoginConfiguration.hpp"
+#include "OkHiSuccessResponse.hpp"
+#include "OkHiUser.hpp"
+#include "OkHiVerificationType.hpp"
+#include <NitroModules/Null.hpp>
 #include <NitroModules/Result.hpp>
 #include <exception>
+#include <functional>
 #include <memory>
+#include <optional>
+#include <string>
+#include <variant>
+#include <vector>
 
 // C++ helpers for Swift
 #include "OkhiNitro-Swift-Cxx-Bridge.hpp"

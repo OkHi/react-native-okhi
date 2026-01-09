@@ -13,9 +13,26 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
+// Forward declaration of `OkHiLogin` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiLogin; }
+// Forward declaration of `OkHiVerificationType` to properly resolve imports.
+namespace margelo::nitro::okhinitro { enum class OkHiVerificationType; }
+// Forward declaration of `NitroOkCollect` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct NitroOkCollect; }
+// Forward declaration of `OkHiSuccessResponse` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiSuccessResponse; }
+// Forward declaration of `OkHiException` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiException; }
 
-
-
+#include "OkHiLogin.hpp"
+#include <string>
+#include <vector>
+#include <optional>
+#include <functional>
+#include "OkHiVerificationType.hpp"
+#include "NitroOkCollect.hpp"
+#include "OkHiSuccessResponse.hpp"
+#include "OkHiException.hpp"
 
 namespace margelo::nitro::okhinitro {
 
@@ -48,7 +65,8 @@ namespace margelo::nitro::okhinitro {
 
     public:
       // Methods
-      virtual double sum(double num1, double num2) = 0;
+      virtual void login(const OkHiLogin& credentials, const std::function<void(const std::optional<std::vector<std::string>>& /* results */)>& callback) = 0;
+      virtual void startAddressVerification(OkHiVerificationType type, const NitroOkCollect& okcollect, const std::function<void(const std::optional<OkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>& callback) = 0;
 
     protected:
       // Hybrid Setup

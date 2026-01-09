@@ -118,14 +118,58 @@ open class HybridOkhiNitroSpec_cxx {
 
   // Methods
   @inline(__always)
-  public final func sum(num1: Double, num2: Double) -> bridge.Result_double_ {
+  public final func login(credentials: OkHiLogin, callback: bridge.Func_void_std__optional_std__vector_std__string__) -> bridge.Result_void_ {
     do {
-      let __result = try self.__implementation.sum(num1: num1, num2: num2)
-      let __resultCpp = __result
-      return bridge.create_Result_double_(__resultCpp)
+      try self.__implementation.login(credentials: credentials, callback: { () -> ([String]?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_std__vector_std__string__(callback)
+        return { (__results: [String]?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_std__vector_std__string__ in
+            if let __unwrappedValue = __results {
+              return bridge.create_std__optional_std__vector_std__string__({ () -> bridge.std__vector_std__string_ in
+                var __vector = bridge.create_std__vector_std__string_(__unwrappedValue.count)
+                for __item in __unwrappedValue {
+                  __vector.push_back(std.string(__item))
+                }
+                return __vector
+              }())
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      return bridge.create_Result_void_()
     } catch (let __error) {
       let __exceptionPtr = __error.toCpp()
-      return bridge.create_Result_double_(__exceptionPtr)
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func startAddressVerification(type: Int32, okcollect: NitroOkCollect, callback: bridge.Func_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.startAddressVerification(type: margelo.nitro.okhinitro.OkHiVerificationType(rawValue: type)!, okcollect: okcollect, callback: { () -> (OkHiSuccessResponse?, OkHiException?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException_(callback)
+        return { (__response: OkHiSuccessResponse?, __error: OkHiException?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_OkHiSuccessResponse_ in
+            if let __unwrappedValue = __response {
+              return bridge.create_std__optional_OkHiSuccessResponse_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }(), { () -> bridge.std__optional_OkHiException_ in
+            if let __unwrappedValue = __error {
+              return bridge.create_std__optional_OkHiException_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
     }
   }
 }

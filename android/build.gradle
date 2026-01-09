@@ -130,8 +130,7 @@ repositories {
 
 
 dependencies {
-  implementation 'io.okhi.android:core:1.7.40'
-  implementation 'io.okhi.android:okverify:1.9.82'
+    implementation 'io.okhi.android:okhi:1.0.0'
   // For < 0.71, this will be from the local maven repo
   // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin
   //noinspection GradleDynamicVersion

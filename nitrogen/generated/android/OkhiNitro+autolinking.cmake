@@ -36,6 +36,7 @@ target_sources(
   ../nitrogen/generated/shared/c++/HybridOkhiNitroSpec.cpp
   # Android-specific Nitrogen C++ sources
   ../nitrogen/generated/android/c++/JHybridOkhiNitroSpec.cpp
+  ../nitrogen/generated/android/c++/JVariant_NullType_OkCollectLocationConfig.cpp
 )
 
 # From node_modules/react-native/ReactAndroid/cmake-utils/folly-flags.cmake

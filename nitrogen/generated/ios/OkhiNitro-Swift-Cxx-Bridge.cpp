@@ -14,6 +14,22 @@
 
 namespace margelo::nitro::okhinitro::bridge::swift {
 
+  // pragma MARK: std::function<void(const std::optional<std::vector<std::string>>& /* results */)>
+  Func_void_std__optional_std__vector_std__string__ create_Func_void_std__optional_std__vector_std__string__(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = OkhiNitro::Func_void_std__optional_std__vector_std__string__::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const std::optional<std::vector<std::string>>& results) mutable -> void {
+      swiftClosure.call(results);
+    };
+  }
+  
+  // pragma MARK: std::function<void(const std::optional<OkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>
+  Func_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException_ create_Func_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException_(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = OkhiNitro::Func_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException_::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const std::optional<OkHiSuccessResponse>& response, const std::optional<OkHiException>& error) mutable -> void {
+      swiftClosure.call(response, error);
+    };
+  }
+  
   // pragma MARK: std::shared_ptr<HybridOkhiNitroSpec>
   std::shared_ptr<HybridOkhiNitroSpec> create_std__shared_ptr_HybridOkhiNitroSpec_(void* NON_NULL swiftUnsafePointer) noexcept {
     OkhiNitro::HybridOkhiNitroSpec_cxx swiftPart = OkhiNitro::HybridOkhiNitroSpec_cxx::fromUnsafe(swiftUnsafePointer);

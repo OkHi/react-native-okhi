@@ -16,6 +16,8 @@
 #include <NitroModules/HybridObjectRegistry.hpp>
 
 #include "JHybridOkhiNitroSpec.hpp"
+#include "JFunc_void_std__optional_std__vector_std__string__.hpp"
+#include "JFunc_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException_.hpp"
 #include <NitroModules/DefaultConstructableObject.hpp>
 
 namespace margelo::nitro::okhinitro {
@@ -28,6 +30,8 @@ int initialize(JavaVM* vm) {
   return facebook::jni::initialize(vm, [] {
     // Register native JNI methods
     margelo::nitro::okhinitro::JHybridOkhiNitroSpec::registerNatives();
+    margelo::nitro::okhinitro::JFunc_void_std__optional_std__vector_std__string___cxx::registerNatives();
+    margelo::nitro::okhinitro::JFunc_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException__cxx::registerNatives();
 
     // Register Nitro Hybrid Objects
     HybridObjectRegistry::registerHybridObjectConstructor(
