@@ -1,4 +1,5 @@
 import type { ViewStyle } from 'react-native';
+import type { JSX } from 'react';
 import type { OkHiException } from '../OkCore/OkHiException';
 import type { OkHiUser, OkHiLocation, UsageType } from '../OkCore/types';
 
