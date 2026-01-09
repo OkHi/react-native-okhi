@@ -66,9 +66,9 @@ function App(): React.JSX.Element {
     if (!user.email || !user.firstName || !user.lastName || !user.phone) return;
     const result = await OkHi.login({
       auth: {
-        branchId: 'OGUXBJeocZ',
-        clientKey: 'd76eb1f5-12a2-47a7-a6b6-2de88a5bc739',
-        env: 'dev',
+        branchId: '',
+        clientKey: '',
+        env: '',
       },
       user: {
         email: user.email,
