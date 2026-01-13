@@ -16,6 +16,7 @@ namespace margelo::nitro::okhinitro {
     registerHybrids(this, [](Prototype& prototype) {
       prototype.registerHybridMethod("login", &HybridOkhiNitroSpec::login);
       prototype.registerHybridMethod("startAddressVerification", &HybridOkhiNitroSpec::startAddressVerification);
+      prototype.registerHybridMethod("onStart", &HybridOkhiNitroSpec::onStart);
     });
   }
 

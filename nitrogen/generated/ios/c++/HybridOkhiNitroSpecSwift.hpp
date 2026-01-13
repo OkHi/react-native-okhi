@@ -20,6 +20,8 @@ namespace margelo::nitro::okhinitro { struct OkHiAuth; }
 namespace margelo::nitro::okhinitro { struct OkHiUser; }
 // Forward declaration of `OkHiLoginConfiguration` to properly resolve imports.
 namespace margelo::nitro::okhinitro { struct OkHiLoginConfiguration; }
+// Forward declaration of `OkHiAppContext` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiAppContext; }
 // Forward declaration of `OkHiVerificationType` to properly resolve imports.
 namespace margelo::nitro::okhinitro { enum class OkHiVerificationType; }
 // Forward declaration of `NitroOkCollect` to properly resolve imports.
@@ -41,6 +43,7 @@ namespace margelo::nitro::okhinitro { struct OkHiException; }
 #include <optional>
 #include "OkHiUser.hpp"
 #include "OkHiLoginConfiguration.hpp"
+#include "OkHiAppContext.hpp"
 #include <vector>
 #include <functional>
 #include "OkHiVerificationType.hpp"
@@ -105,6 +108,12 @@ namespace margelo::nitro::okhinitro {
     }
     inline void startAddressVerification(OkHiVerificationType type, const NitroOkCollect& okcollect, const std::function<void(const std::optional<OkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>& callback) override {
       auto __result = _swiftPart.startAddressVerification(static_cast<int>(type), std::forward<decltype(okcollect)>(okcollect), callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void onStart() override {
+      auto __result = _swiftPart.onStart();
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

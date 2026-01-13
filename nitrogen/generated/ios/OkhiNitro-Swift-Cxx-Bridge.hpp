@@ -12,6 +12,8 @@
 namespace margelo::nitro::okhinitro { class HybridOkhiNitroSpec; }
 // Forward declaration of `OkCollectLocationConfig` to properly resolve imports.
 namespace margelo::nitro::okhinitro { struct OkCollectLocationConfig; }
+// Forward declaration of `OkHiAppContext` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiAppContext; }
 // Forward declaration of `OkHiException` to properly resolve imports.
 namespace margelo::nitro::okhinitro { struct OkHiException; }
 // Forward declaration of `OkHiLoginConfiguration` to properly resolve imports.
@@ -26,6 +28,7 @@ namespace OkhiNitro { class HybridOkhiNitroSpec_cxx; }
 // Include C++ defined types
 #include "HybridOkhiNitroSpec.hpp"
 #include "OkCollectLocationConfig.hpp"
+#include "OkHiAppContext.hpp"
 #include "OkHiException.hpp"
 #include "OkHiLoginConfiguration.hpp"
 #include "OkHiSuccessResponse.hpp"
@@ -87,6 +90,21 @@ namespace margelo::nitro::okhinitro::bridge::swift {
     return optional.has_value();
   }
   inline OkHiLoginConfiguration get_std__optional_OkHiLoginConfiguration_(const std::optional<OkHiLoginConfiguration>& optional) noexcept {
+    return *optional;
+  }
+  
+  // pragma MARK: std::optional<OkHiAppContext>
+  /**
+   * Specialized version of `std::optional<OkHiAppContext>`.
+   */
+  using std__optional_OkHiAppContext_ = std::optional<OkHiAppContext>;
+  inline std::optional<OkHiAppContext> create_std__optional_OkHiAppContext_(const OkHiAppContext& value) noexcept {
+    return std::optional<OkHiAppContext>(value);
+  }
+  inline bool has_value_std__optional_OkHiAppContext_(const std::optional<OkHiAppContext>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline OkHiAppContext get_std__optional_OkHiAppContext_(const std::optional<OkHiAppContext>& optional) noexcept {
     return *optional;
   }
   

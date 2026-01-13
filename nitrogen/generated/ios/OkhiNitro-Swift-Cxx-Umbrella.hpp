@@ -18,6 +18,8 @@ namespace margelo::nitro::okhinitro { struct NitroOkCollectStyle; }
 namespace margelo::nitro::okhinitro { struct NitroOkCollect; }
 // Forward declaration of `OkCollectLocationConfig` to properly resolve imports.
 namespace margelo::nitro::okhinitro { struct OkCollectLocationConfig; }
+// Forward declaration of `OkHiAppContext` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiAppContext; }
 // Forward declaration of `OkHiAuth` to properly resolve imports.
 namespace margelo::nitro::okhinitro { struct OkHiAuth; }
 // Forward declaration of `OkHiException` to properly resolve imports.
@@ -39,6 +41,7 @@ namespace margelo::nitro::okhinitro { enum class OkHiVerificationType; }
 #include "NitroOkCollectConfig.hpp"
 #include "NitroOkCollectStyle.hpp"
 #include "OkCollectLocationConfig.hpp"
+#include "OkHiAppContext.hpp"
 #include "OkHiAuth.hpp"
 #include "OkHiException.hpp"
 #include "OkHiLogin.hpp"

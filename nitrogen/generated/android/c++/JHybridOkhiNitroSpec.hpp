@@ -56,6 +56,7 @@ namespace margelo::nitro::okhinitro {
     // Methods
     void login(const OkHiLogin& credentials, const std::function<void(const std::optional<std::vector<std::string>>& /* results */)>& callback) override;
     void startAddressVerification(OkHiVerificationType type, const NitroOkCollect& okcollect, const std::function<void(const std::optional<OkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>& callback) override;
+    void onStart() override;
 
   private:
     friend HybridBase;

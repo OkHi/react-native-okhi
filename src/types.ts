@@ -18,10 +18,17 @@ export type OkHiLoginConfiguration = {
   withPermissionsRequest?: boolean
 }
 
+export type OkHiAppContext = {
+  name: string
+  version: string
+  build: string
+}
+
 export type OkHiLogin = {
   auth: OkHiAuth
   user: OkHiUser
   configuration?: OkHiLoginConfiguration
+  appContext?: OkHiAppContext
 }
 
 export type OkHiSuccessResponse = {

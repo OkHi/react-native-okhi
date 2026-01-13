@@ -15,6 +15,8 @@ namespace margelo::nitro::okhinitro { struct OkHiAuth; }
 namespace margelo::nitro::okhinitro { struct OkHiUser; }
 // Forward declaration of `OkHiLoginConfiguration` to properly resolve imports.
 namespace margelo::nitro::okhinitro { struct OkHiLoginConfiguration; }
+// Forward declaration of `OkHiAppContext` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiAppContext; }
 // Forward declaration of `OkHiVerificationType` to properly resolve imports.
 namespace margelo::nitro::okhinitro { enum class OkHiVerificationType; }
 // Forward declaration of `NitroOkCollect` to properly resolve imports.
@@ -40,6 +42,8 @@ namespace margelo::nitro::okhinitro { struct OkHiException; }
 #include "JOkHiUser.hpp"
 #include "OkHiLoginConfiguration.hpp"
 #include "JOkHiLoginConfiguration.hpp"
+#include "OkHiAppContext.hpp"
+#include "JOkHiAppContext.hpp"
 #include <vector>
 #include <functional>
 #include "JFunc_void_std__optional_std__vector_std__string__.hpp"
@@ -103,6 +107,10 @@ namespace margelo::nitro::okhinitro {
   void JHybridOkhiNitroSpec::startAddressVerification(OkHiVerificationType type, const NitroOkCollect& okcollect, const std::function<void(const std::optional<OkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>& callback) {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JOkHiVerificationType> /* type */, jni::alias_ref<JNitroOkCollect> /* okcollect */, jni::alias_ref<JFunc_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException_::javaobject> /* callback */)>("startAddressVerification_cxx");
     method(_javaPart, JOkHiVerificationType::fromCpp(type), JNitroOkCollect::fromCpp(okcollect), JFunc_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException__cxx::fromCpp(callback));
+  }
+  void JHybridOkhiNitroSpec::onStart() {
+    static const auto method = javaClassStatic()->getMethod<void()>("onStart");
+    method(_javaPart);
   }
 
 } // namespace margelo::nitro::okhinitro
