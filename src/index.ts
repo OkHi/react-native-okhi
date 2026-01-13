@@ -2,9 +2,9 @@ import { NitroModules } from 'react-native-nitro-modules'
 import type { OkhiNitro as OkhiNitroSpec } from './specs/okhi-nitro.nitro'
 import type {
   NitroOkCollect,
+  NitroOkHiSuccessResponse,
   OkCollect,
   OkHiLogin,
-  OkHiSuccessResponse,
   OkHiVerificationType,
 } from './types'
 
@@ -22,7 +22,7 @@ async function startGenericAddressVerification(
   params?: {
     okcollect?: OkCollect
   }
-): Promise<OkHiSuccessResponse> {
+): Promise<NitroOkHiSuccessResponse> {
   return new Promise((resolve, reject) => {
     const okcollect: NitroOkCollect = {
       configuration: {

@@ -15,7 +15,7 @@ public protocol HybridOkhiNitroSpec_protocol: HybridObject {
 
   // Methods
   func login(credentials: OkHiLogin, callback: @escaping (_ results: [String]?) -> Void) throws -> Void
-  func startAddressVerification(type: OkHiVerificationType, okcollect: NitroOkCollect, callback: @escaping (_ response: OkHiSuccessResponse?, _ error: OkHiException?) -> Void) throws -> Void
+  func startAddressVerification(type: OkHiVerificationType, okcollect: NitroOkCollect, callback: @escaping (_ response: NitroOkHiSuccessResponse?, _ error: OkHiException?) -> Void) throws -> Void
 }
 
 public extension HybridOkhiNitroSpec_protocol {

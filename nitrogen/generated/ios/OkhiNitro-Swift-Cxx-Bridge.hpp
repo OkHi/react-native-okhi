@@ -10,14 +10,14 @@
 // Forward declarations of C++ defined types
 // Forward declaration of `HybridOkhiNitroSpec` to properly resolve imports.
 namespace margelo::nitro::okhinitro { class HybridOkhiNitroSpec; }
+// Forward declaration of `NitroOkHiSuccessResponse` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct NitroOkHiSuccessResponse; }
 // Forward declaration of `OkHiAppContext` to properly resolve imports.
 namespace margelo::nitro::okhinitro { struct OkHiAppContext; }
 // Forward declaration of `OkHiException` to properly resolve imports.
 namespace margelo::nitro::okhinitro { struct OkHiException; }
 // Forward declaration of `OkHiLoginConfiguration` to properly resolve imports.
 namespace margelo::nitro::okhinitro { struct OkHiLoginConfiguration; }
-// Forward declaration of `OkHiSuccessResponse` to properly resolve imports.
-namespace margelo::nitro::okhinitro { struct OkHiSuccessResponse; }
 
 // Forward declarations of Swift defined types
 // Forward declaration of `HybridOkhiNitroSpec_cxx` to properly resolve imports.
@@ -25,10 +25,10 @@ namespace OkhiNitro { class HybridOkhiNitroSpec_cxx; }
 
 // Include C++ defined types
 #include "HybridOkhiNitroSpec.hpp"
+#include "NitroOkHiSuccessResponse.hpp"
 #include "OkHiAppContext.hpp"
 #include "OkHiException.hpp"
 #include "OkHiLoginConfiguration.hpp"
-#include "OkHiSuccessResponse.hpp"
 #include <NitroModules/Result.hpp>
 #include <exception>
 #include <functional>
@@ -151,18 +151,18 @@ namespace margelo::nitro::okhinitro::bridge::swift {
     return Func_void_std__optional_std__vector_std__string___Wrapper(std::move(value));
   }
   
-  // pragma MARK: std::optional<OkHiSuccessResponse>
+  // pragma MARK: std::optional<NitroOkHiSuccessResponse>
   /**
-   * Specialized version of `std::optional<OkHiSuccessResponse>`.
+   * Specialized version of `std::optional<NitroOkHiSuccessResponse>`.
    */
-  using std__optional_OkHiSuccessResponse_ = std::optional<OkHiSuccessResponse>;
-  inline std::optional<OkHiSuccessResponse> create_std__optional_OkHiSuccessResponse_(const OkHiSuccessResponse& value) noexcept {
-    return std::optional<OkHiSuccessResponse>(value);
+  using std__optional_NitroOkHiSuccessResponse_ = std::optional<NitroOkHiSuccessResponse>;
+  inline std::optional<NitroOkHiSuccessResponse> create_std__optional_NitroOkHiSuccessResponse_(const NitroOkHiSuccessResponse& value) noexcept {
+    return std::optional<NitroOkHiSuccessResponse>(value);
   }
-  inline bool has_value_std__optional_OkHiSuccessResponse_(const std::optional<OkHiSuccessResponse>& optional) noexcept {
+  inline bool has_value_std__optional_NitroOkHiSuccessResponse_(const std::optional<NitroOkHiSuccessResponse>& optional) noexcept {
     return optional.has_value();
   }
-  inline OkHiSuccessResponse get_std__optional_OkHiSuccessResponse_(const std::optional<OkHiSuccessResponse>& optional) noexcept {
+  inline NitroOkHiSuccessResponse get_std__optional_NitroOkHiSuccessResponse_(const std::optional<NitroOkHiSuccessResponse>& optional) noexcept {
     return *optional;
   }
   
@@ -181,26 +181,26 @@ namespace margelo::nitro::okhinitro::bridge::swift {
     return *optional;
   }
   
-  // pragma MARK: std::function<void(const std::optional<OkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>
+  // pragma MARK: std::function<void(const std::optional<NitroOkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>
   /**
-   * Specialized version of `std::function<void(const std::optional<OkHiSuccessResponse>&, const std::optional<OkHiException>&)>`.
+   * Specialized version of `std::function<void(const std::optional<NitroOkHiSuccessResponse>&, const std::optional<OkHiException>&)>`.
    */
-  using Func_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException_ = std::function<void(const std::optional<OkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>;
+  using Func_void_std__optional_NitroOkHiSuccessResponse__std__optional_OkHiException_ = std::function<void(const std::optional<NitroOkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>;
   /**
-   * Wrapper class for a `std::function<void(const std::optional<OkHiSuccessResponse>& / * response * /, const std::optional<OkHiException>& / * error * /)>`, this can be used from Swift.
+   * Wrapper class for a `std::function<void(const std::optional<NitroOkHiSuccessResponse>& / * response * /, const std::optional<OkHiException>& / * error * /)>`, this can be used from Swift.
    */
-  class Func_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException__Wrapper final {
+  class Func_void_std__optional_NitroOkHiSuccessResponse__std__optional_OkHiException__Wrapper final {
   public:
-    explicit Func_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException__Wrapper(std::function<void(const std::optional<OkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>&& func): _function(std::make_unique<std::function<void(const std::optional<OkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>>(std::move(func))) {}
-    inline void call(std::optional<OkHiSuccessResponse> response, std::optional<OkHiException> error) const noexcept {
+    explicit Func_void_std__optional_NitroOkHiSuccessResponse__std__optional_OkHiException__Wrapper(std::function<void(const std::optional<NitroOkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>&& func): _function(std::make_unique<std::function<void(const std::optional<NitroOkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>>(std::move(func))) {}
+    inline void call(std::optional<NitroOkHiSuccessResponse> response, std::optional<OkHiException> error) const noexcept {
       _function->operator()(response, error);
     }
   private:
-    std::unique_ptr<std::function<void(const std::optional<OkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>> _function;
+    std::unique_ptr<std::function<void(const std::optional<NitroOkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>> _function;
   } SWIFT_NONCOPYABLE;
-  Func_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException_ create_Func_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException_(void* NON_NULL swiftClosureWrapper) noexcept;
-  inline Func_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException__Wrapper wrap_Func_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException_(Func_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException_ value) noexcept {
-    return Func_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException__Wrapper(std::move(value));
+  Func_void_std__optional_NitroOkHiSuccessResponse__std__optional_OkHiException_ create_Func_void_std__optional_NitroOkHiSuccessResponse__std__optional_OkHiException_(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_std__optional_NitroOkHiSuccessResponse__std__optional_OkHiException__Wrapper wrap_Func_void_std__optional_NitroOkHiSuccessResponse__std__optional_OkHiException_(Func_void_std__optional_NitroOkHiSuccessResponse__std__optional_OkHiException_ value) noexcept {
+    return Func_void_std__optional_NitroOkHiSuccessResponse__std__optional_OkHiException__Wrapper(std::move(value));
   }
   
   // pragma MARK: std::shared_ptr<HybridOkhiNitroSpec>

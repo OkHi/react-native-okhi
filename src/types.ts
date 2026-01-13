@@ -31,9 +31,14 @@ export type OkHiLogin = {
   appContext?: OkHiAppContext
 }
 
-export type OkHiSuccessResponse = {
+export type NitroOkHiSuccessResponse = {
   user: string
   location: string
+}
+
+export type OkHiSuccessResponse = {
+  user: OkHiUser
+  location: OkHiLocation
 }
 
 export type OkHiException = {

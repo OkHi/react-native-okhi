@@ -54,11 +54,11 @@ abstract class HybridOkhiNitroSpec: HybridObject() {
     return __result
   }
   
-  abstract fun startAddressVerification(type: OkHiVerificationType, okcollect: NitroOkCollect, callback: (response: OkHiSuccessResponse?, error: OkHiException?) -> Unit): Unit
+  abstract fun startAddressVerification(type: OkHiVerificationType, okcollect: NitroOkCollect, callback: (response: NitroOkHiSuccessResponse?, error: OkHiException?) -> Unit): Unit
   
   @DoNotStrip
   @Keep
-  private fun startAddressVerification_cxx(type: OkHiVerificationType, okcollect: NitroOkCollect, callback: Func_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException_): Unit {
+  private fun startAddressVerification_cxx(type: OkHiVerificationType, okcollect: NitroOkCollect, callback: Func_void_std__optional_NitroOkHiSuccessResponse__std__optional_OkHiException_): Unit {
     val __result = startAddressVerification(type, okcollect, callback)
     return __result
   }
