@@ -12,16 +12,10 @@
 
 #include "JNitroOkCollectConfig.hpp"
 #include "JNitroOkCollectStyle.hpp"
-#include "JOkCollectLocationConfig.hpp"
-#include "JVariant_NullType_OkCollectLocationConfig.hpp"
 #include "NitroOkCollectConfig.hpp"
 #include "NitroOkCollectStyle.hpp"
-#include "OkCollectLocationConfig.hpp"
-#include <NitroModules/JNull.hpp>
-#include <NitroModules/Null.hpp>
 #include <optional>
 #include <string>
-#include <variant>
 
 namespace margelo::nitro::okhinitro {
 
@@ -46,12 +40,12 @@ namespace margelo::nitro::okhinitro {
       jni::local_ref<JNitroOkCollectStyle> style = this->getFieldValue(fieldStyle);
       static const auto fieldConfiguration = clazz->getField<JNitroOkCollectConfig>("configuration");
       jni::local_ref<JNitroOkCollectConfig> configuration = this->getFieldValue(fieldConfiguration);
-      static const auto fieldLocation = clazz->getField<JVariant_NullType_OkCollectLocationConfig>("location");
-      jni::local_ref<JVariant_NullType_OkCollectLocationConfig> location = this->getFieldValue(fieldLocation);
+      static const auto fieldLocationId = clazz->getField<jni::JString>("locationId");
+      jni::local_ref<jni::JString> locationId = this->getFieldValue(fieldLocationId);
       return NitroOkCollect(
         style->toCpp(),
         configuration->toCpp(),
-        location != nullptr ? std::make_optional(location->toCpp()) : std::nullopt
+        locationId != nullptr ? std::make_optional(locationId->toStdString()) : std::nullopt
       );
     }
 
@@ -61,14 +55,14 @@ namespace margelo::nitro::okhinitro {
      */
     [[maybe_unused]]
     static jni::local_ref<JNitroOkCollect::javaobject> fromCpp(const NitroOkCollect& value) {
-      using JSignature = JNitroOkCollect(jni::alias_ref<JNitroOkCollectStyle>, jni::alias_ref<JNitroOkCollectConfig>, jni::alias_ref<JVariant_NullType_OkCollectLocationConfig>);
+      using JSignature = JNitroOkCollect(jni::alias_ref<JNitroOkCollectStyle>, jni::alias_ref<JNitroOkCollectConfig>, jni::alias_ref<jni::JString>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         JNitroOkCollectStyle::fromCpp(value.style),
         JNitroOkCollectConfig::fromCpp(value.configuration),
-        value.location.has_value() ? JVariant_NullType_OkCollectLocationConfig::fromCpp(value.location.value()) : nullptr
+        value.locationId.has_value() ? jni::make_jstring(value.locationId.value()) : nullptr
       );
     }
   };

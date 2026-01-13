@@ -41,11 +41,11 @@ namespace margelo::nitro::okhinitro {
     std::string email     SWIFT_PRIVATE;
     std::optional<std::string> okhiUserId     SWIFT_PRIVATE;
     std::optional<std::string> token     SWIFT_PRIVATE;
-    std::optional<std::string> appUserId     SWIFT_PRIVATE;
+    std::string appUserId     SWIFT_PRIVATE;
 
   public:
     OkHiUser() = default;
-    explicit OkHiUser(std::string firstName, std::string lastName, std::string phone, std::string email, std::optional<std::string> okhiUserId, std::optional<std::string> token, std::optional<std::string> appUserId): firstName(firstName), lastName(lastName), phone(phone), email(email), okhiUserId(okhiUserId), token(token), appUserId(appUserId) {}
+    explicit OkHiUser(std::string firstName, std::string lastName, std::string phone, std::string email, std::optional<std::string> okhiUserId, std::optional<std::string> token, std::string appUserId): firstName(firstName), lastName(lastName), phone(phone), email(email), okhiUserId(okhiUserId), token(token), appUserId(appUserId) {}
   };
 
 } // namespace margelo::nitro::okhinitro
@@ -64,7 +64,7 @@ namespace margelo::nitro {
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "email")),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, "okhiUserId")),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, "token")),
-        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, "appUserId"))
+        JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "appUserId"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::okhinitro::OkHiUser& arg) {
@@ -75,7 +75,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, "email", JSIConverter<std::string>::toJSI(runtime, arg.email));
       obj.setProperty(runtime, "okhiUserId", JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.okhiUserId));
       obj.setProperty(runtime, "token", JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.token));
-      obj.setProperty(runtime, "appUserId", JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.appUserId));
+      obj.setProperty(runtime, "appUserId", JSIConverter<std::string>::toJSI(runtime, arg.appUserId));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -92,7 +92,7 @@ namespace margelo::nitro {
       if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, "email"))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, "okhiUserId"))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, "token"))) return false;
-      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, "appUserId"))) return false;
+      if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, "appUserId"))) return false;
       return true;
     }
   };

@@ -10,8 +10,6 @@
 // Forward declarations of C++ defined types
 // Forward declaration of `HybridOkhiNitroSpec` to properly resolve imports.
 namespace margelo::nitro::okhinitro { class HybridOkhiNitroSpec; }
-// Forward declaration of `OkCollectLocationConfig` to properly resolve imports.
-namespace margelo::nitro::okhinitro { struct OkCollectLocationConfig; }
 // Forward declaration of `OkHiAppContext` to properly resolve imports.
 namespace margelo::nitro::okhinitro { struct OkHiAppContext; }
 // Forward declaration of `OkHiException` to properly resolve imports.
@@ -27,19 +25,16 @@ namespace OkhiNitro { class HybridOkhiNitroSpec_cxx; }
 
 // Include C++ defined types
 #include "HybridOkhiNitroSpec.hpp"
-#include "OkCollectLocationConfig.hpp"
 #include "OkHiAppContext.hpp"
 #include "OkHiException.hpp"
 #include "OkHiLoginConfiguration.hpp"
 #include "OkHiSuccessResponse.hpp"
-#include <NitroModules/Null.hpp>
 #include <NitroModules/Result.hpp>
 #include <exception>
 #include <functional>
 #include <memory>
 #include <optional>
 #include <string>
-#include <variant>
 #include <vector>
 
 /**
@@ -154,50 +149,6 @@ namespace margelo::nitro::okhinitro::bridge::swift {
   Func_void_std__optional_std__vector_std__string__ create_Func_void_std__optional_std__vector_std__string__(void* NON_NULL swiftClosureWrapper) noexcept;
   inline Func_void_std__optional_std__vector_std__string___Wrapper wrap_Func_void_std__optional_std__vector_std__string__(Func_void_std__optional_std__vector_std__string__ value) noexcept {
     return Func_void_std__optional_std__vector_std__string___Wrapper(std::move(value));
-  }
-  
-  // pragma MARK: std::variant<nitro::NullType, OkCollectLocationConfig>
-  /**
-   * Wrapper struct for `std::variant<nitro::NullType, OkCollectLocationConfig>`.
-   * std::variant cannot be used in Swift because of a Swift bug.
-   * Not even specializing it works. So we create a wrapper struct.
-   */
-  struct std__variant_nitro__NullType__OkCollectLocationConfig_ {
-    std::variant<nitro::NullType, OkCollectLocationConfig> variant;
-    std__variant_nitro__NullType__OkCollectLocationConfig_(std::variant<nitro::NullType, OkCollectLocationConfig> variant): variant(variant) { }
-    operator std::variant<nitro::NullType, OkCollectLocationConfig>() const noexcept {
-      return variant;
-    }
-    inline size_t index() const noexcept {
-      return variant.index();
-    }
-    inline nitro::NullType get_0() const noexcept {
-      return std::get<0>(variant);
-    }
-    inline OkCollectLocationConfig get_1() const noexcept {
-      return std::get<1>(variant);
-    }
-  };
-  inline std__variant_nitro__NullType__OkCollectLocationConfig_ create_std__variant_nitro__NullType__OkCollectLocationConfig_(nitro::NullType value) noexcept {
-    return std__variant_nitro__NullType__OkCollectLocationConfig_(value);
-  }
-  inline std__variant_nitro__NullType__OkCollectLocationConfig_ create_std__variant_nitro__NullType__OkCollectLocationConfig_(const OkCollectLocationConfig& value) noexcept {
-    return std__variant_nitro__NullType__OkCollectLocationConfig_(value);
-  }
-  
-  // pragma MARK: std::optional<std::variant<nitro::NullType, OkCollectLocationConfig>>
-  /**
-   * Specialized version of `std::optional<std::variant<nitro::NullType, OkCollectLocationConfig>>`.
-   */
-  using std__optional_std__variant_nitro__NullType__OkCollectLocationConfig__ = std::optional<std::variant<nitro::NullType, OkCollectLocationConfig>>;
-  inline std::optional<std::variant<nitro::NullType, OkCollectLocationConfig>> create_std__optional_std__variant_nitro__NullType__OkCollectLocationConfig__(const std::variant<nitro::NullType, OkCollectLocationConfig>& value) noexcept {
-    return std::optional<std::variant<nitro::NullType, OkCollectLocationConfig>>(value);
-  }
-  inline bool has_value_std__optional_std__variant_nitro__NullType__OkCollectLocationConfig__(const std::optional<std::variant<nitro::NullType, OkCollectLocationConfig>>& optional) noexcept {
-    return optional.has_value();
-  }
-  inline std::variant<nitro::NullType, OkCollectLocationConfig> get_std__optional_std__variant_nitro__NullType__OkCollectLocationConfig__(const std::optional<std::variant<nitro::NullType, OkCollectLocationConfig>>& optional) noexcept {
-    return *optional;
   }
   
   // pragma MARK: std::optional<OkHiSuccessResponse>

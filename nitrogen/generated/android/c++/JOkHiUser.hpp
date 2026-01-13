@@ -53,7 +53,7 @@ namespace margelo::nitro::okhinitro {
         email->toStdString(),
         okhiUserId != nullptr ? std::make_optional(okhiUserId->toStdString()) : std::nullopt,
         token != nullptr ? std::make_optional(token->toStdString()) : std::nullopt,
-        appUserId != nullptr ? std::make_optional(appUserId->toStdString()) : std::nullopt
+        appUserId->toStdString()
       );
     }
 
@@ -74,7 +74,7 @@ namespace margelo::nitro::okhinitro {
         jni::make_jstring(value.email),
         value.okhiUserId.has_value() ? jni::make_jstring(value.okhiUserId.value()) : nullptr,
         value.token.has_value() ? jni::make_jstring(value.token.value()) : nullptr,
-        value.appUserId.has_value() ? jni::make_jstring(value.appUserId.value()) : nullptr
+        jni::make_jstring(value.appUserId)
       );
     }
   };

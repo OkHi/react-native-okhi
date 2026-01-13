@@ -25,8 +25,6 @@ namespace margelo::nitro::okhinitro { struct NitroOkCollect; }
 namespace margelo::nitro::okhinitro { struct NitroOkCollectStyle; }
 // Forward declaration of `NitroOkCollectConfig` to properly resolve imports.
 namespace margelo::nitro::okhinitro { struct NitroOkCollectConfig; }
-// Forward declaration of `OkCollectLocationConfig` to properly resolve imports.
-namespace margelo::nitro::okhinitro { struct OkCollectLocationConfig; }
 // Forward declaration of `OkHiSuccessResponse` to properly resolve imports.
 namespace margelo::nitro::okhinitro { struct OkHiSuccessResponse; }
 // Forward declaration of `OkHiException` to properly resolve imports.
@@ -56,12 +54,6 @@ namespace margelo::nitro::okhinitro { struct OkHiException; }
 #include "JNitroOkCollectStyle.hpp"
 #include "NitroOkCollectConfig.hpp"
 #include "JNitroOkCollectConfig.hpp"
-#include <NitroModules/Null.hpp>
-#include "OkCollectLocationConfig.hpp"
-#include <variant>
-#include "JVariant_NullType_OkCollectLocationConfig.hpp"
-#include <NitroModules/JNull.hpp>
-#include "JOkCollectLocationConfig.hpp"
 #include "OkHiSuccessResponse.hpp"
 #include "OkHiException.hpp"
 #include "JFunc_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException_.hpp"

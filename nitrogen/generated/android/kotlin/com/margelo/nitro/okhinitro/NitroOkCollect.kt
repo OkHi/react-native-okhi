@@ -9,7 +9,7 @@ package com.margelo.nitro.okhinitro
 
 import androidx.annotation.Keep
 import com.facebook.proguard.annotations.DoNotStrip
-import com.margelo.nitro.core.NullType
+
 
 /**
  * Represents the JavaScript object/struct "NitroOkCollect".
@@ -25,7 +25,7 @@ data class NitroOkCollect(
   val configuration: NitroOkCollectConfig,
   @DoNotStrip
   @Keep
-  val location: Variant_NullType_OkCollectLocationConfig?
+  val locationId: String?
 ) {
   /* primary constructor */
 
@@ -37,8 +37,8 @@ data class NitroOkCollect(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(style: NitroOkCollectStyle, configuration: NitroOkCollectConfig, location: Variant_NullType_OkCollectLocationConfig?): NitroOkCollect {
-      return NitroOkCollect(style, configuration, location)
+    private fun fromCpp(style: NitroOkCollectStyle, configuration: NitroOkCollectConfig, locationId: String?): NitroOkCollect {
+      return NitroOkCollect(style, configuration, locationId)
     }
   }
 }
