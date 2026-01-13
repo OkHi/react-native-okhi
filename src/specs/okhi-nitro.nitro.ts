@@ -23,4 +23,6 @@ export interface OkhiNitro extends HybridObject<{
     okcollect: NitroOkCollect,
     callback: (response?: OkHiSuccessResponse, error?: OkHiException) => void
   ): void
+
+  onStart(): void
 }
