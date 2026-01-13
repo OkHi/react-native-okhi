@@ -7,8 +7,10 @@ import type {
   OkHiSuccessResponse,
   OkHiVerificationType,
 } from './types'
+import { AppState, type NativeEventSubscription } from 'react-native'
 
 const OkhiNitro = NitroModules.createHybridObject<OkhiNitroSpec>('OkhiNitro')
+let subscription: NativeEventSubscription | null = null
 
 export async function login(
   credentials: OkHiLogin
@@ -75,3 +77,17 @@ export async function startDigitalAndPhysicalAddressVerification(params?: {
 export async function createAddress(params?: { okcollect?: OkCollect }) {
   return startGenericAddressVerification('ADDRESSBOOK', params)
 }
+
+;(function () {
+  if (subscription !== null) {
+    ;(subscription as NativeEventSubscription).remove()
+  }
+  subscription = AppState.addEventListener('change', (nextAppState) => {
+    if (nextAppState === 'active') {
+      OkhiNitro.onStart()
+    }
+  })
+  if (AppState.currentState === 'active') {
+    OkhiNitro.onStart()
+  }
+})()
