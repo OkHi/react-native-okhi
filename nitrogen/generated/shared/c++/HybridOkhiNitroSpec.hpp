@@ -67,7 +67,6 @@ namespace margelo::nitro::okhinitro {
       // Methods
       virtual void login(const OkHiLogin& credentials, const std::function<void(const std::optional<std::vector<std::string>>& /* results */)>& callback) = 0;
       virtual void startAddressVerification(OkHiVerificationType type, const NitroOkCollect& okcollect, const std::function<void(const std::optional<OkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>& callback) = 0;
-      virtual void onStart() = 0;
 
     protected:
       // Hybrid Setup

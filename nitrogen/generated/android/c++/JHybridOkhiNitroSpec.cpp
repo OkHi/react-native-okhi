@@ -108,9 +108,5 @@ namespace margelo::nitro::okhinitro {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JOkHiVerificationType> /* type */, jni::alias_ref<JNitroOkCollect> /* okcollect */, jni::alias_ref<JFunc_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException_::javaobject> /* callback */)>("startAddressVerification_cxx");
     method(_javaPart, JOkHiVerificationType::fromCpp(type), JNitroOkCollect::fromCpp(okcollect), JFunc_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException__cxx::fromCpp(callback));
   }
-  void JHybridOkhiNitroSpec::onStart() {
-    static const auto method = javaClassStatic()->getMethod<void()>("onStart");
-    method(_javaPart);
-  }
 
 } // namespace margelo::nitro::okhinitro

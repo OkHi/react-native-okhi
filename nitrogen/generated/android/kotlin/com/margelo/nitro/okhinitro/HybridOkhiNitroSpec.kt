@@ -62,10 +62,6 @@ abstract class HybridOkhiNitroSpec: HybridObject() {
     val __result = startAddressVerification(type, okcollect, callback)
     return __result
   }
-  
-  @DoNotStrip
-  @Keep
-  abstract fun onStart(): Unit
 
   private external fun initHybrid(): HybridData
 

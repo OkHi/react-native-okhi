@@ -112,12 +112,6 @@ namespace margelo::nitro::okhinitro {
         std::rethrow_exception(__result.error());
       }
     }
-    inline void onStart() override {
-      auto __result = _swiftPart.onStart();
-      if (__result.hasError()) [[unlikely]] {
-        std::rethrow_exception(__result.error());
-      }
-    }
 
   private:
     OkhiNitro::HybridOkhiNitroSpec_cxx _swiftPart;

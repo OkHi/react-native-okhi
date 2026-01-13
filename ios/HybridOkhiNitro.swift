@@ -9,7 +9,12 @@ import Foundation
 import OkHi
 
 class HybridOkhiNitro: HybridOkhiNitroSpec {
+    func onStart() throws {
+        <#code#>
+    }
+    
     func login(credentials: OkHiLogin, callback: @escaping ([String]?) -> Void) throws {
+        let nativeAppContext: OkHi.OkHiAppContext? = nil
         
     }
     
