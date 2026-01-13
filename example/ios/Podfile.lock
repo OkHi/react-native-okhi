@@ -37,7 +37,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - OkHi (1.10.4)
+  - OkHi (1.10.5)
   - OkhiNitro (0.1.0):
     - boost
     - DoubleConversion
@@ -46,7 +46,7 @@ PODS:
     - glog
     - hermes-engine
     - NitroModules
-    - OkHi (~> 1.10.4)
+    - OkHi (~> 1.10.5)
     - RCT-Folly
     - RCT-Folly/Fabric
     - RCTRequired
@@ -2923,8 +2923,8 @@ SPEC CHECKSUMS:
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
   hermes-engine: ab46bbf6fb2d80ed1979c301b9b98b71946386ed
   NitroModules: 22837572f1ecf8f1560f5aac7c9f687825754901
-  OkHi: ebbd9545dc77c6f0d1bf52fdb715fe8fa767bfdc
-  OkhiNitro: a33e136ff0349304d5913dde4e2852b8a38a6853
+  OkHi: f81cd317d614c9ecc7d34736278054a7a61fa2fb
+  OkhiNitro: d3812b00da2b8258fb47c33600a177cd80042b5b
   RCT-Folly: 59ec0ac1f2f39672a0c6e6cecdd39383b764646f
   RCTDeprecation: a41bbdd9af30bf2e5715796b313e44ec43eefff1
   RCTRequired: 7be34aabb0b77c3cefe644528df0fa0afad4e4d0
