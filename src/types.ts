@@ -11,7 +11,7 @@ export type OkHiUser = {
   email: string
   okhiUserId?: string
   token?: string
-  appUserId?: string
+  appUserId: string
 }
 
 export type OkHiLoginConfiguration = {
@@ -93,14 +93,10 @@ export type OkCollectConfig = {
   withAppBar?: boolean | null
 }
 
-export type OkCollectLocationConfig = {
-  id: string
-}
-
 export type OkCollect = {
   style?: OkCollectStyle
   configuration?: OkCollectConfig
-  location?: OkCollectLocationConfig
+  locationId?: String
 }
 
 export type NitroOkCollectStyle = {
@@ -119,7 +115,7 @@ export type NitroOkCollectConfig = {
 export type NitroOkCollect = {
   style: NitroOkCollectStyle
   configuration: NitroOkCollectConfig
-  location: OkCollectLocationConfig | null
+  locationId?: string
 }
 
 export type OkHiVerificationType =
