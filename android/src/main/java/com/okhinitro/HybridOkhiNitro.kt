@@ -6,7 +6,6 @@ import com.margelo.nitro.okhinitro.NitroOkCollect
 import com.margelo.nitro.okhinitro.NitroOkHiSuccessResponse
 import com.margelo.nitro.okhinitro.OkHiException
 import com.margelo.nitro.okhinitro.OkHiLogin
-import com.margelo.nitro.okhinitro.OkHiSuccessResponse
 import com.margelo.nitro.okhinitro.OkHiVerificationType
 import io.okhi.android.OkHi
 import io.okhi.android.collect.OkCollect

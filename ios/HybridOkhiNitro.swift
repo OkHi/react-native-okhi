@@ -34,7 +34,7 @@ class HybridOkhiNitro: HybridOkhiNitroSpec {
         }
     }
     
-    func startAddressVerification(type: OkHiVerificationType, okcollect: NitroOkCollect, callback: @escaping (OkHiSuccessResponse?, OkHiException?) -> Void) throws {
+    func startAddressVerification(type: OkHiVerificationType, okcollect: NitroOkCollect, callback: @escaping (NitroOkHiSuccessResponse?, OkHiException?) -> Void) throws {
         DispatchQueue.main.async {
             var okhiLocation: OkHi.OkHiLocation? = nil
             
@@ -64,7 +64,7 @@ class HybridOkhiNitro: HybridOkhiNitroSpec {
         
     }
     
-    private func createAddress(vc: UIViewController, okhiLocation: OkHi.OkHiLocation?, okcollect: NitroOkCollect, callback: @escaping (OkHiSuccessResponse?, OkHiException?) -> Void) {
+    private func createAddress(vc: UIViewController, okhiLocation: OkHi.OkHiLocation?, okcollect: NitroOkCollect, callback: @escaping (NitroOkHiSuccessResponse?, OkHiException?) -> Void) {
         OK.shared.createAddress(
             vc: vc,
             theme: self.parseNitroOkCollect(okcollect: okcollect),
@@ -75,7 +75,7 @@ class HybridOkhiNitro: HybridOkhiNitroSpec {
         }
     }
     
-    private func startDigitalAndPhysicalAddressVerification(vc: UIViewController, okhiLocation: OkHi.OkHiLocation?, okcollect: NitroOkCollect, callback: @escaping (OkHiSuccessResponse?, OkHiException?) -> Void) {
+    private func startDigitalAndPhysicalAddressVerification(vc: UIViewController, okhiLocation: OkHi.OkHiLocation?, okcollect: NitroOkCollect, callback: @escaping (NitroOkHiSuccessResponse?, OkHiException?) -> Void) {
         OK.shared.startDigitalAndPhysicalAddressVerification(
             vc: vc,
             theme: self.parseNitroOkCollect(okcollect: okcollect),
@@ -87,7 +87,7 @@ class HybridOkhiNitro: HybridOkhiNitroSpec {
         }
     }
     
-    private func startPhysicalAddressVerification(vc: UIViewController, okhiLocation: OkHi.OkHiLocation?, okcollect: NitroOkCollect, callback: @escaping (OkHiSuccessResponse?, OkHiException?) -> Void) {
+    private func startPhysicalAddressVerification(vc: UIViewController, okhiLocation: OkHi.OkHiLocation?, okcollect: NitroOkCollect, callback: @escaping (NitroOkHiSuccessResponse?, OkHiException?) -> Void) {
         OK.shared.startPhysicalAddressVerification(
             vc: vc,
             theme: self.parseNitroOkCollect(okcollect: okcollect),
@@ -99,7 +99,7 @@ class HybridOkhiNitro: HybridOkhiNitroSpec {
         }
     }
     
-    private func startDigitalAddressVerification(vc: UIViewController, okhiLocation: OkHi.OkHiLocation?, okcollect: NitroOkCollect, callback: @escaping (OkHiSuccessResponse?, OkHiException?) -> Void) {
+    private func startDigitalAddressVerification(vc: UIViewController, okhiLocation: OkHi.OkHiLocation?, okcollect: NitroOkCollect, callback: @escaping (NitroOkHiSuccessResponse?, OkHiException?) -> Void) {
         OK.shared.startAddressVerification(
             vc: vc,
             theme: self.parseNitroOkCollect(okcollect: okcollect),
@@ -111,9 +111,9 @@ class HybridOkhiNitro: HybridOkhiNitroSpec {
         }
     }
     
-    private func processResponse(response: OkHi.OkHiSuccessResponse?, error: OkHi.OkHiException?, callback: @escaping (OkHiSuccessResponse?, OkHiException?) -> Void) {
+    private func processResponse(response: OkHi.OkHiSuccessResponse?, error: OkHi.OkHiException?, callback: @escaping (NitroOkHiSuccessResponse?, OkHiException?) -> Void) {
         if let response = response, let user = response.user.toJSON(), let location = response.location.toJSON() {
-            let successResponse = OkHiSuccessResponse(user: user, location: location)
+            let successResponse = NitroOkHiSuccessResponse(user: user, location: location)
             callback(successResponse, nil)
         } else if let error = error {
             callback(nil, OkHiException(code: error.code, message: error.message ?? "unable to start verification"))
