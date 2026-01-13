@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
   load 'nitrogen/generated/ios/OkhiNitro+autolinking.rb'
   add_nitrogen_files(s)
 
-  s.dependency "OkHi", "~> 1.10.4"
+  s.dependency "OkHi", "~> 1.10.5"
   s.dependency 'React-jsi'
   s.dependency 'React-callinvoker'
   install_modules_dependencies(s)

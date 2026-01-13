@@ -19,10 +19,16 @@ public extension OkHiLogin {
   /**
    * Create a new instance of `OkHiLogin`.
    */
-  init(auth: OkHiAuth, user: OkHiUser, configuration: OkHiLoginConfiguration?) {
+  init(auth: OkHiAuth, user: OkHiUser, configuration: OkHiLoginConfiguration?, appContext: OkHiAppContext?) {
     self.init(auth, user, { () -> bridge.std__optional_OkHiLoginConfiguration_ in
       if let __unwrappedValue = configuration {
         return bridge.create_std__optional_OkHiLoginConfiguration_(__unwrappedValue)
+      } else {
+        return .init()
+      }
+    }(), { () -> bridge.std__optional_OkHiAppContext_ in
+      if let __unwrappedValue = appContext {
+        return bridge.create_std__optional_OkHiAppContext_(__unwrappedValue)
       } else {
         return .init()
       }
@@ -61,6 +67,23 @@ public extension OkHiLogin {
       self.__configuration = { () -> bridge.std__optional_OkHiLoginConfiguration_ in
         if let __unwrappedValue = newValue {
           return bridge.create_std__optional_OkHiLoginConfiguration_(__unwrappedValue)
+        } else {
+          return .init()
+        }
+      }()
+    }
+  }
+  
+  var appContext: OkHiAppContext? {
+    @inline(__always)
+    get {
+      return self.__appContext.value
+    }
+    @inline(__always)
+    set {
+      self.__appContext = { () -> bridge.std__optional_OkHiAppContext_ in
+        if let __unwrappedValue = newValue {
+          return bridge.create_std__optional_OkHiAppContext_(__unwrappedValue)
         } else {
           return .init()
         }

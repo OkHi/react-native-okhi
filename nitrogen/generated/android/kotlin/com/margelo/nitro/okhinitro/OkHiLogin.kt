@@ -25,7 +25,10 @@ data class OkHiLogin(
   val user: OkHiUser,
   @DoNotStrip
   @Keep
-  val configuration: OkHiLoginConfiguration?
+  val configuration: OkHiLoginConfiguration?,
+  @DoNotStrip
+  @Keep
+  val appContext: OkHiAppContext?
 ) {
   /* primary constructor */
 
@@ -37,8 +40,8 @@ data class OkHiLogin(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(auth: OkHiAuth, user: OkHiUser, configuration: OkHiLoginConfiguration?): OkHiLogin {
-      return OkHiLogin(auth, user, configuration)
+    private fun fromCpp(auth: OkHiAuth, user: OkHiUser, configuration: OkHiLoginConfiguration?, appContext: OkHiAppContext?): OkHiLogin {
+      return OkHiLogin(auth, user, configuration, appContext)
     }
   }
 }

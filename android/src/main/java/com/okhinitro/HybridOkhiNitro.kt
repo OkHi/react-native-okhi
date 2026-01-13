@@ -65,10 +65,10 @@ class HybridOkhiNitro: HybridOkhiNitroSpec() {
             withWorkAddressType = okcollect.configuration.withWorkAddressType,
             withAppBar = okcollect.configuration.withAppBar
         )
-        val location = okcollect.location?.asSecondOrNull()
+        val locationId = okcollect.locationId
         var nativeLocation: io.okhi.android.core.model.OkHiLocation? = null
-        if (location != null) {
-            nativeLocation = io.okhi.android.core.model.OkHiLocation(location.id)
+        if (locationId != null) {
+            nativeLocation = io.okhi.android.core.model.OkHiLocation(locationId)
         }
 
         val nativeOkCollect = OkCollect(

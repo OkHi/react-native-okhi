@@ -38,10 +38,10 @@ async function startGenericAddressVerification(
         logo: params?.okcollect?.style?.logo || 'https://cdn.okhi.co/icon.png',
         name: params?.okcollect?.style?.name || 'OkHi Customer',
       },
-      location:
-        typeof params?.okcollect?.location?.id === 'string'
-          ? { id: params.okcollect.location.id }
-          : null,
+      locationId:
+        typeof params?.okcollect?.locationId === 'string'
+          ? params.okcollect.locationId
+          : undefined,
     }
     OkhiNitro.startAddressVerification(type, okcollect, (response, error) => {
       if (response) {

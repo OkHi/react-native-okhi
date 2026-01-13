@@ -20,6 +20,8 @@ namespace margelo::nitro::okhinitro { struct OkHiAuth; }
 namespace margelo::nitro::okhinitro { struct OkHiUser; }
 // Forward declaration of `OkHiLoginConfiguration` to properly resolve imports.
 namespace margelo::nitro::okhinitro { struct OkHiLoginConfiguration; }
+// Forward declaration of `OkHiAppContext` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiAppContext; }
 // Forward declaration of `OkHiVerificationType` to properly resolve imports.
 namespace margelo::nitro::okhinitro { enum class OkHiVerificationType; }
 // Forward declaration of `NitroOkCollect` to properly resolve imports.
@@ -28,8 +30,6 @@ namespace margelo::nitro::okhinitro { struct NitroOkCollect; }
 namespace margelo::nitro::okhinitro { struct NitroOkCollectStyle; }
 // Forward declaration of `NitroOkCollectConfig` to properly resolve imports.
 namespace margelo::nitro::okhinitro { struct NitroOkCollectConfig; }
-// Forward declaration of `OkCollectLocationConfig` to properly resolve imports.
-namespace margelo::nitro::okhinitro { struct OkCollectLocationConfig; }
 // Forward declaration of `OkHiSuccessResponse` to properly resolve imports.
 namespace margelo::nitro::okhinitro { struct OkHiSuccessResponse; }
 // Forward declaration of `OkHiException` to properly resolve imports.
@@ -41,15 +41,13 @@ namespace margelo::nitro::okhinitro { struct OkHiException; }
 #include <optional>
 #include "OkHiUser.hpp"
 #include "OkHiLoginConfiguration.hpp"
+#include "OkHiAppContext.hpp"
 #include <vector>
 #include <functional>
 #include "OkHiVerificationType.hpp"
 #include "NitroOkCollect.hpp"
 #include "NitroOkCollectStyle.hpp"
 #include "NitroOkCollectConfig.hpp"
-#include <NitroModules/Null.hpp>
-#include "OkCollectLocationConfig.hpp"
-#include <variant>
 #include "OkHiSuccessResponse.hpp"
 #include "OkHiException.hpp"
 

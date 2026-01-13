@@ -29,11 +29,14 @@ namespace margelo::nitro::okhinitro { struct OkHiAuth; }
 namespace margelo::nitro::okhinitro { struct OkHiUser; }
 // Forward declaration of `OkHiLoginConfiguration` to properly resolve imports.
 namespace margelo::nitro::okhinitro { struct OkHiLoginConfiguration; }
+// Forward declaration of `OkHiAppContext` to properly resolve imports.
+namespace margelo::nitro::okhinitro { struct OkHiAppContext; }
 
 #include "OkHiAuth.hpp"
 #include "OkHiUser.hpp"
 #include "OkHiLoginConfiguration.hpp"
 #include <optional>
+#include "OkHiAppContext.hpp"
 
 namespace margelo::nitro::okhinitro {
 
@@ -45,10 +48,11 @@ namespace margelo::nitro::okhinitro {
     OkHiAuth auth     SWIFT_PRIVATE;
     OkHiUser user     SWIFT_PRIVATE;
     std::optional<OkHiLoginConfiguration> configuration     SWIFT_PRIVATE;
+    std::optional<OkHiAppContext> appContext     SWIFT_PRIVATE;
 
   public:
     OkHiLogin() = default;
-    explicit OkHiLogin(OkHiAuth auth, OkHiUser user, std::optional<OkHiLoginConfiguration> configuration): auth(auth), user(user), configuration(configuration) {}
+    explicit OkHiLogin(OkHiAuth auth, OkHiUser user, std::optional<OkHiLoginConfiguration> configuration, std::optional<OkHiAppContext> appContext): auth(auth), user(user), configuration(configuration), appContext(appContext) {}
   };
 
 } // namespace margelo::nitro::okhinitro
@@ -63,7 +67,8 @@ namespace margelo::nitro {
       return margelo::nitro::okhinitro::OkHiLogin(
         JSIConverter<margelo::nitro::okhinitro::OkHiAuth>::fromJSI(runtime, obj.getProperty(runtime, "auth")),
         JSIConverter<margelo::nitro::okhinitro::OkHiUser>::fromJSI(runtime, obj.getProperty(runtime, "user")),
-        JSIConverter<std::optional<margelo::nitro::okhinitro::OkHiLoginConfiguration>>::fromJSI(runtime, obj.getProperty(runtime, "configuration"))
+        JSIConverter<std::optional<margelo::nitro::okhinitro::OkHiLoginConfiguration>>::fromJSI(runtime, obj.getProperty(runtime, "configuration")),
+        JSIConverter<std::optional<margelo::nitro::okhinitro::OkHiAppContext>>::fromJSI(runtime, obj.getProperty(runtime, "appContext"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::okhinitro::OkHiLogin& arg) {
@@ -71,6 +76,7 @@ namespace margelo::nitro {
       obj.setProperty(runtime, "auth", JSIConverter<margelo::nitro::okhinitro::OkHiAuth>::toJSI(runtime, arg.auth));
       obj.setProperty(runtime, "user", JSIConverter<margelo::nitro::okhinitro::OkHiUser>::toJSI(runtime, arg.user));
       obj.setProperty(runtime, "configuration", JSIConverter<std::optional<margelo::nitro::okhinitro::OkHiLoginConfiguration>>::toJSI(runtime, arg.configuration));
+      obj.setProperty(runtime, "appContext", JSIConverter<std::optional<margelo::nitro::okhinitro::OkHiAppContext>>::toJSI(runtime, arg.appContext));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -84,6 +90,7 @@ namespace margelo::nitro {
       if (!JSIConverter<margelo::nitro::okhinitro::OkHiAuth>::canConvert(runtime, obj.getProperty(runtime, "auth"))) return false;
       if (!JSIConverter<margelo::nitro::okhinitro::OkHiUser>::canConvert(runtime, obj.getProperty(runtime, "user"))) return false;
       if (!JSIConverter<std::optional<margelo::nitro::okhinitro::OkHiLoginConfiguration>>::canConvert(runtime, obj.getProperty(runtime, "configuration"))) return false;
+      if (!JSIConverter<std::optional<margelo::nitro::okhinitro::OkHiAppContext>>::canConvert(runtime, obj.getProperty(runtime, "appContext"))) return false;
       return true;
     }
   };

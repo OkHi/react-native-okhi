@@ -19,17 +19,10 @@ public extension NitroOkCollect {
   /**
    * Create a new instance of `NitroOkCollect`.
    */
-  init(style: NitroOkCollectStyle, configuration: NitroOkCollectConfig, location: Variant_NullType_OkCollectLocationConfig?) {
-    self.init(style, configuration, { () -> bridge.std__optional_std__variant_nitro__NullType__OkCollectLocationConfig__ in
-      if let __unwrappedValue = location {
-        return bridge.create_std__optional_std__variant_nitro__NullType__OkCollectLocationConfig__({ () -> bridge.std__variant_nitro__NullType__OkCollectLocationConfig_ in
-          switch __unwrappedValue {
-            case .first(let __value):
-              return bridge.create_std__variant_nitro__NullType__OkCollectLocationConfig_(margelo.nitro.NullType.null)
-            case .second(let __value):
-              return bridge.create_std__variant_nitro__NullType__OkCollectLocationConfig_(__value)
-          }
-        }().variant)
+  init(style: NitroOkCollectStyle, configuration: NitroOkCollectConfig, locationId: String?) {
+    self.init(style, configuration, { () -> bridge.std__optional_std__string_ in
+      if let __unwrappedValue = locationId {
+        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
       } else {
         return .init()
       }
@@ -58,25 +51,13 @@ public extension NitroOkCollect {
     }
   }
   
-  var location: Variant_NullType_OkCollectLocationConfig? {
+  var locationId: String? {
     @inline(__always)
     get {
-      return { () -> Variant_NullType_OkCollectLocationConfig? in
-        if bridge.has_value_std__optional_std__variant_nitro__NullType__OkCollectLocationConfig__(self.__location) {
-          let __unwrapped = bridge.get_std__optional_std__variant_nitro__NullType__OkCollectLocationConfig__(self.__location)
-          return { () -> Variant_NullType_OkCollectLocationConfig in
-            let __variant = bridge.std__variant_nitro__NullType__OkCollectLocationConfig_(__unwrapped)
-            switch __variant.index() {
-              case 0:
-                let __actual = __variant.get_0()
-                return .first(NullType.null)
-              case 1:
-                let __actual = __variant.get_1()
-                return .second(__actual)
-              default:
-                fatalError("Variant can never have index \(__variant.index())!")
-            }
-          }()
+      return { () -> String? in
+        if bridge.has_value_std__optional_std__string_(self.__locationId) {
+          let __unwrapped = bridge.get_std__optional_std__string_(self.__locationId)
+          return String(__unwrapped)
         } else {
           return nil
         }
@@ -84,16 +65,9 @@ public extension NitroOkCollect {
     }
     @inline(__always)
     set {
-      self.__location = { () -> bridge.std__optional_std__variant_nitro__NullType__OkCollectLocationConfig__ in
+      self.__locationId = { () -> bridge.std__optional_std__string_ in
         if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_std__variant_nitro__NullType__OkCollectLocationConfig__({ () -> bridge.std__variant_nitro__NullType__OkCollectLocationConfig_ in
-            switch __unwrappedValue {
-              case .first(let __value):
-                return bridge.create_std__variant_nitro__NullType__OkCollectLocationConfig_(margelo.nitro.NullType.null)
-              case .second(let __value):
-                return bridge.create_std__variant_nitro__NullType__OkCollectLocationConfig_(__value)
-            }
-          }().variant)
+          return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
         } else {
           return .init()
         }

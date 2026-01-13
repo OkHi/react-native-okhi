@@ -37,7 +37,7 @@ data class OkHiUser(
   val token: String?,
   @DoNotStrip
   @Keep
-  val appUserId: String?
+  val appUserId: String
 ) {
   /* primary constructor */
 
@@ -49,7 +49,7 @@ data class OkHiUser(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(firstName: String, lastName: String, phone: String, email: String, okhiUserId: String?, token: String?, appUserId: String?): OkHiUser {
+    private fun fromCpp(firstName: String, lastName: String, phone: String, email: String, okhiUserId: String?, token: String?, appUserId: String): OkHiUser {
       return OkHiUser(firstName, lastName, phone, email, okhiUserId, token, appUserId)
     }
   }

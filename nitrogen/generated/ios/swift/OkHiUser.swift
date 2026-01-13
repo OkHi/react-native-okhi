@@ -19,7 +19,7 @@ public extension OkHiUser {
   /**
    * Create a new instance of `OkHiUser`.
    */
-  init(firstName: String, lastName: String, phone: String, email: String, okhiUserId: String?, token: String?, appUserId: String?) {
+  init(firstName: String, lastName: String, phone: String, email: String, okhiUserId: String?, token: String?, appUserId: String) {
     self.init(std.string(firstName), std.string(lastName), std.string(phone), std.string(email), { () -> bridge.std__optional_std__string_ in
       if let __unwrappedValue = okhiUserId {
         return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
@@ -32,13 +32,7 @@ public extension OkHiUser {
       } else {
         return .init()
       }
-    }(), { () -> bridge.std__optional_std__string_ in
-      if let __unwrappedValue = appUserId {
-        return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
-      } else {
-        return .init()
-      }
-    }())
+    }(), std.string(appUserId))
   }
 
   var firstName: String {
@@ -133,27 +127,14 @@ public extension OkHiUser {
     }
   }
   
-  var appUserId: String? {
+  var appUserId: String {
     @inline(__always)
     get {
-      return { () -> String? in
-        if bridge.has_value_std__optional_std__string_(self.__appUserId) {
-          let __unwrapped = bridge.get_std__optional_std__string_(self.__appUserId)
-          return String(__unwrapped)
-        } else {
-          return nil
-        }
-      }()
+      return String(self.__appUserId)
     }
     @inline(__always)
     set {
-      self.__appUserId = { () -> bridge.std__optional_std__string_ in
-        if let __unwrappedValue = newValue {
-          return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
-        } else {
-          return .init()
-        }
-      }()
+      self.__appUserId = std.string(newValue)
     }
   }
 }

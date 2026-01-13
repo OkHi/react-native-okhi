@@ -27,14 +27,10 @@
 namespace margelo::nitro::okhinitro { struct NitroOkCollectStyle; }
 // Forward declaration of `NitroOkCollectConfig` to properly resolve imports.
 namespace margelo::nitro::okhinitro { struct NitroOkCollectConfig; }
-// Forward declaration of `OkCollectLocationConfig` to properly resolve imports.
-namespace margelo::nitro::okhinitro { struct OkCollectLocationConfig; }
 
 #include "NitroOkCollectStyle.hpp"
 #include "NitroOkCollectConfig.hpp"
-#include <NitroModules/Null.hpp>
-#include "OkCollectLocationConfig.hpp"
-#include <variant>
+#include <string>
 #include <optional>
 
 namespace margelo::nitro::okhinitro {
@@ -46,11 +42,11 @@ namespace margelo::nitro::okhinitro {
   public:
     NitroOkCollectStyle style     SWIFT_PRIVATE;
     NitroOkCollectConfig configuration     SWIFT_PRIVATE;
-    std::optional<std::variant<nitro::NullType, OkCollectLocationConfig>> location     SWIFT_PRIVATE;
+    std::optional<std::string> locationId     SWIFT_PRIVATE;
 
   public:
     NitroOkCollect() = default;
-    explicit NitroOkCollect(NitroOkCollectStyle style, NitroOkCollectConfig configuration, std::optional<std::variant<nitro::NullType, OkCollectLocationConfig>> location): style(style), configuration(configuration), location(location) {}
+    explicit NitroOkCollect(NitroOkCollectStyle style, NitroOkCollectConfig configuration, std::optional<std::string> locationId): style(style), configuration(configuration), locationId(locationId) {}
   };
 
 } // namespace margelo::nitro::okhinitro
@@ -65,14 +61,14 @@ namespace margelo::nitro {
       return margelo::nitro::okhinitro::NitroOkCollect(
         JSIConverter<margelo::nitro::okhinitro::NitroOkCollectStyle>::fromJSI(runtime, obj.getProperty(runtime, "style")),
         JSIConverter<margelo::nitro::okhinitro::NitroOkCollectConfig>::fromJSI(runtime, obj.getProperty(runtime, "configuration")),
-        JSIConverter<std::optional<std::variant<nitro::NullType, margelo::nitro::okhinitro::OkCollectLocationConfig>>>::fromJSI(runtime, obj.getProperty(runtime, "location"))
+        JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, "locationId"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::okhinitro::NitroOkCollect& arg) {
       jsi::Object obj(runtime);
       obj.setProperty(runtime, "style", JSIConverter<margelo::nitro::okhinitro::NitroOkCollectStyle>::toJSI(runtime, arg.style));
       obj.setProperty(runtime, "configuration", JSIConverter<margelo::nitro::okhinitro::NitroOkCollectConfig>::toJSI(runtime, arg.configuration));
-      obj.setProperty(runtime, "location", JSIConverter<std::optional<std::variant<nitro::NullType, margelo::nitro::okhinitro::OkCollectLocationConfig>>>::toJSI(runtime, arg.location));
+      obj.setProperty(runtime, "locationId", JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.locationId));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -85,7 +81,7 @@ namespace margelo::nitro {
       }
       if (!JSIConverter<margelo::nitro::okhinitro::NitroOkCollectStyle>::canConvert(runtime, obj.getProperty(runtime, "style"))) return false;
       if (!JSIConverter<margelo::nitro::okhinitro::NitroOkCollectConfig>::canConvert(runtime, obj.getProperty(runtime, "configuration"))) return false;
-      if (!JSIConverter<std::optional<std::variant<nitro::NullType, margelo::nitro::okhinitro::OkCollectLocationConfig>>>::canConvert(runtime, obj.getProperty(runtime, "location"))) return false;
+      if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, "locationId"))) return false;
       return true;
     }
   };

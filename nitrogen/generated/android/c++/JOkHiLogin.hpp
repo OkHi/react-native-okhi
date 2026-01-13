@@ -10,9 +10,11 @@
 #include <fbjni/fbjni.h>
 #include "OkHiLogin.hpp"
 
+#include "JOkHiAppContext.hpp"
 #include "JOkHiAuth.hpp"
 #include "JOkHiLoginConfiguration.hpp"
 #include "JOkHiUser.hpp"
+#include "OkHiAppContext.hpp"
 #include "OkHiAuth.hpp"
 #include "OkHiLoginConfiguration.hpp"
 #include "OkHiUser.hpp"
@@ -44,10 +46,13 @@ namespace margelo::nitro::okhinitro {
       jni::local_ref<JOkHiUser> user = this->getFieldValue(fieldUser);
       static const auto fieldConfiguration = clazz->getField<JOkHiLoginConfiguration>("configuration");
       jni::local_ref<JOkHiLoginConfiguration> configuration = this->getFieldValue(fieldConfiguration);
+      static const auto fieldAppContext = clazz->getField<JOkHiAppContext>("appContext");
+      jni::local_ref<JOkHiAppContext> appContext = this->getFieldValue(fieldAppContext);
       return OkHiLogin(
         auth->toCpp(),
         user->toCpp(),
-        configuration != nullptr ? std::make_optional(configuration->toCpp()) : std::nullopt
+        configuration != nullptr ? std::make_optional(configuration->toCpp()) : std::nullopt,
+        appContext != nullptr ? std::make_optional(appContext->toCpp()) : std::nullopt
       );
     }
 
@@ -57,14 +62,15 @@ namespace margelo::nitro::okhinitro {
      */
     [[maybe_unused]]
     static jni::local_ref<JOkHiLogin::javaobject> fromCpp(const OkHiLogin& value) {
-      using JSignature = JOkHiLogin(jni::alias_ref<JOkHiAuth>, jni::alias_ref<JOkHiUser>, jni::alias_ref<JOkHiLoginConfiguration>);
+      using JSignature = JOkHiLogin(jni::alias_ref<JOkHiAuth>, jni::alias_ref<JOkHiUser>, jni::alias_ref<JOkHiLoginConfiguration>, jni::alias_ref<JOkHiAppContext>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
         clazz,
         JOkHiAuth::fromCpp(value.auth),
         JOkHiUser::fromCpp(value.user),
-        value.configuration.has_value() ? JOkHiLoginConfiguration::fromCpp(value.configuration.value()) : nullptr
+        value.configuration.has_value() ? JOkHiLoginConfiguration::fromCpp(value.configuration.value()) : nullptr,
+        value.appContext.has_value() ? JOkHiAppContext::fromCpp(value.appContext.value()) : nullptr
       );
     }
   };
