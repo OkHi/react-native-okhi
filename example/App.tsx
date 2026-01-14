@@ -11,7 +11,6 @@ import {
 import * as OkHi from 'react-native-okhi';
 import Clipboard from '@react-native-clipboard/clipboard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { OkHiLocation } from '../src/types';
 
 export function genAppUserId(): string {
   return Math.random().toString(36).substring(2, 8);
@@ -68,7 +67,6 @@ function App(): React.JSX.Element {
       auth: {
         branchId: '',
         clientKey: '',
-        env: '',
       },
       user: {
         email: user.email,
@@ -188,12 +186,10 @@ function App(): React.JSX.Element {
             title="Digital Verification"
             onPress={async () => {
               const result = await OkHi.startAddressVerification();
-              const location = JSON.parse(result.location) as OkHiLocation;
               showMessage({
                 title: 'Success',
-                message:
-                  'Verification started successfully. ID copied to clipboard!',
-                data: location.id ?? 'location id not available',
+                message: `started verification for ${result.location.id}`,
+                data: result.location.id ?? 'location id not available',
               });
             }}
           />
@@ -202,14 +198,25 @@ function App(): React.JSX.Element {
           <Button
             title="Physical Verification"
             onPress={async () => {
-              await OkHi.startPhysicalAddressVerification();
               const result = await OkHi.startPhysicalAddressVerification();
-              const location = JSON.parse(result.location) as OkHiLocation;
               showMessage({
                 title: 'Success',
-                message:
-                  'Verification started successfully. ID copied to clipboard!',
-                data: location.id ?? 'location id not available',
+                message: `started verification for ${result.location.id}`,
+                data: result.location.id ?? 'location id not available',
+              });
+            }}
+          />
+        </View>
+        <View style={{ marginBottom: 15 }}>
+          <Button
+            title="Digital + Physical Verification"
+            onPress={async () => {
+              const result =
+                await OkHi.startDigitalAndPhysicalAddressVerification();
+              showMessage({
+                title: 'Success',
+                message: `started verification for ${result.location.id}`,
+                data: result.location.id ?? 'location id not available',
               });
             }}
           />
@@ -219,17 +226,31 @@ function App(): React.JSX.Element {
             title="Create an address"
             onPress={async () => {
               const result = await OkHi.createAddress();
-              const location = JSON.parse(result.location) as OkHiLocation;
-              locationIdRef.current = location.id;
+              locationIdRef.current = result.location.id;
               showMessage({
-                title: 'Address created',
-                message: 'Address created successfully',
+                title: 'Success',
+                message: `started verification for ${result.location.id}`,
+                data: result.location.id ?? 'location id not available',
               });
             }}
           />
         </View>
         <View style={{ marginBottom: 15 }}>
-          <Button title="Verify saved address" />
+          <Button
+            title="Verify saved address"
+            onPress={async () => {
+              if (locationIdRef.current) {
+                const result = await OkHi.startAddressVerification({
+                  okcollect: { locationId: locationIdRef.current },
+                });
+                showMessage({
+                  title: 'Success',
+                  message: `started verification for ${result.location.id}`,
+                  data: result.location.id ?? 'location id not available',
+                });
+              }
+            }}
+          />
         </View>
       </View>
     </ScrollView>

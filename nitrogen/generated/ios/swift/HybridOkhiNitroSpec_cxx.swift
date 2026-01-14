@@ -146,14 +146,14 @@ open class HybridOkhiNitroSpec_cxx {
   }
   
   @inline(__always)
-  public final func startAddressVerification(type: Int32, okcollect: NitroOkCollect, callback: bridge.Func_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException_) -> bridge.Result_void_ {
+  public final func startAddressVerification(type: Int32, okcollect: NitroOkCollect, callback: bridge.Func_void_std__optional_NitroOkHiSuccessResponse__std__optional_OkHiException_) -> bridge.Result_void_ {
     do {
-      try self.__implementation.startAddressVerification(type: margelo.nitro.okhinitro.OkHiVerificationType(rawValue: type)!, okcollect: okcollect, callback: { () -> (OkHiSuccessResponse?, OkHiException?) -> Void in
-        let __wrappedFunction = bridge.wrap_Func_void_std__optional_OkHiSuccessResponse__std__optional_OkHiException_(callback)
-        return { (__response: OkHiSuccessResponse?, __error: OkHiException?) -> Void in
-          __wrappedFunction.call({ () -> bridge.std__optional_OkHiSuccessResponse_ in
+      try self.__implementation.startAddressVerification(type: margelo.nitro.okhinitro.OkHiVerificationType(rawValue: type)!, okcollect: okcollect, callback: { () -> (NitroOkHiSuccessResponse?, OkHiException?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_NitroOkHiSuccessResponse__std__optional_OkHiException_(callback)
+        return { (__response: NitroOkHiSuccessResponse?, __error: OkHiException?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_NitroOkHiSuccessResponse_ in
             if let __unwrappedValue = __response {
-              return bridge.create_std__optional_OkHiSuccessResponse_(__unwrappedValue)
+              return bridge.create_std__optional_NitroOkHiSuccessResponse_(__unwrappedValue)
             } else {
               return .init()
             }

@@ -3,9 +3,9 @@ package com.okhinitro
 import com.margelo.nitro.NitroModules
 import com.margelo.nitro.okhinitro.HybridOkhiNitroSpec
 import com.margelo.nitro.okhinitro.NitroOkCollect
+import com.margelo.nitro.okhinitro.NitroOkHiSuccessResponse
 import com.margelo.nitro.okhinitro.OkHiException
 import com.margelo.nitro.okhinitro.OkHiLogin
-import com.margelo.nitro.okhinitro.OkHiSuccessResponse
 import com.margelo.nitro.okhinitro.OkHiVerificationType
 import io.okhi.android.OkHi
 import io.okhi.android.collect.OkCollect
@@ -47,7 +47,7 @@ class HybridOkhiNitro: HybridOkhiNitroSpec() {
     override fun startAddressVerification(
         type: OkHiVerificationType,
         okcollect: NitroOkCollect,
-        callback: (response: OkHiSuccessResponse?, error: OkHiException?) -> Unit
+        callback: (response: NitroOkHiSuccessResponse?, error: OkHiException?) -> Unit
     ) {
         val activity = NitroModules.applicationContext?.currentActivity
         if (activity == null) {
@@ -84,7 +84,7 @@ class HybridOkhiNitro: HybridOkhiNitroSpec() {
                     callback = object : OkHiAddressVerificationCallback() {
                         override fun onSuccess(response: io.okhi.android.collect.models.OkHiSuccessResponse) {
                             super.onSuccess(response)
-                            val response = OkHiSuccessResponse(
+                            val response = NitroOkHiSuccessResponse(
                                 user = response.user.toJSON().toString(),
                                 location = response.location.toJSON().toString()
                             )
@@ -111,7 +111,7 @@ class HybridOkhiNitro: HybridOkhiNitroSpec() {
                     callback = object : OkHiAddressVerificationCallback() {
                         override fun onSuccess(response: io.okhi.android.collect.models.OkHiSuccessResponse) {
                             super.onSuccess(response)
-                            val response = OkHiSuccessResponse(
+                            val response = NitroOkHiSuccessResponse(
                                 user = response.user.toJSON().toString(),
                                 location = response.location.toJSON().toString()
                             )
@@ -138,7 +138,7 @@ class HybridOkhiNitro: HybridOkhiNitroSpec() {
                     callback = object : OkHiAddressVerificationCallback() {
                         override fun onSuccess(response: io.okhi.android.collect.models.OkHiSuccessResponse) {
                             super.onSuccess(response)
-                            val response = OkHiSuccessResponse(
+                            val response = NitroOkHiSuccessResponse(
                                 user = response.user.toJSON().toString(),
                                 location = response.location.toJSON().toString()
                             )
@@ -165,7 +165,7 @@ class HybridOkhiNitro: HybridOkhiNitroSpec() {
                     callback = object : OkHiAddressVerificationCallback() {
                         override fun onSuccess(response: io.okhi.android.collect.models.OkHiSuccessResponse) {
                             super.onSuccess(response)
-                            val response = OkHiSuccessResponse(
+                            val response = NitroOkHiSuccessResponse(
                                 user = response.user.toJSON().toString(),
                                 location = response.location.toJSON().toString()
                             )
@@ -192,7 +192,7 @@ class HybridOkhiNitro: HybridOkhiNitroSpec() {
                     callback = object : OkHiAddressVerificationCallback() {
                         override fun onSuccess(response: io.okhi.android.collect.models.OkHiSuccessResponse) {
                             super.onSuccess(response)
-                            val response = OkHiSuccessResponse(
+                            val response = NitroOkHiSuccessResponse(
                                 user = response.user.toJSON().toString(),
                                 location = response.location.toJSON().toString()
                             )
