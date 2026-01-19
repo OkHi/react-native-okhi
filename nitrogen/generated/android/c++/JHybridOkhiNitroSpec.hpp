@@ -56,6 +56,19 @@ namespace margelo::nitro::okhinitro {
     // Methods
     void login(const OkHiLogin& credentials, const std::function<void(const std::optional<std::vector<std::string>>& /* results */)>& callback) override;
     void startAddressVerification(OkHiVerificationType type, const NitroOkCollect& okcollect, const std::function<void(const std::optional<NitroOkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>& callback) override;
+    void isLocationServicesEnabled(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override;
+    void canOpenProtectedApps(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override;
+    void getLocationAccuracyLevel(const std::function<void(const std::optional<std::string>& /* result */, const std::optional<OkHiException>& /* error */)>& callback) override;
+    void isBackgroundLocationPermissionGranted(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override;
+    void isCoarseLocationPermissionGranted(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override;
+    void isFineLocationPermissionGranted(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override;
+    void isPlayServicesAvailable(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override;
+    void isPostNotificationPermissionGranted(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override;
+    void openProtectedApps() override;
+    void requestBackgroundLocationPermission(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override;
+    void requestEnableLocationServices(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override;
+    void requestLocationPermission(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override;
+    void requestPostNotificationPermissions(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override;
 
   private:
     friend HybridBase;

@@ -67,6 +67,19 @@ namespace margelo::nitro::okhinitro {
       // Methods
       virtual void login(const OkHiLogin& credentials, const std::function<void(const std::optional<std::vector<std::string>>& /* results */)>& callback) = 0;
       virtual void startAddressVerification(OkHiVerificationType type, const NitroOkCollect& okcollect, const std::function<void(const std::optional<NitroOkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>& callback) = 0;
+      virtual void isLocationServicesEnabled(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) = 0;
+      virtual void canOpenProtectedApps(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) = 0;
+      virtual void getLocationAccuracyLevel(const std::function<void(const std::optional<std::string>& /* result */, const std::optional<OkHiException>& /* error */)>& callback) = 0;
+      virtual void isBackgroundLocationPermissionGranted(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) = 0;
+      virtual void isCoarseLocationPermissionGranted(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) = 0;
+      virtual void isFineLocationPermissionGranted(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) = 0;
+      virtual void isPlayServicesAvailable(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) = 0;
+      virtual void isPostNotificationPermissionGranted(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) = 0;
+      virtual void openProtectedApps() = 0;
+      virtual void requestBackgroundLocationPermission(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) = 0;
+      virtual void requestEnableLocationServices(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) = 0;
+      virtual void requestLocationPermission(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) = 0;
+      virtual void requestPostNotificationPermissions(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) = 0;
 
     protected:
       // Hybrid Setup

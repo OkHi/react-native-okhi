@@ -62,6 +62,118 @@ abstract class HybridOkhiNitroSpec: HybridObject() {
     val __result = startAddressVerification(type, okcollect, callback)
     return __result
   }
+  
+  abstract fun isLocationServicesEnabled(callback: (result: Boolean?, error: OkHiException?) -> Unit): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun isLocationServicesEnabled_cxx(callback: Func_void_std__optional_bool__std__optional_OkHiException_): Unit {
+    val __result = isLocationServicesEnabled(callback)
+    return __result
+  }
+  
+  abstract fun canOpenProtectedApps(callback: (result: Boolean?, error: OkHiException?) -> Unit): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun canOpenProtectedApps_cxx(callback: Func_void_std__optional_bool__std__optional_OkHiException_): Unit {
+    val __result = canOpenProtectedApps(callback)
+    return __result
+  }
+  
+  abstract fun getLocationAccuracyLevel(callback: (result: String?, error: OkHiException?) -> Unit): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun getLocationAccuracyLevel_cxx(callback: Func_void_std__optional_std__string__std__optional_OkHiException_): Unit {
+    val __result = getLocationAccuracyLevel(callback)
+    return __result
+  }
+  
+  abstract fun isBackgroundLocationPermissionGranted(callback: (result: Boolean?, error: OkHiException?) -> Unit): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun isBackgroundLocationPermissionGranted_cxx(callback: Func_void_std__optional_bool__std__optional_OkHiException_): Unit {
+    val __result = isBackgroundLocationPermissionGranted(callback)
+    return __result
+  }
+  
+  abstract fun isCoarseLocationPermissionGranted(callback: (result: Boolean?, error: OkHiException?) -> Unit): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun isCoarseLocationPermissionGranted_cxx(callback: Func_void_std__optional_bool__std__optional_OkHiException_): Unit {
+    val __result = isCoarseLocationPermissionGranted(callback)
+    return __result
+  }
+  
+  abstract fun isFineLocationPermissionGranted(callback: (result: Boolean?, error: OkHiException?) -> Unit): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun isFineLocationPermissionGranted_cxx(callback: Func_void_std__optional_bool__std__optional_OkHiException_): Unit {
+    val __result = isFineLocationPermissionGranted(callback)
+    return __result
+  }
+  
+  abstract fun isPlayServicesAvailable(callback: (result: Boolean?, error: OkHiException?) -> Unit): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun isPlayServicesAvailable_cxx(callback: Func_void_std__optional_bool__std__optional_OkHiException_): Unit {
+    val __result = isPlayServicesAvailable(callback)
+    return __result
+  }
+  
+  abstract fun isPostNotificationPermissionGranted(callback: (result: Boolean?, error: OkHiException?) -> Unit): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun isPostNotificationPermissionGranted_cxx(callback: Func_void_std__optional_bool__std__optional_OkHiException_): Unit {
+    val __result = isPostNotificationPermissionGranted(callback)
+    return __result
+  }
+  
+  @DoNotStrip
+  @Keep
+  abstract fun openProtectedApps(): Unit
+  
+  abstract fun requestBackgroundLocationPermission(callback: (result: Boolean?, error: OkHiException?) -> Unit): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun requestBackgroundLocationPermission_cxx(callback: Func_void_std__optional_bool__std__optional_OkHiException_): Unit {
+    val __result = requestBackgroundLocationPermission(callback)
+    return __result
+  }
+  
+  abstract fun requestEnableLocationServices(callback: (result: Boolean?, error: OkHiException?) -> Unit): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun requestEnableLocationServices_cxx(callback: Func_void_std__optional_bool__std__optional_OkHiException_): Unit {
+    val __result = requestEnableLocationServices(callback)
+    return __result
+  }
+  
+  abstract fun requestLocationPermission(callback: (result: Boolean?, error: OkHiException?) -> Unit): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun requestLocationPermission_cxx(callback: Func_void_std__optional_bool__std__optional_OkHiException_): Unit {
+    val __result = requestLocationPermission(callback)
+    return __result
+  }
+  
+  abstract fun requestPostNotificationPermissions(callback: (result: Boolean?, error: OkHiException?) -> Unit): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun requestPostNotificationPermissions_cxx(callback: Func_void_std__optional_bool__std__optional_OkHiException_): Unit {
+    val __result = requestPostNotificationPermissions(callback)
+    return __result
+  }
 
   private external fun initHybrid(): HybridData
 

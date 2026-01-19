@@ -16,6 +16,19 @@ namespace margelo::nitro::okhinitro {
     registerHybrids(this, [](Prototype& prototype) {
       prototype.registerHybridMethod("login", &HybridOkhiNitroSpec::login);
       prototype.registerHybridMethod("startAddressVerification", &HybridOkhiNitroSpec::startAddressVerification);
+      prototype.registerHybridMethod("isLocationServicesEnabled", &HybridOkhiNitroSpec::isLocationServicesEnabled);
+      prototype.registerHybridMethod("canOpenProtectedApps", &HybridOkhiNitroSpec::canOpenProtectedApps);
+      prototype.registerHybridMethod("getLocationAccuracyLevel", &HybridOkhiNitroSpec::getLocationAccuracyLevel);
+      prototype.registerHybridMethod("isBackgroundLocationPermissionGranted", &HybridOkhiNitroSpec::isBackgroundLocationPermissionGranted);
+      prototype.registerHybridMethod("isCoarseLocationPermissionGranted", &HybridOkhiNitroSpec::isCoarseLocationPermissionGranted);
+      prototype.registerHybridMethod("isFineLocationPermissionGranted", &HybridOkhiNitroSpec::isFineLocationPermissionGranted);
+      prototype.registerHybridMethod("isPlayServicesAvailable", &HybridOkhiNitroSpec::isPlayServicesAvailable);
+      prototype.registerHybridMethod("isPostNotificationPermissionGranted", &HybridOkhiNitroSpec::isPostNotificationPermissionGranted);
+      prototype.registerHybridMethod("openProtectedApps", &HybridOkhiNitroSpec::openProtectedApps);
+      prototype.registerHybridMethod("requestBackgroundLocationPermission", &HybridOkhiNitroSpec::requestBackgroundLocationPermission);
+      prototype.registerHybridMethod("requestEnableLocationServices", &HybridOkhiNitroSpec::requestEnableLocationServices);
+      prototype.registerHybridMethod("requestLocationPermission", &HybridOkhiNitroSpec::requestLocationPermission);
+      prototype.registerHybridMethod("requestPostNotificationPermissions", &HybridOkhiNitroSpec::requestPostNotificationPermissions);
     });
   }
 

@@ -203,6 +203,50 @@ namespace margelo::nitro::okhinitro::bridge::swift {
     return Func_void_std__optional_NitroOkHiSuccessResponse__std__optional_OkHiException__Wrapper(std::move(value));
   }
   
+  // pragma MARK: std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>
+  /**
+   * Specialized version of `std::function<void(std::optional<bool>, const std::optional<OkHiException>&)>`.
+   */
+  using Func_void_std__optional_bool__std__optional_OkHiException_ = std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>;
+  /**
+   * Wrapper class for a `std::function<void(std::optional<bool> / * result * /, const std::optional<OkHiException>& / * error * /)>`, this can be used from Swift.
+   */
+  class Func_void_std__optional_bool__std__optional_OkHiException__Wrapper final {
+  public:
+    explicit Func_void_std__optional_bool__std__optional_OkHiException__Wrapper(std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>&& func): _function(std::make_unique<std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>>(std::move(func))) {}
+    inline void call(std::optional<bool> result, std::optional<OkHiException> error) const noexcept {
+      _function->operator()(result, error);
+    }
+  private:
+    std::unique_ptr<std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_std__optional_bool__std__optional_OkHiException_ create_Func_void_std__optional_bool__std__optional_OkHiException_(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_std__optional_bool__std__optional_OkHiException__Wrapper wrap_Func_void_std__optional_bool__std__optional_OkHiException_(Func_void_std__optional_bool__std__optional_OkHiException_ value) noexcept {
+    return Func_void_std__optional_bool__std__optional_OkHiException__Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::function<void(const std::optional<std::string>& /* result */, const std::optional<OkHiException>& /* error */)>
+  /**
+   * Specialized version of `std::function<void(const std::optional<std::string>&, const std::optional<OkHiException>&)>`.
+   */
+  using Func_void_std__optional_std__string__std__optional_OkHiException_ = std::function<void(const std::optional<std::string>& /* result */, const std::optional<OkHiException>& /* error */)>;
+  /**
+   * Wrapper class for a `std::function<void(const std::optional<std::string>& / * result * /, const std::optional<OkHiException>& / * error * /)>`, this can be used from Swift.
+   */
+  class Func_void_std__optional_std__string__std__optional_OkHiException__Wrapper final {
+  public:
+    explicit Func_void_std__optional_std__string__std__optional_OkHiException__Wrapper(std::function<void(const std::optional<std::string>& /* result */, const std::optional<OkHiException>& /* error */)>&& func): _function(std::make_unique<std::function<void(const std::optional<std::string>& /* result */, const std::optional<OkHiException>& /* error */)>>(std::move(func))) {}
+    inline void call(std::optional<std::string> result, std::optional<OkHiException> error) const noexcept {
+      _function->operator()(result, error);
+    }
+  private:
+    std::unique_ptr<std::function<void(const std::optional<std::string>& /* result */, const std::optional<OkHiException>& /* error */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_std__optional_std__string__std__optional_OkHiException_ create_Func_void_std__optional_std__string__std__optional_OkHiException_(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_std__optional_std__string__std__optional_OkHiException__Wrapper wrap_Func_void_std__optional_std__string__std__optional_OkHiException_(Func_void_std__optional_std__string__std__optional_OkHiException_ value) noexcept {
+    return Func_void_std__optional_std__string__std__optional_OkHiException__Wrapper(std::move(value));
+  }
+  
   // pragma MARK: std::shared_ptr<HybridOkhiNitroSpec>
   /**
    * Specialized version of `std::shared_ptr<HybridOkhiNitroSpec>`.

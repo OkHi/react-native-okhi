@@ -59,6 +59,8 @@ namespace margelo::nitro::okhinitro { struct OkHiException; }
 #include "JFunc_void_std__optional_NitroOkHiSuccessResponse__std__optional_OkHiException_.hpp"
 #include "JNitroOkHiSuccessResponse.hpp"
 #include "JOkHiException.hpp"
+#include "JFunc_void_std__optional_bool__std__optional_OkHiException_.hpp"
+#include "JFunc_void_std__optional_std__string__std__optional_OkHiException_.hpp"
 
 namespace margelo::nitro::okhinitro {
 
@@ -99,6 +101,58 @@ namespace margelo::nitro::okhinitro {
   void JHybridOkhiNitroSpec::startAddressVerification(OkHiVerificationType type, const NitroOkCollect& okcollect, const std::function<void(const std::optional<NitroOkHiSuccessResponse>& /* response */, const std::optional<OkHiException>& /* error */)>& callback) {
     static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JOkHiVerificationType> /* type */, jni::alias_ref<JNitroOkCollect> /* okcollect */, jni::alias_ref<JFunc_void_std__optional_NitroOkHiSuccessResponse__std__optional_OkHiException_::javaobject> /* callback */)>("startAddressVerification_cxx");
     method(_javaPart, JOkHiVerificationType::fromCpp(type), JNitroOkCollect::fromCpp(okcollect), JFunc_void_std__optional_NitroOkHiSuccessResponse__std__optional_OkHiException__cxx::fromCpp(callback));
+  }
+  void JHybridOkhiNitroSpec::isLocationServicesEnabled(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_std__optional_bool__std__optional_OkHiException_::javaobject> /* callback */)>("isLocationServicesEnabled_cxx");
+    method(_javaPart, JFunc_void_std__optional_bool__std__optional_OkHiException__cxx::fromCpp(callback));
+  }
+  void JHybridOkhiNitroSpec::canOpenProtectedApps(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_std__optional_bool__std__optional_OkHiException_::javaobject> /* callback */)>("canOpenProtectedApps_cxx");
+    method(_javaPart, JFunc_void_std__optional_bool__std__optional_OkHiException__cxx::fromCpp(callback));
+  }
+  void JHybridOkhiNitroSpec::getLocationAccuracyLevel(const std::function<void(const std::optional<std::string>& /* result */, const std::optional<OkHiException>& /* error */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_std__optional_std__string__std__optional_OkHiException_::javaobject> /* callback */)>("getLocationAccuracyLevel_cxx");
+    method(_javaPart, JFunc_void_std__optional_std__string__std__optional_OkHiException__cxx::fromCpp(callback));
+  }
+  void JHybridOkhiNitroSpec::isBackgroundLocationPermissionGranted(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_std__optional_bool__std__optional_OkHiException_::javaobject> /* callback */)>("isBackgroundLocationPermissionGranted_cxx");
+    method(_javaPart, JFunc_void_std__optional_bool__std__optional_OkHiException__cxx::fromCpp(callback));
+  }
+  void JHybridOkhiNitroSpec::isCoarseLocationPermissionGranted(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_std__optional_bool__std__optional_OkHiException_::javaobject> /* callback */)>("isCoarseLocationPermissionGranted_cxx");
+    method(_javaPart, JFunc_void_std__optional_bool__std__optional_OkHiException__cxx::fromCpp(callback));
+  }
+  void JHybridOkhiNitroSpec::isFineLocationPermissionGranted(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_std__optional_bool__std__optional_OkHiException_::javaobject> /* callback */)>("isFineLocationPermissionGranted_cxx");
+    method(_javaPart, JFunc_void_std__optional_bool__std__optional_OkHiException__cxx::fromCpp(callback));
+  }
+  void JHybridOkhiNitroSpec::isPlayServicesAvailable(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_std__optional_bool__std__optional_OkHiException_::javaobject> /* callback */)>("isPlayServicesAvailable_cxx");
+    method(_javaPart, JFunc_void_std__optional_bool__std__optional_OkHiException__cxx::fromCpp(callback));
+  }
+  void JHybridOkhiNitroSpec::isPostNotificationPermissionGranted(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_std__optional_bool__std__optional_OkHiException_::javaobject> /* callback */)>("isPostNotificationPermissionGranted_cxx");
+    method(_javaPart, JFunc_void_std__optional_bool__std__optional_OkHiException__cxx::fromCpp(callback));
+  }
+  void JHybridOkhiNitroSpec::openProtectedApps() {
+    static const auto method = javaClassStatic()->getMethod<void()>("openProtectedApps");
+    method(_javaPart);
+  }
+  void JHybridOkhiNitroSpec::requestBackgroundLocationPermission(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_std__optional_bool__std__optional_OkHiException_::javaobject> /* callback */)>("requestBackgroundLocationPermission_cxx");
+    method(_javaPart, JFunc_void_std__optional_bool__std__optional_OkHiException__cxx::fromCpp(callback));
+  }
+  void JHybridOkhiNitroSpec::requestEnableLocationServices(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_std__optional_bool__std__optional_OkHiException_::javaobject> /* callback */)>("requestEnableLocationServices_cxx");
+    method(_javaPart, JFunc_void_std__optional_bool__std__optional_OkHiException__cxx::fromCpp(callback));
+  }
+  void JHybridOkhiNitroSpec::requestLocationPermission(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_std__optional_bool__std__optional_OkHiException_::javaobject> /* callback */)>("requestLocationPermission_cxx");
+    method(_javaPart, JFunc_void_std__optional_bool__std__optional_OkHiException__cxx::fromCpp(callback));
+  }
+  void JHybridOkhiNitroSpec::requestPostNotificationPermissions(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) {
+    static const auto method = javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_std__optional_bool__std__optional_OkHiException_::javaobject> /* callback */)>("requestPostNotificationPermissions_cxx");
+    method(_javaPart, JFunc_void_std__optional_bool__std__optional_OkHiException__cxx::fromCpp(callback));
   }
 
 } // namespace margelo::nitro::okhinitro
