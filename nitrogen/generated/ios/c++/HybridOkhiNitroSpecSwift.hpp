@@ -107,6 +107,84 @@ namespace margelo::nitro::okhinitro {
         std::rethrow_exception(__result.error());
       }
     }
+    inline void isLocationServicesEnabled(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override {
+      auto __result = _swiftPart.isLocationServicesEnabled(callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void canOpenProtectedApps(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override {
+      auto __result = _swiftPart.canOpenProtectedApps(callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void getLocationAccuracyLevel(const std::function<void(const std::optional<std::string>& /* result */, const std::optional<OkHiException>& /* error */)>& callback) override {
+      auto __result = _swiftPart.getLocationAccuracyLevel(callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void isBackgroundLocationPermissionGranted(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override {
+      auto __result = _swiftPart.isBackgroundLocationPermissionGranted(callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void isCoarseLocationPermissionGranted(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override {
+      auto __result = _swiftPart.isCoarseLocationPermissionGranted(callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void isFineLocationPermissionGranted(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override {
+      auto __result = _swiftPart.isFineLocationPermissionGranted(callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void isPlayServicesAvailable(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override {
+      auto __result = _swiftPart.isPlayServicesAvailable(callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void isPostNotificationPermissionGranted(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override {
+      auto __result = _swiftPart.isPostNotificationPermissionGranted(callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void openProtectedApps() override {
+      auto __result = _swiftPart.openProtectedApps();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void requestBackgroundLocationPermission(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override {
+      auto __result = _swiftPart.requestBackgroundLocationPermission(callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void requestEnableLocationServices(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override {
+      auto __result = _swiftPart.requestEnableLocationServices(callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void requestLocationPermission(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override {
+      auto __result = _swiftPart.requestLocationPermission(callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void requestPostNotificationPermissions(const std::function<void(std::optional<bool> /* result */, const std::optional<OkHiException>& /* error */)>& callback) override {
+      auto __result = _swiftPart.requestPostNotificationPermissions(callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
 
   private:
     OkhiNitro::HybridOkhiNitroSpec_cxx _swiftPart;

@@ -16,6 +16,19 @@ public protocol HybridOkhiNitroSpec_protocol: HybridObject {
   // Methods
   func login(credentials: OkHiLogin, callback: @escaping (_ results: [String]?) -> Void) throws -> Void
   func startAddressVerification(type: OkHiVerificationType, okcollect: NitroOkCollect, callback: @escaping (_ response: NitroOkHiSuccessResponse?, _ error: OkHiException?) -> Void) throws -> Void
+  func isLocationServicesEnabled(callback: @escaping (_ result: Bool?, _ error: OkHiException?) -> Void) throws -> Void
+  func canOpenProtectedApps(callback: @escaping (_ result: Bool?, _ error: OkHiException?) -> Void) throws -> Void
+  func getLocationAccuracyLevel(callback: @escaping (_ result: String?, _ error: OkHiException?) -> Void) throws -> Void
+  func isBackgroundLocationPermissionGranted(callback: @escaping (_ result: Bool?, _ error: OkHiException?) -> Void) throws -> Void
+  func isCoarseLocationPermissionGranted(callback: @escaping (_ result: Bool?, _ error: OkHiException?) -> Void) throws -> Void
+  func isFineLocationPermissionGranted(callback: @escaping (_ result: Bool?, _ error: OkHiException?) -> Void) throws -> Void
+  func isPlayServicesAvailable(callback: @escaping (_ result: Bool?, _ error: OkHiException?) -> Void) throws -> Void
+  func isPostNotificationPermissionGranted(callback: @escaping (_ result: Bool?, _ error: OkHiException?) -> Void) throws -> Void
+  func openProtectedApps() throws -> Void
+  func requestBackgroundLocationPermission(callback: @escaping (_ result: Bool?, _ error: OkHiException?) -> Void) throws -> Void
+  func requestEnableLocationServices(callback: @escaping (_ result: Bool?, _ error: OkHiException?) -> Void) throws -> Void
+  func requestLocationPermission(callback: @escaping (_ result: Bool?, _ error: OkHiException?) -> Void) throws -> Void
+  func requestPostNotificationPermissions(callback: @escaping (_ result: Bool?, _ error: OkHiException?) -> Void) throws -> Void
 }
 
 public extension HybridOkhiNitroSpec_protocol {

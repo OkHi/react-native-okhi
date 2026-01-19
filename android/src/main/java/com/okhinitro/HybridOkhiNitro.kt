@@ -135,5 +135,126 @@ class HybridOkhiNitro: HybridOkhiNitroSpec() {
         }
     }
 
+    override fun isLocationServicesEnabled(callback: (result: Boolean?, error: OkHiException?) -> Unit) {
+        val activity = NitroModules.applicationContext?.currentActivity
+        if (activity == null) {
+            callback(null, OkHiException("unknown", "activity not available"))
+            return
+        }
+        callback(OkHi.isLocationServicesEnabled(activity.applicationContext), null)
+    }
 
+    override fun canOpenProtectedApps(callback: (result: Boolean?, error: OkHiException?) -> Unit) {
+        val activity = NitroModules.applicationContext?.currentActivity
+        if (activity == null) {
+            callback(null, OkHiException("unknown", "activity not available"))
+            return
+        }
+        callback(OkHi.canOpenProtectedApps(activity.applicationContext), null)
+    }
+
+    override fun getLocationAccuracyLevel(callback: (result: String?, error: OkHiException?) -> Unit) {
+        val activity = NitroModules.applicationContext?.currentActivity
+        if (activity == null) {
+            callback(null, OkHiException("unknown", "activity not available"))
+            return
+        }
+        callback(OkHi.getLocationAccuracyLevel(activity.applicationContext).toString(), null)
+    }
+
+    override fun isBackgroundLocationPermissionGranted(callback: (result: Boolean?, error: OkHiException?) -> Unit) {
+        val activity = NitroModules.applicationContext?.currentActivity
+        if (activity == null) {
+            callback(null, OkHiException("unknown", "activity not available"))
+            return
+        }
+        callback(OkHi.isBackgroundLocationPermissionGranted(activity.applicationContext), null)
+    }
+
+    override fun isCoarseLocationPermissionGranted(callback: (result: Boolean?, error: OkHiException?) -> Unit) {
+        val activity = NitroModules.applicationContext?.currentActivity
+        if (activity == null) {
+            callback(null, OkHiException("unknown", "activity not available"))
+            return
+        }
+        callback(OkHi.isCoarseLocationPermissionGranted(activity.applicationContext), null)
+    }
+
+    override fun isFineLocationPermissionGranted(callback: (result: Boolean?, error: OkHiException?) -> Unit) {
+        val activity = NitroModules.applicationContext?.currentActivity
+        if (activity == null) {
+            callback(null, OkHiException("unknown", "activity not available"))
+            return
+        }
+        callback(OkHi.isFineLocationPermissionGranted(activity.applicationContext), null)
+    }
+
+    override fun isPlayServicesAvailable(callback: (result: Boolean?, error: OkHiException?) -> Unit) {
+        val activity = NitroModules.applicationContext?.currentActivity
+        if (activity == null) {
+            callback(null, OkHiException("unknown", "activity not available"))
+            return
+        }
+        callback(OkHi.isPlayServicesAvailable(activity.applicationContext), null)
+    }
+
+    override fun isPostNotificationPermissionGranted(callback: (result: Boolean?, error: OkHiException?) -> Unit) {
+        val activity = NitroModules.applicationContext?.currentActivity
+        if (activity == null) {
+            callback(null, OkHiException("unknown", "activity not available"))
+            return
+        }
+        callback(OkHi.isPostNotificationPermissionGranted(activity.applicationContext), null)
+    }
+
+    override fun openProtectedApps() {
+        val activity = NitroModules.applicationContext?.currentActivity ?: return
+        if (OkHi.canOpenProtectedApps(activity.applicationContext)) {
+            OkHi.openProtectedApps(activity.applicationContext)
+        }
+    }
+
+    override fun requestBackgroundLocationPermission(callback: (result: Boolean?, error: OkHiException?) -> Unit) {
+        val activity = NitroModules.applicationContext?.currentActivity
+        if (activity == null) {
+            callback(null, OkHiException("unknown", "activity not available"))
+            return
+        }
+        OkHi.requestBackgroundLocationPermission(activity.applicationContext) { result ->
+            callback(result, null)
+        }
+    }
+
+    override fun requestEnableLocationServices(callback: (result: Boolean?, error: OkHiException?) -> Unit) {
+        val activity = NitroModules.applicationContext?.currentActivity
+        if (activity == null) {
+            callback(null, OkHiException("unknown", "activity not available"))
+            return
+        }
+        OkHi.requestEnableLocationServices(activity.applicationContext) { result ->
+            callback(result, null)
+        }
+    }
+
+    override fun requestLocationPermission(callback: (result: Boolean?, error: OkHiException?) -> Unit) {
+        val activity = NitroModules.applicationContext?.currentActivity
+        if (activity == null) {
+            callback(null, OkHiException("unknown", "activity not available"))
+            return
+        }
+        OkHi.requestLocationPermission(activity.applicationContext) { result ->
+            callback(result, null)
+        }
+    }
+
+    override fun requestPostNotificationPermissions(callback: (result: Boolean?, error: OkHiException?) -> Unit) {
+        val activity = NitroModules.applicationContext?.currentActivity
+        if (activity == null) {
+            callback(null, OkHiException("unknown", "activity not available"))
+            return
+        }
+        OkHi.requestPostNotificationPermissions(activity.applicationContext) { result ->
+            callback(result, null)
+        }
+    }
 }

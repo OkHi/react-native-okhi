@@ -172,4 +172,351 @@ open class HybridOkhiNitroSpec_cxx {
       return bridge.create_Result_void_(__exceptionPtr)
     }
   }
+  
+  @inline(__always)
+  public final func isLocationServicesEnabled(callback: bridge.Func_void_std__optional_bool__std__optional_OkHiException_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.isLocationServicesEnabled(callback: { () -> (Bool?, OkHiException?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_bool__std__optional_OkHiException_(callback)
+        return { (__result: Bool?, __error: OkHiException?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_bool_ in
+            if let __unwrappedValue = __result {
+              return bridge.create_std__optional_bool_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }(), { () -> bridge.std__optional_OkHiException_ in
+            if let __unwrappedValue = __error {
+              return bridge.create_std__optional_OkHiException_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func canOpenProtectedApps(callback: bridge.Func_void_std__optional_bool__std__optional_OkHiException_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.canOpenProtectedApps(callback: { () -> (Bool?, OkHiException?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_bool__std__optional_OkHiException_(callback)
+        return { (__result: Bool?, __error: OkHiException?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_bool_ in
+            if let __unwrappedValue = __result {
+              return bridge.create_std__optional_bool_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }(), { () -> bridge.std__optional_OkHiException_ in
+            if let __unwrappedValue = __error {
+              return bridge.create_std__optional_OkHiException_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func getLocationAccuracyLevel(callback: bridge.Func_void_std__optional_std__string__std__optional_OkHiException_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.getLocationAccuracyLevel(callback: { () -> (String?, OkHiException?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_std__string__std__optional_OkHiException_(callback)
+        return { (__result: String?, __error: OkHiException?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_std__string_ in
+            if let __unwrappedValue = __result {
+              return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
+            } else {
+              return .init()
+            }
+          }(), { () -> bridge.std__optional_OkHiException_ in
+            if let __unwrappedValue = __error {
+              return bridge.create_std__optional_OkHiException_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func isBackgroundLocationPermissionGranted(callback: bridge.Func_void_std__optional_bool__std__optional_OkHiException_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.isBackgroundLocationPermissionGranted(callback: { () -> (Bool?, OkHiException?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_bool__std__optional_OkHiException_(callback)
+        return { (__result: Bool?, __error: OkHiException?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_bool_ in
+            if let __unwrappedValue = __result {
+              return bridge.create_std__optional_bool_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }(), { () -> bridge.std__optional_OkHiException_ in
+            if let __unwrappedValue = __error {
+              return bridge.create_std__optional_OkHiException_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func isCoarseLocationPermissionGranted(callback: bridge.Func_void_std__optional_bool__std__optional_OkHiException_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.isCoarseLocationPermissionGranted(callback: { () -> (Bool?, OkHiException?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_bool__std__optional_OkHiException_(callback)
+        return { (__result: Bool?, __error: OkHiException?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_bool_ in
+            if let __unwrappedValue = __result {
+              return bridge.create_std__optional_bool_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }(), { () -> bridge.std__optional_OkHiException_ in
+            if let __unwrappedValue = __error {
+              return bridge.create_std__optional_OkHiException_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func isFineLocationPermissionGranted(callback: bridge.Func_void_std__optional_bool__std__optional_OkHiException_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.isFineLocationPermissionGranted(callback: { () -> (Bool?, OkHiException?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_bool__std__optional_OkHiException_(callback)
+        return { (__result: Bool?, __error: OkHiException?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_bool_ in
+            if let __unwrappedValue = __result {
+              return bridge.create_std__optional_bool_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }(), { () -> bridge.std__optional_OkHiException_ in
+            if let __unwrappedValue = __error {
+              return bridge.create_std__optional_OkHiException_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func isPlayServicesAvailable(callback: bridge.Func_void_std__optional_bool__std__optional_OkHiException_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.isPlayServicesAvailable(callback: { () -> (Bool?, OkHiException?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_bool__std__optional_OkHiException_(callback)
+        return { (__result: Bool?, __error: OkHiException?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_bool_ in
+            if let __unwrappedValue = __result {
+              return bridge.create_std__optional_bool_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }(), { () -> bridge.std__optional_OkHiException_ in
+            if let __unwrappedValue = __error {
+              return bridge.create_std__optional_OkHiException_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func isPostNotificationPermissionGranted(callback: bridge.Func_void_std__optional_bool__std__optional_OkHiException_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.isPostNotificationPermissionGranted(callback: { () -> (Bool?, OkHiException?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_bool__std__optional_OkHiException_(callback)
+        return { (__result: Bool?, __error: OkHiException?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_bool_ in
+            if let __unwrappedValue = __result {
+              return bridge.create_std__optional_bool_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }(), { () -> bridge.std__optional_OkHiException_ in
+            if let __unwrappedValue = __error {
+              return bridge.create_std__optional_OkHiException_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func openProtectedApps() -> bridge.Result_void_ {
+    do {
+      try self.__implementation.openProtectedApps()
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func requestBackgroundLocationPermission(callback: bridge.Func_void_std__optional_bool__std__optional_OkHiException_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.requestBackgroundLocationPermission(callback: { () -> (Bool?, OkHiException?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_bool__std__optional_OkHiException_(callback)
+        return { (__result: Bool?, __error: OkHiException?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_bool_ in
+            if let __unwrappedValue = __result {
+              return bridge.create_std__optional_bool_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }(), { () -> bridge.std__optional_OkHiException_ in
+            if let __unwrappedValue = __error {
+              return bridge.create_std__optional_OkHiException_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func requestEnableLocationServices(callback: bridge.Func_void_std__optional_bool__std__optional_OkHiException_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.requestEnableLocationServices(callback: { () -> (Bool?, OkHiException?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_bool__std__optional_OkHiException_(callback)
+        return { (__result: Bool?, __error: OkHiException?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_bool_ in
+            if let __unwrappedValue = __result {
+              return bridge.create_std__optional_bool_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }(), { () -> bridge.std__optional_OkHiException_ in
+            if let __unwrappedValue = __error {
+              return bridge.create_std__optional_OkHiException_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func requestLocationPermission(callback: bridge.Func_void_std__optional_bool__std__optional_OkHiException_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.requestLocationPermission(callback: { () -> (Bool?, OkHiException?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_bool__std__optional_OkHiException_(callback)
+        return { (__result: Bool?, __error: OkHiException?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_bool_ in
+            if let __unwrappedValue = __result {
+              return bridge.create_std__optional_bool_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }(), { () -> bridge.std__optional_OkHiException_ in
+            if let __unwrappedValue = __error {
+              return bridge.create_std__optional_OkHiException_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func requestPostNotificationPermissions(callback: bridge.Func_void_std__optional_bool__std__optional_OkHiException_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.requestPostNotificationPermissions(callback: { () -> (Bool?, OkHiException?) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__optional_bool__std__optional_OkHiException_(callback)
+        return { (__result: Bool?, __error: OkHiException?) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__optional_bool_ in
+            if let __unwrappedValue = __result {
+              return bridge.create_std__optional_bool_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }(), { () -> bridge.std__optional_OkHiException_ in
+            if let __unwrappedValue = __error {
+              return bridge.create_std__optional_OkHiException_(__unwrappedValue)
+            } else {
+              return .init()
+            }
+          }())
+        }
+      }())
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
 }

@@ -9,7 +9,18 @@ import Foundation
 import React
 import OkHi
 
-class HybridOkhiNitro: HybridOkhiNitroSpec {
+class HybridOkhiNitro: HybridOkhiNitroSpec, OkVerifyDelegate {
+    
+    let okVerify = OkVerify()
+
+    var currentCallback: ((Bool?, OkHiException?) -> Void)? = nil
+    var currentPermissionLevelRequest: String? = nil
+    
+    override init() {
+        super.init()
+        okVerify.delegate = self
+    }
+    
     func login(credentials: OkHiLogin, callback: @escaping ([String]?) -> Void) throws {
         var nativeAppContext: OkHi.OkHiAppContext? = nil
         if let appContext = credentials.appContext {
@@ -143,5 +154,124 @@ class HybridOkhiNitro: HybridOkhiNitroSpec {
             return 1.0
         }
         return 2.0
+    }
+}
+
+
+extension HybridOkhiNitro {
+    func isLocationServicesEnabled(callback: @escaping (Bool?, OkHiException?) -> Void) throws {
+        callback(OkVerify.isLocationServicesEnabled(), nil)
+    }
+    
+    func canOpenProtectedApps(callback: @escaping (Bool?, OkHiException?) -> Void) throws {
+        callback(false, nil)
+    }
+    
+    func getLocationAccuracyLevel(callback: @escaping (String?, OkHiException?) -> Void) throws {
+        callback(OkVerify.getLocationAccuracyLevel(), nil)
+    }
+    
+    func isBackgroundLocationPermissionGranted(callback: @escaping (Bool?, OkHiException?) -> Void) throws {
+        callback(OkVerify.isBackgroundLocationPermissionGranted(), nil)
+    }
+    
+    func isCoarseLocationPermissionGranted(callback: @escaping (Bool?, OkHiException?) -> Void) throws {
+        let currentLevel = OkVerify.getLocationAccuracyLevel()
+        if (currentLevel == "precise" || currentLevel == "approximate") {
+            callback(true, nil)
+        } else {
+            callback(false, nil)
+        }
+    }
+    
+    func isFineLocationPermissionGranted(callback: @escaping (Bool?, OkHiException?) -> Void) throws {
+        let currentLevel = OkVerify.getLocationAccuracyLevel()
+        if (currentLevel == "precise") {
+            callback(true, nil)
+        } else {
+            callback(false, nil)
+        }
+    }
+    
+    func isPlayServicesAvailable(callback: @escaping (Bool?, OkHiException?) -> Void) throws {
+        callback(false, nil)
+    }
+    
+    func isPostNotificationPermissionGranted(callback: @escaping (Bool?, OkHiException?) -> Void) throws {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            switch settings.authorizationStatus {
+            case .authorized, .provisional, .ephemeral:
+                callback(true, nil)
+            case .denied, .notDetermined:
+                callback(false, nil)
+            @unknown default:
+                callback(false, nil)
+            }
+        }
+    }
+    
+    func openProtectedApps() throws {
+        return
+    }
+    
+    func requestBackgroundLocationPermission(callback: @escaping (Bool?, OkHiException?) -> Void) throws {
+        currentPermissionLevelRequest = "always"
+        currentCallback = callback
+        okVerify.requestBackgroundLocationPermission()
+    }
+    
+    func requestEnableLocationServices(callback: @escaping (Bool?, OkHiException?) -> Void) throws {
+        callback(nil, OkHiException(code: "unsupported_platform", message: "operation not supported on iOS"))
+    }
+    
+    func requestLocationPermission(callback: @escaping (Bool?, OkHiException?) -> Void) throws {
+        currentPermissionLevelRequest = "whenInUse"
+        currentCallback = callback
+    }
+    
+    func requestPostNotificationPermissions(callback: @escaping (Bool?, OkHiException?) -> Void) throws {
+        callback(nil, OkHiException(code: "unsupported_platform", message: "operation not supported on iOS"))
+    }
+}
+
+extension HybridOkhiNitro {
+    func verify(_ okverify: OkHi.OkVerify, didChangeLocationPermissionStatus requestType: OkHi.OkVerifyLocationPermissionRequestType, status: Bool) {
+        if let callback = currentCallback {
+            if (currentPermissionLevelRequest == "whenInUse" && requestType == .whenInUse) {
+                callback(status, nil)
+                currentCallback = nil
+                return
+            }
+            if (currentPermissionLevelRequest == "always" && requestType == .always) {
+                callback(status, nil)
+                currentCallback = nil
+                return
+            }
+            currentCallback = nil
+        }
+    }
+    
+    func verify(_ okverify: OkHi.OkVerify, didInitialize result: Bool) {
+        
+    }
+    
+    func verify(_ okverify: OkHi.OkVerify, didEncounterError error: OkHi.OkVerifyError) {
+        
+    }
+    
+    func verify(_ okverify: OkHi.OkVerify, didStartAddressVerificationFor locationId: String) {
+        
+    }
+    
+    func verify(_ okverify: OkHi.OkVerify, didStopVerificationFor locationId: String) {
+        
+    }
+    
+    func verify(_ okverify: OkHi.OkVerify, didUpdateLocationPermissionStatus status: CLAuthorizationStatus) {
+        
+    }
+    
+    func verify(_ okverify: OkHi.OkVerify, didUpdateNotificationPermissionStatus status: Bool) {
+        
     }
 }
