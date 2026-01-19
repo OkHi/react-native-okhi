@@ -36,7 +36,7 @@ function safeJsonParse<T>(value: unknown, label: string): T {
   if (typeof value !== 'string') {
     throw <OkHiException>{
       code: 'invalid_response',
-      message: `Expected ${label} to be a JSON string`,
+      message: `Expected ${label} to be a JSON string.`,
     }
   }
   try {
