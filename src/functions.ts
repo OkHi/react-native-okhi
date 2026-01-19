@@ -89,7 +89,6 @@ export async function startGenericAddressVerification(
 
   const response = await new Promise<any>((resolve, reject) => {
     OkHiNitro.startAddressVerification(type, okcollect, (res, err) => {
-      console.log(res?.location, '<<>>')
       if (err) return reject(err)
 
       // If both are empty, treat it as an error
