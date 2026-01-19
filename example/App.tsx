@@ -111,8 +111,8 @@ function App(): React.JSX.Element {
 
     const result = await OkHi.login({
       auth: {
-        branchId: 'bWpVwm65jy',
-        clientKey: '3db1617f-b25b-4a80-8165-8077b4d1ea44',
+        branchId: '',
+        clientKey: '',
       },
       user: {
         email: user.email,
