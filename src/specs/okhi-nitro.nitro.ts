@@ -27,31 +27,31 @@ export interface OkhiNitro extends HybridObject<{
     ) => void
   ): void
 
-  isLocationServicesEnabled(callback: (result: boolean) => any): void
+  isLocationServicesEnabled(callback: (result: boolean) => void): void
 
-  canOpenProtectedApps(callback: (result: boolean) => any): void
+  canOpenProtectedApps(callback: (result: boolean) => void): void
 
-  getLocationAccuracyLevel(callback: (result: string) => any): void
+  getLocationAccuracyLevel(callback: (result: string) => void): void
 
   isBackgroundLocationPermissionGranted(
-    callback: (result: boolean) => any
+    callback: (result: boolean) => void
   ): void
 
-  isCoarseLocationPermissionGranted(callback: (result: boolean) => any): void
+  isCoarseLocationPermissionGranted(callback: (result: boolean) => void): void
 
-  isFineLocationPermissionGranted(callback: (result: boolean) => any): void
+  isFineLocationPermissionGranted(callback: (result: boolean) => void): void
 
-  isPlayServicesAvailable(callback: (result: boolean) => any): void
+  isPlayServicesAvailable(callback: (result: boolean) => void): void
 
-  isPostNotificationPermissionGranted(callback: (result: boolean) => any): void
+  isPostNotificationPermissionGranted(callback: (result: boolean) => void): void
 
   openProtectedApps(): void
 
-  requestBackgroundLocationPermission(callback: (result: boolean) => any): void
+  requestBackgroundLocationPermission(callback: (result: boolean) => void): void
 
-  requestEnableLocationServices(callback: (result: boolean) => any): void
+  requestEnableLocationServices(callback: (result: boolean) => void): void
 
-  requestLocationPermission(callback: (result: boolean) => any): void
+  requestLocationPermission(callback: (result: boolean) => void): void
 
-  requestPostNotificationPermissions(callback: (result: boolean) => any): void
+  requestPostNotificationPermissions(callback: (result: boolean) => void): void
 }
