@@ -85,12 +85,25 @@ function App(): React.JSX.Element {
     message: string;
     data?: string;
   }) => {
-    Alert.alert(title, message, [], {
-      cancelable: true,
-      onDismiss: () => {
-        if (data) Clipboard.setString(data);
-      },
-    });
+    Alert.alert(
+      title,
+      message,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        ...(data
+          ? [
+              {
+                text: 'Copy',
+                onPress: () => Clipboard.setString(data),
+              },
+            ]
+          : []),
+      ],
+      { cancelable: true },
+    );
   };
 
   const handleLogin = async () => {
@@ -98,8 +111,8 @@ function App(): React.JSX.Element {
 
     const result = await OkHi.login({
       auth: {
-        branchId: '',
-        clientKey: '',
+        branchId: 'bWpVwm65jy',
+        clientKey: '3db1617f-b25b-4a80-8165-8077b4d1ea44',
       },
       user: {
         email: user.email,
@@ -110,16 +123,10 @@ function App(): React.JSX.Element {
       },
     });
 
-    let data: string | undefined = undefined;
-
-    if (result?.length) {
-      data = result.reduce((acc, value) => acc + ',' + value, '');
-    }
-
     showMessage({
       title: 'Login success',
-      message: data ? 'IDs copied to Clipboard!' : '🥳',
-      data,
+      message: result?.length ? 'IDs copied to Clipboard!' : '🥳',
+      data: result?.length ? JSON.stringify(result) : '',
     });
   };
 
@@ -200,9 +207,10 @@ function App(): React.JSX.Element {
               title="Digital Verification"
               onPress={async () => {
                 const result = await OkHi.startAddressVerification();
+                console.log(result, '<<<>>>');
                 showMessage({
                   title: 'Success',
-                  message: `started verification for ${result.location.id}`,
+                  message: `started verification for ${result.location.id}.`,
                   data: result.location.id ?? 'location id not available',
                 });
               }}
@@ -216,7 +224,7 @@ function App(): React.JSX.Element {
                 const result = await OkHi.startPhysicalAddressVerification();
                 showMessage({
                   title: 'Success',
-                  message: `started verification for ${result.location.id}`,
+                  message: `started verification for ${result.location.id}.`,
                   data: result.location.id ?? 'location id not available',
                 });
               }}
@@ -231,7 +239,7 @@ function App(): React.JSX.Element {
                   await OkHi.startDigitalAndPhysicalAddressVerification();
                 showMessage({
                   title: 'Success',
-                  message: `started verification for ${result.location.id}`,
+                  message: `started verification for ${result.location.id}.`,
                   data: result.location.id ?? 'location id not available',
                 });
               }}
@@ -246,7 +254,7 @@ function App(): React.JSX.Element {
                 locationIdRef.current = result.location.id;
                 showMessage({
                   title: 'Success',
-                  message: `started verification for ${result.location.id}`,
+                  message: `started verification for ${result.location.id}.`,
                   data: result.location.id ?? 'location id not available',
                 });
               }}
@@ -261,9 +269,10 @@ function App(): React.JSX.Element {
                   const result = await OkHi.startAddressVerification({
                     okcollect: { locationId: locationIdRef.current },
                   });
+                  console.log(result, 'saved address');
                   showMessage({
                     title: 'Success',
-                    message: `started verification for ${result.location.id}`,
+                    message: `started verification for ${result.location.id}.\n\nlocationId copied to clipboard`,
                     data: result.location.id ?? 'location id not available',
                   });
                 }
