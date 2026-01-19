@@ -1,5 +1,6 @@
 package com.okhinitro
 
+import android.util.Log
 import com.margelo.nitro.NitroModules
 import com.margelo.nitro.okhinitro.HybridOkhiNitroSpec
 import com.margelo.nitro.okhinitro.NitroOkCollect
@@ -11,11 +12,32 @@ import io.okhi.android.OkHi
 import io.okhi.android.collect.OkCollect
 import io.okhi.android.collect.OkCollectConfig
 import io.okhi.android.collect.OkCollectStyle
+import io.okhi.android.collect.models.OkHiSuccessResponse
 import io.okhi.android.core.interfaces.OkHiAddressVerificationCallback
 import io.okhi.android.core.model.OkHiAuth
 import io.okhi.android.core.model.OkHiUser
 
 class HybridOkhiNitro: HybridOkhiNitroSpec() {
+
+    var currentCallback: ((response: NitroOkHiSuccessResponse?, error: OkHiException?) -> Unit)? = null
+    val okhiAddressVerificationCallback = object : OkHiAddressVerificationCallback() {
+        override fun onClose() {
+            currentCallback?.invoke(null, OkHiException("user_closed", "user closed address creation"))
+        }
+
+        override fun onError(e: io.okhi.android.core.model.OkHiException) {
+            currentCallback?.invoke(null, OkHiException(e.code, e.message))
+        }
+
+        override fun onSuccess(response: OkHiSuccessResponse) {
+            val response = NitroOkHiSuccessResponse(
+                user = response.user.toJSON().toString(),
+                location = response.location.toJSON().toString()
+            )
+            currentCallback?.invoke(response, null)
+        }
+    }
+
     override fun login(
         credentials: OkHiLogin,
         callback: (results: Array<String>?) -> Unit
@@ -49,6 +71,7 @@ class HybridOkhiNitro: HybridOkhiNitroSpec() {
         okcollect: NitroOkCollect,
         callback: (response: NitroOkHiSuccessResponse?, error: OkHiException?) -> Unit
     ) {
+        currentCallback = callback
         val activity = NitroModules.applicationContext?.currentActivity
         if (activity == null) {
             callback(null, OkHiException("unknown", "activity not available"))
@@ -76,31 +99,13 @@ class HybridOkhiNitro: HybridOkhiNitroSpec() {
             config,
             nativeLocation
         )
+
         when (type) {
             OkHiVerificationType.DIGITAL -> {
                 OkHi.startAddressVerification(
                     activity = activity,
                     collect = nativeOkCollect,
-                    callback = object : OkHiAddressVerificationCallback() {
-                        override fun onSuccess(response: io.okhi.android.collect.models.OkHiSuccessResponse) {
-                            super.onSuccess(response)
-                            val response = NitroOkHiSuccessResponse(
-                                user = response.user.toJSON().toString(),
-                                location = response.location.toJSON().toString()
-                            )
-                            callback(response, null)
-                        }
-
-                        override fun onError(e: io.okhi.android.core.model.OkHiException) {
-                            super.onError(e)
-                            callback(null, OkHiException(e.code, e.message))
-                        }
-
-                        override fun onClose() {
-                            super.onClose()
-                            callback(null, OkHiException("user_closed", "user closed address creation"))
-                        }
-                    }
+                    callback = okhiAddressVerificationCallback
                 )
             }
 
@@ -108,26 +113,7 @@ class HybridOkhiNitro: HybridOkhiNitroSpec() {
                 OkHi.startPhysicalAddressVerification(
                     activity = activity,
                     collect = nativeOkCollect,
-                    callback = object : OkHiAddressVerificationCallback() {
-                        override fun onSuccess(response: io.okhi.android.collect.models.OkHiSuccessResponse) {
-                            super.onSuccess(response)
-                            val response = NitroOkHiSuccessResponse(
-                                user = response.user.toJSON().toString(),
-                                location = response.location.toJSON().toString()
-                            )
-                            callback(response, null)
-                        }
-
-                        override fun onError(e: io.okhi.android.core.model.OkHiException) {
-                            super.onError(e)
-                            callback(null, OkHiException(e.code, e.message))
-                        }
-
-                        override fun onClose() {
-                            super.onClose()
-                            callback(null, OkHiException("user_closed", "user closed address creation"))
-                        }
-                    }
+                    callback = okhiAddressVerificationCallback
                 )
             }
 
@@ -135,26 +121,7 @@ class HybridOkhiNitro: HybridOkhiNitroSpec() {
                 OkHi.startDigitalAndPhysicalAddressVerification(
                     activity = activity,
                     collect = nativeOkCollect,
-                    callback = object : OkHiAddressVerificationCallback() {
-                        override fun onSuccess(response: io.okhi.android.collect.models.OkHiSuccessResponse) {
-                            super.onSuccess(response)
-                            val response = NitroOkHiSuccessResponse(
-                                user = response.user.toJSON().toString(),
-                                location = response.location.toJSON().toString()
-                            )
-                            callback(response, null)
-                        }
-
-                        override fun onError(e: io.okhi.android.core.model.OkHiException) {
-                            super.onError(e)
-                            callback(null, OkHiException(e.code, e.message))
-                        }
-
-                        override fun onClose() {
-                            super.onClose()
-                            callback(null, OkHiException("user_closed", "user closed address creation"))
-                        }
-                    }
+                    callback = okhiAddressVerificationCallback
                 )
             }
 
@@ -162,53 +129,7 @@ class HybridOkhiNitro: HybridOkhiNitroSpec() {
                 OkHi.createAddress(
                     activity = activity,
                     collect = nativeOkCollect,
-                    callback = object : OkHiAddressVerificationCallback() {
-                        override fun onSuccess(response: io.okhi.android.collect.models.OkHiSuccessResponse) {
-                            super.onSuccess(response)
-                            val response = NitroOkHiSuccessResponse(
-                                user = response.user.toJSON().toString(),
-                                location = response.location.toJSON().toString()
-                            )
-                            callback(response, null)
-                        }
-
-                        override fun onError(e: io.okhi.android.core.model.OkHiException) {
-                            super.onError(e)
-                            callback(null, OkHiException(e.code, e.message))
-                        }
-
-                        override fun onClose() {
-                            super.onClose()
-                            callback(null, OkHiException("user_closed", "user closed address creation"))
-                        }
-                    }
-                )
-            }
-
-            null -> {
-                OkHi.startAddressVerification(
-                    activity = activity,
-                    collect = nativeOkCollect,
-                    callback = object : OkHiAddressVerificationCallback() {
-                        override fun onSuccess(response: io.okhi.android.collect.models.OkHiSuccessResponse) {
-                            super.onSuccess(response)
-                            val response = NitroOkHiSuccessResponse(
-                                user = response.user.toJSON().toString(),
-                                location = response.location.toJSON().toString()
-                            )
-                            callback(response, null)
-                        }
-
-                        override fun onError(e: io.okhi.android.core.model.OkHiException) {
-                            super.onError(e)
-                            callback(null, OkHiException(e.code, e.message))
-                        }
-
-                        override fun onClose() {
-                            super.onClose()
-                            callback(null, OkHiException("user_closed", "user closed address creation"))
-                        }
-                    }
+                    callback = okhiAddressVerificationCallback
                 )
             }
         }
