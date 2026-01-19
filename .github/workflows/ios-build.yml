@@ -38,9 +38,6 @@ on:
       - '**/nitro.json'
   workflow_dispatch:
 
-env:
-  USE_CCACHE: 1
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -73,7 +70,7 @@ jobs:
         with:
           ruby-version: '3.2'
           bundler-cache: true
-          working-directory: example/ios
+          working-directory: example
 
       - name: Install xcpretty
         run: gem install xcpretty
