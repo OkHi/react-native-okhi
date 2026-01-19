@@ -102,6 +102,6 @@ jobs:
             -scheme OkHi \
             -sdk iphonesimulator \
             -configuration Debug \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' \
             build \
             CODE_SIGNING_ALLOWED=NO | xcpretty
