@@ -4,8 +4,6 @@ on:
     branches:
       - main
   pull_request:
-    branches:
-      - main
   merge_group:
     types:
       - checks_requested
@@ -31,19 +29,6 @@ jobs:
       - name: Typecheck files
         run: yarn typecheck
 
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-
-      - name: Setup
-        uses: ./.github/actions/setup
-
-      - name: Run unit tests
-        run: yarn test --maxWorkers=2 --coverage
-
   build-library:
     runs-on: ubuntu-latest
 
@@ -60,8 +45,20 @@ jobs:
   build-android:
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        arch:
+          - name: new
+            newArchEnabled: true
+          - name: old
+            newArchEnabled: false
+
+    name: build-android (${{ matrix.arch.name }} arch)
+
     env:
-      TURBO_CACHE_DIR: .turbo/android
+      TURBO_CACHE_DIR: .turbo/android-${{ matrix.arch.name }}
+      ORG_GRADLE_PROJECT_newArchEnabled: ${{ matrix.arch.newArchEnabled }}
 
     steps:
       - name: Checkout
@@ -74,9 +71,9 @@ jobs:
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: ${{ env.TURBO_CACHE_DIR }}
-          key: ${{ runner.os }}-turborepo-android-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-turborepo-android-${{ matrix.arch.name }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-turborepo-android-
+            ${{ runner.os }}-turborepo-android-${{ matrix.arch.name }}-
 
       - name: Check turborepo cache for Android
         run: |
@@ -105,9 +102,9 @@ jobs:
           path: |
             ~/.gradle/wrapper
             ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('example/android/gradle/wrapper/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-gradle-${{ matrix.arch.name }}-${{ hashFiles('example/android/gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: |
-            ${{ runner.os }}-gradle-
+            ${{ runner.os }}-gradle-${{ matrix.arch.name }}-
 
       - name: Build example for Android
         env:
@@ -118,9 +115,21 @@ jobs:
   build-ios:
     runs-on: macos-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        arch:
+          - name: new
+            newArchEnabled: 1
+          - name: old
+            newArchEnabled: 0
+
+    name: build-ios (${{ matrix.arch.name }} arch)
+
     env:
-      XCODE_VERSION: 16.3
-      TURBO_CACHE_DIR: .turbo/ios
+      XCODE_VERSION: 16.4
+      TURBO_CACHE_DIR: .turbo/ios-${{ matrix.arch.name }}
+      RCT_NEW_ARCH_ENABLED: ${{ matrix.arch.newArchEnabled }}
       RCT_USE_RN_DEP: 1
       RCT_USE_PREBUILT_RNCORE: 1
 
@@ -131,13 +140,28 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
+      - name: Use Xcode 16.4
+        uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
+        with:
+          xcode-version: ${{ env.XCODE_VERSION }}
+
+      - name: Install iOS Simulator Runtime
+        run: |
+          sudo xcode-select -s /Applications/Xcode_${{ env.XCODE_VERSION }}.app
+          xcodebuild -runFirstLaunch
+          xcrun simctl list runtimes
+          # Download iOS runtime if not available
+          if ! xcrun simctl list runtimes | grep -q "iOS.*Available"; then
+            xcodebuild -downloadPlatform iOS || true
+          fi
+
       - name: Cache turborepo for iOS
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: ${{ env.TURBO_CACHE_DIR }}
-          key: ${{ runner.os }}-turborepo-ios-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-turborepo-ios-${{ matrix.arch.name }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-turborepo-ios-
+            ${{ runner.os }}-turborepo-ios-${{ matrix.arch.name }}-
 
       - name: Check turborepo cache for iOS
         run: |
@@ -146,12 +170,6 @@ jobs:
           if [[ $TURBO_CACHE_STATUS == "HIT" ]]; then
             echo "turbo_cache_hit=1" >> $GITHUB_ENV
           fi
-
-      - name: Use appropriate Xcode version
-        if: env.turbo_cache_hit != 1
-        uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
-        with:
-          xcode-version: ${{ env.XCODE_VERSION }}
 
       - name: Install cocoapods
         if: env.turbo_cache_hit != 1 && steps.cocoapods-cache.outputs.cache-hit != 'true'

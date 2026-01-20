@@ -6838,6 +6838,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"okhiapp@workspace:example":
+  version: 0.0.0-use.local
+  resolution: "okhiapp@workspace:example"
+  dependencies:
+    "@babel/core": "npm:^7.25.2"
+    "@babel/preset-env": "npm:^7.25.3"
+    "@babel/runtime": "npm:^7.25.0"
+    "@react-native-community/cli": "npm:20.0.0"
+    "@react-native-community/cli-platform-android": "npm:20.0.0"
+    "@react-native-community/cli-platform-ios": "npm:20.0.0"
+    "@react-native/babel-preset": "npm:0.83.0"
+    "@react-native/metro-config": "npm:0.83.0"
+    "@react-native/typescript-config": "npm:0.83.0"
+    "@types/react": "npm:^19.2.0"
+    react: "npm:19.2.0"
+    react-native: "npm:0.83.0"
+    react-native-builder-bob: "npm:^0.40.13"
+    react-native-monorepo-config: "npm:^0.3.1"
+  languageName: unknown
+  linkType: soft
+
 "on-finished@npm:~2.3.0":
   version: 2.3.0
   resolution: "on-finished@npm:2.3.0"
@@ -7349,27 +7370,6 @@ __metadata:
   checksum: 10c0/c711f6a898ae263b68aef3bf8bd9c3806cd489676da8c5480dd155859b47bcd49a7700f3c056896c19b3ce2c2c3ea42a5482def93b0ff03febbe023ceb128c96
   languageName: node
   linkType: hard
-
-"react-native-okhi-example@workspace:example":
-  version: 0.0.0-use.local
-  resolution: "react-native-okhi-example@workspace:example"
-  dependencies:
-    "@babel/core": "npm:^7.25.2"
-    "@babel/preset-env": "npm:^7.25.3"
-    "@babel/runtime": "npm:^7.25.0"
-    "@react-native-community/cli": "npm:20.0.0"
-    "@react-native-community/cli-platform-android": "npm:20.0.0"
-    "@react-native-community/cli-platform-ios": "npm:20.0.0"
-    "@react-native/babel-preset": "npm:0.83.0"
-    "@react-native/metro-config": "npm:0.83.0"
-    "@react-native/typescript-config": "npm:0.83.0"
-    "@types/react": "npm:^19.2.0"
-    react: "npm:19.2.0"
-    react-native: "npm:0.83.0"
-    react-native-builder-bob: "npm:^0.40.13"
-    react-native-monorepo-config: "npm:^0.3.1"
-  languageName: unknown
-  linkType: soft
 
 "react-native-okhi@workspace:.":
   version: 0.0.0-use.local
