@@ -1,29 +1,37 @@
-# react-native-okhi-nitro
+# react-native-okhi
 
 The OkHi React Native library enables you to collect and verify addresses from your users
 
-[![Version](https://img.shields.io/npm/v/react-native-okhi-nitro.svg)](https://www.npmjs.com/package/react-native-okhi-nitro)
-[![Downloads](https://img.shields.io/npm/dm/react-native-okhi-nitro.svg)](https://www.npmjs.com/package/react-native-okhi-nitro)
-[![License](https://img.shields.io/npm/l/react-native-okhi-nitro.svg)](https://github.com/patrickkabwe/react-native-okhi-nitro/LICENSE)
-
-## Requirements
-
-- React Native v0.76.0 or higher
-- Node 18.0.0 or higher
-
-> [!IMPORTANT]  
-> To Support `Nitro Views` you need to install React Native version v0.78.0 or higher.
-
 ## Installation
 
-```bash
-npm install react-native-okhi-nitro react-native-nitro-modules
+
+```sh
+npm install react-native-okhi
 ```
 
-## Credits
 
-Bootstrapped with [create-nitro-module](https://github.com/patrickkabwe/create-nitro-module).
+## Usage
+
+
+```js
+import { multiply } from 'react-native-okhi';
+
+// ...
+
+const result = multiply(3, 7);
+```
+
 
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+- [Development workflow](CONTRIBUTING.md#development-workflow)
+- [Sending a pull request](CONTRIBUTING.md#sending-a-pull-request)
+- [Code of conduct](CODE_OF_CONDUCT.md)
+
+## License
+
+MIT
+
+---
+
+Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
