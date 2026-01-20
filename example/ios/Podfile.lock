@@ -15,6 +15,7 @@ PODS:
     - fmt
     - glog
     - hermes-engine
+    - OkHi (~> 1.10.5)
     - RCT-Folly
     - RCT-Folly/Fabric
     - RCTRequired
@@ -36,6 +37,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
+  - OkHi (1.10.5)
   - RCT-Folly (2024.11.18.00):
     - boost
     - DoubleConversion
@@ -2564,6 +2566,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - OkHi
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -2733,7 +2736,8 @@ SPEC CHECKSUMS:
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
   hermes-engine: 9653d3d352f70adb2b47ef2b26c4d8fbc700716e
-  Okhi: 7fa1747dd1f8e9cf85cd4ebcc74bb05b6c8484bf
+  OkHi: f81cd317d614c9ecc7d34736278054a7a61fa2fb
+  Okhi: 0fe37cab1e5bad3d635421408c9c46722ec09354
   RCT-Folly: 59ec0ac1f2f39672a0c6e6cecdd39383b764646f
   RCTDeprecation: 2b70c6e3abe00396cefd8913efbf6a2db01a2b36
   RCTRequired: f3540eee8094231581d40c5c6d41b0f170237a81
