@@ -113,7 +113,7 @@ jobs:
           yarn turbo run build:android --cache-dir="${{ env.TURBO_CACHE_DIR }}"
 
   build-ios:
-    runs-on: macos-latest
+    runs-on: macos-14
 
     strategy:
       fail-fast: false
@@ -127,7 +127,6 @@ jobs:
     name: build-ios (${{ matrix.arch.name }} arch)
 
     env:
-      XCODE_VERSION: 16.3
       TURBO_CACHE_DIR: .turbo/ios-${{ matrix.arch.name }}
       RCT_NEW_ARCH_ENABLED: ${{ matrix.arch.newArchEnabled }}
       RCT_USE_RN_DEP: 1
@@ -155,12 +154,6 @@ jobs:
           if [[ $TURBO_CACHE_STATUS == "HIT" ]]; then
             echo "turbo_cache_hit=1" >> $GITHUB_ENV
           fi
-
-      - name: Use appropriate Xcode version
-        if: env.turbo_cache_hit != 1
-        uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
-        with:
-          xcode-version: ${{ env.XCODE_VERSION }}
 
       - name: Install cocoapods
         if: env.turbo_cache_hit != 1 && steps.cocoapods-cache.outputs.cache-hit != 'true'
