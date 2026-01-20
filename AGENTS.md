@@ -626,3 +626,21 @@ export function AddressVerificationScreen({ user }) {
    - Verify Maven repository is added to settings.gradle
    - Ensure minSdk is 21+
    - Verify `foregroundServiceType="location"` is set on FOREGROUND_SERVICE permission
+
+4. **Xcode 16.x build error: "no matching function for call to '__construct_at'"**
+   - This is a C++ template compatibility issue with Xcode 16's libc++
+   - Add the following to your `ios/Podfile` inside the `post_install` block:
+
+   ```ruby
+   post_install do |installer|
+     # Fix: Force C++20 for all Pods (helps with Xcode 16/libc++ template issues)
+     installer.pods_project.targets.each do |target|
+       target.build_configurations.each do |config|
+         config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++20'
+         config.build_settings['CLANG_CXX_LIBRARY'] = 'libc++'
+       end
+     end
+   end
+   ```
+
+   - Then run `cd ios && pod install && cd ..` to apply the changes
