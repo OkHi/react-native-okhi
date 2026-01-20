@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "OkhiExample.app"
-               BlueprintName = "OkhiExample"
-               ReferencedContainer = "container:OkhiExample.xcodeproj">
+               BuildableName = "OkHiApp.app"
+               BlueprintName = "OkHiApp"
+               ReferencedContainer = "container:OkHiApp.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "OkhiExampleTests.xctest"
-               BlueprintName = "OkhiExampleTests"
-               ReferencedContainer = "container:OkhiExample.xcodeproj">
+               BuildableName = "OkHiAppTests.xctest"
+               BlueprintName = "OkHiAppTests"
+               ReferencedContainer = "container:OkHiApp.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "OkhiExample.app"
-            BlueprintName = "OkhiExample"
-            ReferencedContainer = "container:OkhiExample.xcodeproj">
+            BuildableName = "OkHiApp.app"
+            BlueprintName = "OkHiApp"
+            ReferencedContainer = "container:OkHiApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "OkhiExample.app"
-            BlueprintName = "OkhiExample"
-            ReferencedContainer = "container:OkhiExample.xcodeproj">
+            BuildableName = "OkHiApp.app"
+            BlueprintName = "OkHiApp"
+            ReferencedContainer = "container:OkHiApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
