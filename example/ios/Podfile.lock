@@ -38,7 +38,7 @@ PODS:
     - SocketRocket
     - Yoga
   - OkHi (1.10.5)
-  - OkhiNitro (0.1.0):
+  - OkhiNitro (1.2.32-beta.1):
     - boost
     - DoubleConversion
     - fast_float
@@ -3017,7 +3017,7 @@ SPEC CHECKSUMS:
   hermes-engine: ab46bbf6fb2d80ed1979c301b9b98b71946386ed
   NitroModules: dae3143fe7bd2dcc7da1d97c51707c17a3caa163
   OkHi: f81cd317d614c9ecc7d34736278054a7a61fa2fb
-  OkhiNitro: d3812b00da2b8258fb47c33600a177cd80042b5b
+  OkhiNitro: 4bd493249d93fcf6ac6c716180bc0bf061ad9a88
   RCT-Folly: 59ec0ac1f2f39672a0c6e6cecdd39383b764646f
   RCTDeprecation: a41bbdd9af30bf2e5715796b313e44ec43eefff1
   RCTRequired: 7be34aabb0b77c3cefe644528df0fa0afad4e4d0
@@ -3095,6 +3095,6 @@ SPEC CHECKSUMS:
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 5456bb010373068fc92221140921b09d126b116e
 
-PODFILE CHECKSUM: a7ae95afb1f2a7c11f60a6e79874314478fd2c15
+PODFILE CHECKSUM: e78b9445229a6513765480b83bb8cba78e38155b
 
 COCOAPODS: 1.16.2
