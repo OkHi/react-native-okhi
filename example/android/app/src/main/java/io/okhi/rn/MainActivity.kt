@@ -1,4 +1,4 @@
-package okhi.example
+package io.okhi.rn
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
