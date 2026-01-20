@@ -97,17 +97,13 @@ jobs:
       - name: Build App
         working-directory: example/ios
         run: |
-          set -o pipefail
-
-          xcodebuild \
+          set -o pipefail && xcodebuild \
             CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
             -derivedDataPath build -UseModernBuildSystem=YES \
             -workspace OkHiApp.xcworkspace \
             -scheme OkHi \
-            -configuration Debug \
             -sdk iphonesimulator \
-            -destination 'generic/platform=iOS Simulator' \
-            ONLY_ACTIVE_ARCH=NO \
-            ARCHS=arm64 \
+            -configuration Debug \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
             build \
             CODE_SIGNING_ALLOWED=NO | xcpretty
