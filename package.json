@@ -1,6 +1,6 @@
 {
   "name": "react-native-okhi",
-  "version": "0.1.0",
+  "version": "1.2.32-beta.1",
   "description": "The OkHi React Native library enables you to collect and verify addresses from your users",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
@@ -42,11 +42,13 @@
   "workspaces": [
     "example"
   ],
-  "repository": "https://github.com/jgkiano/react-native-okhi-nitro.git",
-  "author": "jgkiano",
+  "repository": "https://github.com/OkHi/react-native-okhi",
+  "author": "OkHi <kiano@okhi.co> (https://okhi.com)",
   "license": "MIT",
-  "bugs": "https://github.com/jgkiano/react-native-okhi-nitro/issues",
-  "homepage": "https://github.com/jgkiano/react-native-okhi-nitro#readme",
+  "bugs": {
+    "url": "https://github.com/OkHi/react-native-okhi/issues"
+  },
+  "homepage": "https://github.com/OkHi/react-native-okhi#readme",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
