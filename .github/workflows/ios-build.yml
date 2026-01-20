@@ -106,6 +106,8 @@ jobs:
             -scheme OkHi \
             -configuration Debug \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 16,arch=arm64' \
+            -destination 'generic/platform=iOS Simulator' \
+            ONLY_ACTIVE_ARCH=NO \
+            ARCHS=arm64 \
             build \
             CODE_SIGNING_ALLOWED=NO | xcpretty
