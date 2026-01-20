@@ -94,7 +94,7 @@ export async function getLocationAccuracyLevel(): Promise<"precise" | "no_permis
   return new Promise((resolve, reject) => {
     OkHiNitro.getLocationAccuracyLevel((result, error) => {
       if (typeof result === "string") {
-        resolve(result.toLowerCase() as any)
+        resolve(result.toLowerCase() as "precise" | "no_permission" | "approximate")
       } else {
         const err: OkHiException = error || {code: "unknown", message: "unable to retrive result"}
         reject(err)
