@@ -48,10 +48,10 @@ Before integration, ensure you have:
 
 ```bash
 # Using npm
-npm install react-native-okhi
+npm install react-native-okhi react-native-nitro-modules
 
 # Using yarn
-yarn add react-native-okhi
+yarn add react-native-okhi react-native-nitro-modules
 ```
 
 For iOS, install CocoaPods dependencies:
