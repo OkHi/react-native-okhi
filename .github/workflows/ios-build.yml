@@ -72,19 +72,27 @@ jobs:
       - name: Install xcpretty
         run: gem install xcpretty
 
-      - name: Cache CocoaPods
+      - name: Cache CocoaPods repos
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.cocoapods/repos
-            example/ios/Pods
-          key: ${{ runner.os }}-pods-${{ hashFiles('example/ios/Podfile.lock') }}
+          path: ~/.cocoapods/repos
+          key: ${{ runner.os }}-pods-repos-v1
           restore-keys: |
-            ${{ runner.os }}-pods-
+            ${{ runner.os }}-pods-repos-
+
+      - name: Cache DerivedData
+        uses: actions/cache@v4
+        with:
+          path: example/ios/build
+          key: ${{ runner.os }}-deriveddata-${{ hashFiles('example/ios/Podfile', 'ios/**', 'nitrogen/generated/ios/**', 'cpp/**') }}
+          restore-keys: |
+            ${{ runner.os }}-deriveddata-
 
       - name: Install Pods
         working-directory: example/ios
-        run: pod install
+        run: |
+          rm -rf Pods Podfile.lock
+          pod install
 
       - name: Build App
         working-directory: example/ios
@@ -98,6 +106,7 @@ jobs:
             -scheme OkHi \
             -configuration Debug \
             -sdk iphonesimulator \
-            -destination 'generic/platform=iOS Simulator' \
+            -arch arm64 \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
             build \
             CODE_SIGNING_ALLOWED=NO | xcpretty
