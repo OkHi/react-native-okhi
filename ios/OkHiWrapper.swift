@@ -63,6 +63,60 @@ import React
     }
   }
 
+  // MARK: - Helper Methods
+
+  private static func parseOkCollect(_ okcollect: NSDictionary) -> (theme: OkHiTheme, config: OkHiConfig, location: OkHi.OkHiLocation?) {
+    // Parse style
+    let styleDict = okcollect["style"] as? NSDictionary
+    let color = styleDict?["color"] as? String ?? "#005D67"
+    let logo = styleDict?["logo"] as? String ?? "https://cdn.okhi.co/icon.png"
+
+    // Parse configuration
+    let configDict = okcollect["configuration"] as? NSDictionary
+    let streetView = configDict?["streetView"] as? Bool ?? true
+    let withHomeAddressType = configDict?["withHomeAddressType"] as? Bool ?? true
+    let withWorkAddressType = configDict?["withWorkAddressType"] as? Bool ?? false
+
+    // Parse optional locationId
+    let locationId = okcollect["locationId"] as? String
+    var okhiLocation: OkHi.OkHiLocation? = nil
+    if let locationId = locationId {
+      okhiLocation = OkHi.OkHiLocation(identifier: locationId)
+    }
+
+    // Build theme
+    let theme = OkHiTheme()
+      .with(appBarColor: color)
+      .with(logoUrl: logo)
+      .with(primaryColor: color)
+
+    // Build config
+    var config = OkHiConfig()
+      .withAddressTypes(work: withWorkAddressType, home: withHomeAddressType)
+    if streetView {
+      config = config.enableStreetView()
+    }
+
+    return (theme, config, okhiLocation)
+  }
+
+  private static func processResponse(_ response: OkHi.OkHiSuccessResponse?, _ error: OkHi.OkHiException?, callback: @escaping (NSDictionary?, NSDictionary?) -> Void) {
+    if let response = response,
+       let userJson = response.user.toJSON(),
+       let locationJson = response.location.toJSON() {
+      let successResult: NSDictionary = ["user": userJson, "location": locationJson]
+      callback(successResult, nil)
+    } else if let error = error {
+      let errorResult: NSDictionary = ["code": error.code, "message": error.message ?? "Unable to complete operation"]
+      callback(nil, errorResult)
+    } else {
+      let errorResult: NSDictionary = ["code": "unknown", "message": "Unable to parse response"]
+      callback(nil, errorResult)
+    }
+  }
+
+  // MARK: - Digital Verification
+
   @objc public static func startDigitalVerification(_ okcollect: NSDictionary, callback: @escaping (NSDictionary?, NSDictionary?) -> Void) {
     DispatchQueue.main.async {
       guard let vc = RCTPresentedViewController() else {
@@ -71,55 +125,83 @@ import React
         return
       }
 
-      // Parse style
-      let styleDict = okcollect["style"] as? NSDictionary
-      let color = styleDict?["color"] as? String ?? "#005D67"
-      let logo = styleDict?["logo"] as? String ?? "https://cdn.okhi.co/icon.png"
-
-      // Parse configuration
-      let configDict = okcollect["configuration"] as? NSDictionary
-      let streetView = configDict?["streetView"] as? Bool ?? true
-      let withHomeAddressType = configDict?["withHomeAddressType"] as? Bool ?? true
-      let withWorkAddressType = configDict?["withWorkAddressType"] as? Bool ?? false
-
-      // Parse optional locationId
-      let locationId = okcollect["locationId"] as? String
-      var okhiLocation: OkHi.OkHiLocation? = nil
-      if let locationId = locationId {
-        okhiLocation = OkHi.OkHiLocation(identifier: locationId)
-      }
-
-      // Build theme
-      let theme = OkHiTheme()
-        .with(appBarColor: color)
-        .with(logoUrl: logo)
-        .with(primaryColor: color)
-
-      // Build config
-      var config = OkHiConfig()
-        .withAddressTypes(work: withWorkAddressType, home: withHomeAddressType)
-      if streetView {
-        config = config.enableStreetView()
-      }
+      let (theme, config, location) = parseOkCollect(okcollect)
 
       OK.shared.startAddressVerification(
         vc: vc,
         theme: theme,
         config: config,
-        location: okhiLocation
+        location: location
       ) { response, error in
-        if let response = response,
-           let userJson = response.user.toJSON(),
-           let locationJson = response.location.toJSON() {
-          let successResult: NSDictionary = ["user": userJson, "location": locationJson]
-          callback(successResult, nil)
-        } else if let error = error {
-          let errorResult: NSDictionary = ["code": error.code, "message": error.message ?? "Unable to start verification"]
-          callback(nil, errorResult)
-        } else {
-          let errorResult: NSDictionary = ["code": "unknown", "message": "Unable to parse verification response"]
-          callback(nil, errorResult)
-        }
+        processResponse(response, error, callback: callback)
+      }
+    }
+  }
+
+  // MARK: - Physical Verification
+
+  @objc public static func startPhysicalVerification(_ okcollect: NSDictionary, callback: @escaping (NSDictionary?, NSDictionary?) -> Void) {
+    DispatchQueue.main.async {
+      guard let vc = RCTPresentedViewController() else {
+        let errorResult: NSDictionary = ["code": "unknown", "message": "Unable to retrieve current view controller"]
+        callback(nil, errorResult)
+        return
+      }
+
+      let (theme, config, location) = parseOkCollect(okcollect)
+
+      OK.shared.startPhysicalAddressVerification(
+        vc: vc,
+        theme: theme,
+        config: config,
+        location: location
+      ) { response, error in
+        processResponse(response, error, callback: callback)
+      }
+    }
+  }
+
+  // MARK: - Digital and Physical Verification
+
+  @objc public static func startDigitalAndPhysicalVerification(_ okcollect: NSDictionary, callback: @escaping (NSDictionary?, NSDictionary?) -> Void) {
+    DispatchQueue.main.async {
+      guard let vc = RCTPresentedViewController() else {
+        let errorResult: NSDictionary = ["code": "unknown", "message": "Unable to retrieve current view controller"]
+        callback(nil, errorResult)
+        return
+      }
+
+      let (theme, config, location) = parseOkCollect(okcollect)
+
+      OK.shared.startDigitalAndPhysicalAddressVerification(
+        vc: vc,
+        theme: theme,
+        config: config,
+        location: location
+      ) { response, error in
+        processResponse(response, error, callback: callback)
+      }
+    }
+  }
+
+  // MARK: - Create Address
+
+  @objc public static func createAddress(_ okcollect: NSDictionary, callback: @escaping (NSDictionary?, NSDictionary?) -> Void) {
+    DispatchQueue.main.async {
+      guard let vc = RCTPresentedViewController() else {
+        let errorResult: NSDictionary = ["code": "unknown", "message": "Unable to retrieve current view controller"]
+        callback(nil, errorResult)
+        return
+      }
+
+      let (theme, config, _) = parseOkCollect(okcollect)
+
+      OK.shared.createAddress(
+        vc: vc,
+        theme: theme,
+        config: config
+      ) { response, error in
+        processResponse(response, error, callback: callback)
       }
     }
   }

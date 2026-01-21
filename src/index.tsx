@@ -25,10 +25,9 @@ export function login(credentials: OkHiLogin): Promise<string[] | null> {
   });
 }
 
-export function startDigitalVerification(
-  okcollect?: OkCollect
-): Promise<OkHiSuccessResponse> {
-  const config = {
+// Helper to build config with defaults
+function buildConfig(okcollect?: OkCollect) {
+  return {
     style: {
       color: okcollect?.style?.color ?? '#005D67',
       logo: okcollect?.style?.logo ?? 'https://cdn.okhi.co/icon.png',
@@ -42,34 +41,82 @@ export function startDigitalVerification(
     },
     locationId: okcollect?.locationId,
   };
+}
 
+// Helper to process response
+function processVerificationResponse(
+  response: unknown,
+  error: unknown,
+  resolve: (value: OkHiSuccessResponse) => void,
+  reject: (reason: { code: string; message: string }) => void
+) {
+  try {
+    const res = response as { user: string; location: string };
+    if (response != null) {
+      resolve({
+        user: JSON.parse(res.user),
+        location: JSON.parse(res.location),
+      });
+    } else if (error != null) {
+      const err = error as { code: string; message: string };
+      reject({
+        code: err.code,
+        message: err.message,
+      });
+    } else {
+      reject({
+        code: 'unknown',
+        message: 'unable to complete operation - unknown response',
+      });
+    }
+  } catch {
+    reject({
+      code: 'unknown',
+      message: 'unable to complete operation - unknown error',
+    });
+  }
+}
+
+export function startDigitalVerification(
+  okcollect?: OkCollect
+): Promise<OkHiSuccessResponse> {
+  const config = buildConfig(okcollect);
   return new Promise((resolve, reject) => {
     Okhi.startDigitalVerification(config, (response, error) => {
-      try {
-        const res = response as { user: string; location: string };
-        if (response != null) {
-          resolve({
-            user: JSON.parse(res.user),
-            location: JSON.parse(res.location),
-          });
-        } else if (error != null) {
-          const err = error as { code: string; message: string };
-          reject({
-            code: err.code,
-            message: err.message,
-          });
-        } else {
-          reject({
-            code: 'unknown',
-            message: 'unable to start verification - unknown response',
-          });
-        }
-      } catch (error) {
-        reject({
-          code: 'unknown',
-          message: 'unable to start verification - unknown error',
-        });
-      }
+      processVerificationResponse(response, error, resolve, reject);
+    });
+  });
+}
+
+export function startPhysicalVerification(
+  okcollect?: OkCollect
+): Promise<OkHiSuccessResponse> {
+  const config = buildConfig(okcollect);
+  return new Promise((resolve, reject) => {
+    Okhi.startPhysicalVerification(config, (response, error) => {
+      processVerificationResponse(response, error, resolve, reject);
+    });
+  });
+}
+
+export function startDigitalAndPhysicalVerification(
+  okcollect?: OkCollect
+): Promise<OkHiSuccessResponse> {
+  const config = buildConfig(okcollect);
+  return new Promise((resolve, reject) => {
+    Okhi.startDigitalAndPhysicalVerification(config, (response, error) => {
+      processVerificationResponse(response, error, resolve, reject);
+    });
+  });
+}
+
+export function createAddress(
+  okcollect?: OkCollect
+): Promise<OkHiSuccessResponse> {
+  const config = buildConfig(okcollect);
+  return new Promise((resolve, reject) => {
+    Okhi.createAddress(config, (response, error) => {
+      processVerificationResponse(response, error, resolve, reject);
     });
   });
 }

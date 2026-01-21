@@ -28,6 +28,30 @@
     }];
 }
 
+- (void)startPhysicalVerification:(NSDictionary *)okcollect callback:(RCTResponseSenderBlock)callback {
+    [OkHiWrapper startPhysicalVerification:okcollect callback:^(NSDictionary *result, NSDictionary *error) {
+        if (callback) {
+            callback(@[result ?: [NSNull null], error ?: [NSNull null]]);
+        }
+    }];
+}
+
+- (void)startDigitalAndPhysicalVerification:(NSDictionary *)okcollect callback:(RCTResponseSenderBlock)callback {
+    [OkHiWrapper startDigitalAndPhysicalVerification:okcollect callback:^(NSDictionary *result, NSDictionary *error) {
+        if (callback) {
+            callback(@[result ?: [NSNull null], error ?: [NSNull null]]);
+        }
+    }];
+}
+
+- (void)createAddress:(NSDictionary *)okcollect callback:(RCTResponseSenderBlock)callback {
+    [OkHiWrapper createAddress:okcollect callback:^(NSDictionary *result, NSDictionary *error) {
+        if (callback) {
+            callback(@[result ?: [NSNull null], error ?: [NSNull null]]);
+        }
+    }];
+}
+
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
     (const facebook::react::ObjCTurboModule::InitParams &)params
 {

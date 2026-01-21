@@ -10,6 +10,18 @@ export interface Spec extends TurboModule {
     okcollect: Object,
     callback: (result?: Object, error?: Object) => void
   ): void;
+  startPhysicalVerification(
+    okcollect: Object,
+    callback: (result?: Object, error?: Object) => void
+  ): void;
+  startDigitalAndPhysicalVerification(
+    okcollect: Object,
+    callback: (result?: Object, error?: Object) => void
+  ): void;
+  createAddress(
+    okcollect: Object,
+    callback: (result?: Object, error?: Object) => void
+  ): void;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('Okhi');
