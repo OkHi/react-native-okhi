@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import Okhi from './NativeOkhi';
 import type { OkCollect, OkHiLogin, OkHiSuccessResponse } from './types';
 
@@ -256,8 +257,15 @@ export function requestEnableLocationServices(): Promise<boolean> {
 
 export function requestPostNotificationPermissions(): Promise<boolean> {
   return new Promise((resolve, reject) => {
-    Okhi.requestPostNotificationPermissions((result, error) => {
-      processBooleanResponse(result, error, resolve, reject);
-    });
+    if (Platform.OS === 'ios') {
+      reject({
+        code: 'unsupported_platform',
+        message: 'operation not supported',
+      });
+    } else {
+      Okhi.requestPostNotificationPermissions((result, error) => {
+        processBooleanResponse(result, error, resolve, reject);
+      });
+    }
   });
 }
