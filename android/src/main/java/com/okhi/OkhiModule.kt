@@ -40,7 +40,7 @@ class OkhiModule(reactContext: ReactApplicationContext) : NativeOkhiSpec(reactCo
     override fun onSuccess(response: OkHiSuccessResponse) {
       val response = Arguments.createMap().apply {
         putString("user", response.user.toJSON().toString())
-        putString("location", response.user.toJSON().toString())
+        putString("location", response.location.toJSON().toString())
       }
       currentCallback?.invoke(response, null)
     }
