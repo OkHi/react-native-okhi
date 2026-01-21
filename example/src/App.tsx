@@ -1,117 +1,52 @@
-import { Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import {
-  multiply,
-  login,
-  startDigitalAddressVerification,
-  startPhysicalAddressVerification,
-  startDigitalAndPhysicalAddressVerification,
-  createAddress,
-} from 'react-native-okhi';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { LoginScreen } from './screens/LoginScreen';
+import { VerificationScreen } from './screens/VerificationScreen';
+import { HelpersScreen } from './screens/HelpersScreen';
 
-const result = multiply(3, 7);
-
-const handleLogin = async () => {
-  const results = await login({
-    auth: {
-      branchId: '',
-      clientKey: '',
-      env: 'prod',
-    },
-    user: {
-      phone: '+254700110590',
-      firstName: 'Julius',
-      lastName: 'Kiano',
-      email: 'kiano@okhi.co',
-      appUserId: 'abcd1234',
-    },
-  });
-  console.log('Login results:', results);
+export type RootStackParamList = {
+  Login: undefined;
+  Verification: undefined;
+  Helpers: undefined;
 };
 
-const handleDigitalVerification = async () => {
-  try {
-    const result = await startDigitalAddressVerification();
-    console.log('Digital Verification success:', result);
-  } catch (error) {
-    console.log('Digital Verification error:', error);
-  }
-};
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const handlePhysicalVerification = async () => {
-  try {
-    const result = await startPhysicalAddressVerification();
-    console.log('Physical Verification success:', result);
-  } catch (error) {
-    console.log('Physical Verification error:', error);
-  }
-};
-
-const handleDigitalAndPhysicalVerification = async () => {
-  try {
-    const result = await startDigitalAndPhysicalAddressVerification();
-    console.log('Digital & Physical Verification success:', result);
-  } catch (error) {
-    console.log('Digital & Physical Verification error:', error);
-  }
-};
-
-const handleCreateAddress = async () => {
-  try {
-    const result = await createAddress();
-    console.log('Create Address success:', result);
-  } catch (error) {
-    console.log('Create Address error:', error);
-  }
-};
-
-export default function App() {
+function App(): React.JSX.Element {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text>Result: {result}</Text>
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleDigitalVerification}
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Login"
+        screenOptions={{
+          headerShown: false,
+          animation: 'slide_from_right',
+        }}
       >
-        <Text style={styles.buttonText}>Digital Verification</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handlePhysicalVerification}
-      >
-        <Text style={styles.buttonText}>Physical Verification</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleDigitalAndPhysicalVerification}
-      >
-        <Text style={styles.buttonText}>Digital & Physical</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleCreateAddress}>
-        <Text style={styles.buttonText}>Create Address</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{
+            gestureEnabled: false,
+            title: 'Login',
+          }}
+        />
+        <Stack.Screen
+          name="Verification"
+          component={VerificationScreen}
+          options={{
+            gestureEnabled: false,
+            title: 'Verification',
+          }}
+        />
+        <Stack.Screen
+          name="Helpers"
+          component={HelpersScreen}
+          options={{ title: 'Helpers' }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  button: {
-    marginTop: 20,
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 8,
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});
+export default App;
