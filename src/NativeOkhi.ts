@@ -6,15 +6,15 @@ export interface Spec extends TurboModule {
     credentials: Object,
     callback: (results: string[] | null) => void
   ): void;
-  startDigitalVerification(
+  startDigitalAddressVerification(
     okcollect: Object,
     callback: (result?: Object, error?: Object) => void
   ): void;
-  startPhysicalVerification(
+  startPhysicalAddressVerification(
     okcollect: Object,
     callback: (result?: Object, error?: Object) => void
   ): void;
-  startDigitalAndPhysicalVerification(
+  startDigitalAndPhysicalAddressVerification(
     okcollect: Object,
     callback: (result?: Object, error?: Object) => void
   ): void;

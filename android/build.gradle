@@ -67,11 +67,13 @@ android {
 repositories {
   mavenCentral()
   google()
+  maven { url "https://repo.okhi.io/artifactory/maven" }
 }
 
 def kotlin_version = getExtOrDefault("kotlinVersion")
 
 dependencies {
+  implementation 'io.okhi.android:okhi:1.0.0'
   implementation "com.facebook.react:react-android"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

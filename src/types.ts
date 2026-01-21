@@ -5,10 +5,10 @@ export type OkHiAuth = {
 };
 
 export type OkHiUser = {
-  firstName?: string;
-  lastName?: string;
+  firstName: string;
+  lastName: string;
   phone: string;
-  email?: string;
+  email: string;
   okhiUserId?: string;
   token?: string;
   appUserId?: string;
@@ -40,6 +40,7 @@ export type OkCollectConfig = {
   streetView: boolean;
   withHomeAddressType: boolean;
   withWorkAddressType: boolean;
+  withAppBar: boolean;
 };
 
 export type OkCollect = {

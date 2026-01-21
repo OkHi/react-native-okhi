@@ -33,6 +33,7 @@ function buildConfig(okcollect?: OkCollect) {
       logo: okcollect?.style?.logo ?? 'https://cdn.okhi.co/icon.png',
     },
     configuration: {
+      withAppBar: true,
       streetView: okcollect?.configuration?.streetView ?? true,
       withHomeAddressType:
         okcollect?.configuration?.withHomeAddressType ?? true,
@@ -77,36 +78,39 @@ function processVerificationResponse(
   }
 }
 
-export function startDigitalVerification(
+export function startDigitalAddressVerification(
   okcollect?: OkCollect
 ): Promise<OkHiSuccessResponse> {
   const config = buildConfig(okcollect);
   return new Promise((resolve, reject) => {
-    Okhi.startDigitalVerification(config, (response, error) => {
+    Okhi.startDigitalAddressVerification(config, (response, error) => {
       processVerificationResponse(response, error, resolve, reject);
     });
   });
 }
 
-export function startPhysicalVerification(
+export function startPhysicalAddressVerification(
   okcollect?: OkCollect
 ): Promise<OkHiSuccessResponse> {
   const config = buildConfig(okcollect);
   return new Promise((resolve, reject) => {
-    Okhi.startPhysicalVerification(config, (response, error) => {
+    Okhi.startPhysicalAddressVerification(config, (response, error) => {
       processVerificationResponse(response, error, resolve, reject);
     });
   });
 }
 
-export function startDigitalAndPhysicalVerification(
+export function startDigitalAndPhysicalAddressVerification(
   okcollect?: OkCollect
 ): Promise<OkHiSuccessResponse> {
   const config = buildConfig(okcollect);
   return new Promise((resolve, reject) => {
-    Okhi.startDigitalAndPhysicalVerification(config, (response, error) => {
-      processVerificationResponse(response, error, resolve, reject);
-    });
+    Okhi.startDigitalAndPhysicalAddressVerification(
+      config,
+      (response, error) => {
+        processVerificationResponse(response, error, resolve, reject);
+      }
+    );
   });
 }
 
