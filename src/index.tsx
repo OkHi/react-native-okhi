@@ -124,3 +124,24 @@ export function createAddress(
     });
   });
 }
+
+export const isLocationServicesEnabled = (): Promise<any> => Promise.resolve();
+export const canOpenProtectedApps = (): Promise<any> => Promise.resolve();
+export const getLocationAccuracyLevel = (): Promise<any> => Promise.resolve();
+export const isBackgroundLocationPermissionGranted = (): Promise<any> =>
+  Promise.resolve();
+export const isCoarseLocationPermissionGranted = (): Promise<any> =>
+  Promise.resolve();
+export const isFineLocationPermissionGranted = (): Promise<any> =>
+  Promise.resolve();
+export const isPlayServicesAvailable = (): Promise<any> => Promise.resolve();
+export const isPostNotificationPermissionGranted = (): Promise<any> =>
+  Promise.resolve();
+export const openProtectedApps = (): Promise<any> => Promise.resolve();
+export const requestBackgroundLocationPermission = (): Promise<any> =>
+  Promise.resolve();
+export const requestEnableLocationServices = (): Promise<any> =>
+  Promise.resolve();
+export const requestLocationPermission = (): Promise<any> => Promise.resolve();
+export const requestPostNotificationPermissions = (): Promise<any> =>
+  Promise.resolve();
