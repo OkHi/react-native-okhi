@@ -125,23 +125,139 @@ export function createAddress(
   });
 }
 
-export const isLocationServicesEnabled = (): Promise<any> => Promise.resolve();
-export const canOpenProtectedApps = (): Promise<any> => Promise.resolve();
-export const getLocationAccuracyLevel = (): Promise<any> => Promise.resolve();
-export const isBackgroundLocationPermissionGranted = (): Promise<any> =>
-  Promise.resolve();
-export const isCoarseLocationPermissionGranted = (): Promise<any> =>
-  Promise.resolve();
-export const isFineLocationPermissionGranted = (): Promise<any> =>
-  Promise.resolve();
-export const isPlayServicesAvailable = (): Promise<any> => Promise.resolve();
-export const isPostNotificationPermissionGranted = (): Promise<any> =>
-  Promise.resolve();
-export const openProtectedApps = (): Promise<any> => Promise.resolve();
-export const requestBackgroundLocationPermission = (): Promise<any> =>
-  Promise.resolve();
-export const requestEnableLocationServices = (): Promise<any> =>
-  Promise.resolve();
-export const requestLocationPermission = (): Promise<any> => Promise.resolve();
-export const requestPostNotificationPermissions = (): Promise<any> =>
-  Promise.resolve();
+// Helper to process boolean response
+function processBooleanResponse(
+  result: unknown,
+  error: unknown,
+  resolve: (value: boolean) => void,
+  reject: (reason: { code: string; message: string }) => void
+) {
+  if (error != null) {
+    const err = error as { code: string; message: string };
+    reject({ code: err.code, message: err.message });
+  } else {
+    resolve(result as boolean);
+  }
+}
+
+// Helper to process string response
+function processStringResponse(
+  result: unknown,
+  error: unknown,
+  resolve: (value: string) => void,
+  reject: (reason: { code: string; message: string }) => void
+) {
+  if (error != null) {
+    const err = error as { code: string; message: string };
+    reject({ code: err.code, message: err.message });
+  } else {
+    resolve(result as string);
+  }
+}
+
+// MARK: - Check Helpers
+
+export function isLocationServicesEnabled(): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    Okhi.isLocationServicesEnabled((result, error) => {
+      processBooleanResponse(result, error, resolve, reject);
+    });
+  });
+}
+
+export function canOpenProtectedApps(): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    Okhi.canOpenProtectedApps((result, error) => {
+      processBooleanResponse(result, error, resolve, reject);
+    });
+  });
+}
+
+export function getLocationAccuracyLevel(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    Okhi.getLocationAccuracyLevel((result, error) => {
+      processStringResponse(result?.toLowerCase(), error, resolve, reject);
+    });
+  });
+}
+
+export function isBackgroundLocationPermissionGranted(): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    Okhi.isBackgroundLocationPermissionGranted((result, error) => {
+      processBooleanResponse(result, error, resolve, reject);
+    });
+  });
+}
+
+export function isCoarseLocationPermissionGranted(): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    Okhi.isCoarseLocationPermissionGranted((result, error) => {
+      processBooleanResponse(result, error, resolve, reject);
+    });
+  });
+}
+
+export function isFineLocationPermissionGranted(): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    Okhi.isFineLocationPermissionGranted((result, error) => {
+      processBooleanResponse(result, error, resolve, reject);
+    });
+  });
+}
+
+export function isPlayServicesAvailable(): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    Okhi.isPlayServicesAvailable((result, error) => {
+      processBooleanResponse(result, error, resolve, reject);
+    });
+  });
+}
+
+export function isPostNotificationPermissionGranted(): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    Okhi.isPostNotificationPermissionGranted((result, error) => {
+      processBooleanResponse(result, error, resolve, reject);
+    });
+  });
+}
+
+export function openProtectedApps(): Promise<void> {
+  return new Promise((resolve) => {
+    Okhi.openProtectedApps();
+    resolve();
+  });
+}
+
+// MARK: - Request Helpers
+
+export function requestLocationPermission(): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    Okhi.requestLocationPermission((result, error) => {
+      processBooleanResponse(result, error, resolve, reject);
+    });
+  });
+}
+
+export function requestBackgroundLocationPermission(): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    Okhi.requestBackgroundLocationPermission((result, error) => {
+      processBooleanResponse(result, error, resolve, reject);
+    });
+  });
+}
+
+export function requestEnableLocationServices(): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    Okhi.requestEnableLocationServices((result, error) => {
+      processBooleanResponse(result, error, resolve, reject);
+    });
+  });
+}
+
+export function requestPostNotificationPermissions(): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    Okhi.requestPostNotificationPermissions((result, error) => {
+      processBooleanResponse(result, error, resolve, reject);
+    });
+  });
+}

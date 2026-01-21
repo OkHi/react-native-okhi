@@ -205,4 +205,72 @@ import React
       }
     }
   }
+
+  // MARK: - Helper Methods
+
+  @objc public static func isLocationServicesEnabled(callback: @escaping (NSNumber?, NSDictionary?) -> Void) {
+    let errorResult: NSDictionary = ["code": "not_implemented", "message": "Not implemented on iOS"]
+    callback(nil, errorResult)
+  }
+
+  @objc public static func canOpenProtectedApps(callback: @escaping (NSNumber?, NSDictionary?) -> Void) {
+    // Always false on iOS - protected apps is Android-specific
+    callback(NSNumber(value: false), nil)
+  }
+
+  @objc public static func getLocationAccuracyLevel(callback: @escaping (NSString?, NSDictionary?) -> Void) {
+    let errorResult: NSDictionary = ["code": "not_implemented", "message": "Not implemented on iOS"]
+    callback(nil, errorResult)
+  }
+
+  @objc public static func isBackgroundLocationPermissionGranted(callback: @escaping (NSNumber?, NSDictionary?) -> Void) {
+    let errorResult: NSDictionary = ["code": "not_implemented", "message": "Not implemented on iOS"]
+    callback(nil, errorResult)
+  }
+
+  @objc public static func isCoarseLocationPermissionGranted(callback: @escaping (NSNumber?, NSDictionary?) -> Void) {
+    let errorResult: NSDictionary = ["code": "not_implemented", "message": "Not implemented on iOS"]
+    callback(nil, errorResult)
+  }
+
+  @objc public static func isFineLocationPermissionGranted(callback: @escaping (NSNumber?, NSDictionary?) -> Void) {
+    let errorResult: NSDictionary = ["code": "not_implemented", "message": "Not implemented on iOS"]
+    callback(nil, errorResult)
+  }
+
+  @objc public static func isPlayServicesAvailable(callback: @escaping (NSNumber?, NSDictionary?) -> Void) {
+    // Always false on iOS - Play Services is Android-specific
+    callback(NSNumber(value: false), nil)
+  }
+
+  @objc public static func isPostNotificationPermissionGranted(callback: @escaping (NSNumber?, NSDictionary?) -> Void) {
+    let errorResult: NSDictionary = ["code": "not_implemented", "message": "Not implemented on iOS"]
+    callback(nil, errorResult)
+  }
+
+  @objc public static func openProtectedApps() {
+    // No-op on iOS - protected apps is Android-specific
+  }
+
+  // MARK: - Request Helpers
+
+  @objc public static func requestLocationPermission(callback: @escaping (NSNumber?, NSDictionary?) -> Void) {
+    let errorResult: NSDictionary = ["code": "not_implemented", "message": "Not implemented on iOS"]
+    callback(nil, errorResult)
+  }
+
+  @objc public static func requestBackgroundLocationPermission(callback: @escaping (NSNumber?, NSDictionary?) -> Void) {
+    let errorResult: NSDictionary = ["code": "not_implemented", "message": "Not implemented on iOS"]
+    callback(nil, errorResult)
+  }
+
+  @objc public static func requestEnableLocationServices(callback: @escaping (NSNumber?, NSDictionary?) -> Void) {
+    let errorResult: NSDictionary = ["code": "not_implemented", "message": "Not implemented on iOS"]
+    callback(nil, errorResult)
+  }
+
+  @objc public static func requestPostNotificationPermissions(callback: @escaping (NSNumber?, NSDictionary?) -> Void) {
+    let errorResult: NSDictionary = ["code": "not_implemented", "message": "Not implemented on iOS"]
+    callback(nil, errorResult)
+  }
 }

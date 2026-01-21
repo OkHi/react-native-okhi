@@ -52,6 +52,110 @@
     }];
 }
 
+// MARK: - Helper Methods
+
+- (void)isLocationServicesEnabled:(RCTResponseSenderBlock)callback {
+    [OkHiWrapper isLocationServicesEnabled:^(NSNumber *result, NSDictionary *error) {
+        if (callback) {
+            callback(@[result ?: [NSNull null], error ?: [NSNull null]]);
+        }
+    }];
+}
+
+- (void)canOpenProtectedApps:(RCTResponseSenderBlock)callback {
+    [OkHiWrapper canOpenProtectedApps:^(NSNumber *result, NSDictionary *error) {
+        if (callback) {
+            callback(@[result ?: [NSNull null], error ?: [NSNull null]]);
+        }
+    }];
+}
+
+- (void)getLocationAccuracyLevel:(RCTResponseSenderBlock)callback {
+    [OkHiWrapper getLocationAccuracyLevel:^(NSString *result, NSDictionary *error) {
+        if (callback) {
+            callback(@[result ?: [NSNull null], error ?: [NSNull null]]);
+        }
+    }];
+}
+
+- (void)isBackgroundLocationPermissionGranted:(RCTResponseSenderBlock)callback {
+    [OkHiWrapper isBackgroundLocationPermissionGranted:^(NSNumber *result, NSDictionary *error) {
+        if (callback) {
+            callback(@[result ?: [NSNull null], error ?: [NSNull null]]);
+        }
+    }];
+}
+
+- (void)isCoarseLocationPermissionGranted:(RCTResponseSenderBlock)callback {
+    [OkHiWrapper isCoarseLocationPermissionGranted:^(NSNumber *result, NSDictionary *error) {
+        if (callback) {
+            callback(@[result ?: [NSNull null], error ?: [NSNull null]]);
+        }
+    }];
+}
+
+- (void)isFineLocationPermissionGranted:(RCTResponseSenderBlock)callback {
+    [OkHiWrapper isFineLocationPermissionGranted:^(NSNumber *result, NSDictionary *error) {
+        if (callback) {
+            callback(@[result ?: [NSNull null], error ?: [NSNull null]]);
+        }
+    }];
+}
+
+- (void)isPlayServicesAvailable:(RCTResponseSenderBlock)callback {
+    [OkHiWrapper isPlayServicesAvailable:^(NSNumber *result, NSDictionary *error) {
+        if (callback) {
+            callback(@[result ?: [NSNull null], error ?: [NSNull null]]);
+        }
+    }];
+}
+
+- (void)isPostNotificationPermissionGranted:(RCTResponseSenderBlock)callback {
+    [OkHiWrapper isPostNotificationPermissionGranted:^(NSNumber *result, NSDictionary *error) {
+        if (callback) {
+            callback(@[result ?: [NSNull null], error ?: [NSNull null]]);
+        }
+    }];
+}
+
+- (void)openProtectedApps {
+    [OkHiWrapper openProtectedApps];
+}
+
+// MARK: - Request Helpers
+
+- (void)requestLocationPermission:(RCTResponseSenderBlock)callback {
+    [OkHiWrapper requestLocationPermission:^(NSNumber *result, NSDictionary *error) {
+        if (callback) {
+            callback(@[result ?: [NSNull null], error ?: [NSNull null]]);
+        }
+    }];
+}
+
+- (void)requestBackgroundLocationPermission:(RCTResponseSenderBlock)callback {
+    [OkHiWrapper requestBackgroundLocationPermission:^(NSNumber *result, NSDictionary *error) {
+        if (callback) {
+            callback(@[result ?: [NSNull null], error ?: [NSNull null]]);
+        }
+    }];
+}
+
+- (void)requestEnableLocationServices:(RCTResponseSenderBlock)callback {
+    [OkHiWrapper requestEnableLocationServices:^(NSNumber *result, NSDictionary *error) {
+        if (callback) {
+            callback(@[result ?: [NSNull null], error ?: [NSNull null]]);
+        }
+    }];
+}
+
+- (void)requestPostNotificationPermissions:(RCTResponseSenderBlock)callback {
+    [OkHiWrapper requestPostNotificationPermissions:^(NSNumber *result, NSDictionary *error) {
+        if (callback) {
+            callback(@[result ?: [NSNull null], error ?: [NSNull null]]);
+        }
+    }];
+}
+
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
     (const facebook::react::ObjCTurboModule::InitParams &)params
 {
