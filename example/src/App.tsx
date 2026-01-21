@@ -1,8 +1,11 @@
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import {
   multiply,
   login,
   startDigitalVerification,
+  startPhysicalVerification,
+  startDigitalAndPhysicalVerification,
+  createAddress,
 } from 'react-native-okhi';
 
 const result = multiply(3, 7);
@@ -10,9 +13,9 @@ const result = multiply(3, 7);
 const handleLogin = async () => {
   const results = await login({
     auth: {
-      branchId: 'B0lKOrJaUN',
-      clientKey: '73957af9-faef-4c9f-ad27-e0abe969f76a',
-      env: 'sandbox',
+      branchId: '',
+      clientKey: '',
+      env: 'prod',
     },
     user: {
       phone: '+254700110590',
@@ -26,16 +29,44 @@ const handleLogin = async () => {
 };
 
 const handleDigitalVerification = async () => {
-  // Using defaults - no params needed
-  const result = await startDigitalVerification();
-  if (result) {
-    console.log('Verification success:', result);
+  try {
+    const result = await startDigitalVerification();
+    console.log('Digital Verification success:', result);
+  } catch (error) {
+    console.log('Digital Verification error:', error);
+  }
+};
+
+const handlePhysicalVerification = async () => {
+  try {
+    const result = await startPhysicalVerification();
+    console.log('Physical Verification success:', result);
+  } catch (error) {
+    console.log('Physical Verification error:', error);
+  }
+};
+
+const handleDigitalAndPhysicalVerification = async () => {
+  try {
+    const result = await startDigitalAndPhysicalVerification();
+    console.log('Digital & Physical Verification success:', result);
+  } catch (error) {
+    console.log('Digital & Physical Verification error:', error);
+  }
+};
+
+const handleCreateAddress = async () => {
+  try {
+    const result = await createAddress();
+    console.log('Create Address success:', result);
+  } catch (error) {
+    console.log('Create Address error:', error);
   }
 };
 
 export default function App() {
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text>Result: {result}</Text>
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
@@ -46,7 +77,22 @@ export default function App() {
       >
         <Text style={styles.buttonText}>Digital Verification</Text>
       </TouchableOpacity>
-    </View>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handlePhysicalVerification}
+      >
+        <Text style={styles.buttonText}>Physical Verification</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleDigitalAndPhysicalVerification}
+      >
+        <Text style={styles.buttonText}>Digital & Physical</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={handleCreateAddress}>
+        <Text style={styles.buttonText}>Create Address</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 }
 
