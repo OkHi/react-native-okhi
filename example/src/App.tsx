@@ -2,9 +2,9 @@ import { Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import {
   multiply,
   login,
-  startDigitalVerification,
-  startPhysicalVerification,
-  startDigitalAndPhysicalVerification,
+  startDigitalAddressVerification,
+  startPhysicalAddressVerification,
+  startDigitalAndPhysicalAddressVerification,
   createAddress,
 } from 'react-native-okhi';
 
@@ -30,7 +30,7 @@ const handleLogin = async () => {
 
 const handleDigitalVerification = async () => {
   try {
-    const result = await startDigitalVerification();
+    const result = await startDigitalAddressVerification();
     console.log('Digital Verification success:', result);
   } catch (error) {
     console.log('Digital Verification error:', error);
@@ -39,7 +39,7 @@ const handleDigitalVerification = async () => {
 
 const handlePhysicalVerification = async () => {
   try {
-    const result = await startPhysicalVerification();
+    const result = await startPhysicalAddressVerification();
     console.log('Physical Verification success:', result);
   } catch (error) {
     console.log('Physical Verification error:', error);
@@ -48,7 +48,7 @@ const handlePhysicalVerification = async () => {
 
 const handleDigitalAndPhysicalVerification = async () => {
   try {
-    const result = await startDigitalAndPhysicalVerification();
+    const result = await startDigitalAndPhysicalAddressVerification();
     console.log('Digital & Physical Verification success:', result);
   } catch (error) {
     console.log('Digital & Physical Verification error:', error);

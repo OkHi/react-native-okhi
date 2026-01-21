@@ -1,6 +1,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Location permissions (foreground & background) -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
+    <!-- Internet access (required for API communication) -->
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Notifications (required for foreground service notifications) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Foreground services (required for background verification tasks) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE"
+        android:foregroundServiceType="location" />
+        
 
     <application
       android:name=".MainApplication"

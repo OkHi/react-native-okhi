@@ -40,6 +40,7 @@ export type OkCollectConfig = {
   streetView: boolean;
   withHomeAddressType: boolean;
   withWorkAddressType: boolean;
+  withAppBar: boolean;
 };
 
 export type OkCollect = {

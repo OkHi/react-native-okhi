@@ -20,24 +20,24 @@
     }];
 }
 
-- (void)startDigitalVerification:(NSDictionary *)okcollect callback:(RCTResponseSenderBlock)callback {
-    [OkHiWrapper startDigitalVerification:okcollect callback:^(NSDictionary *result, NSDictionary *error) {
+- (void)startDigitalAddressVerification:(NSDictionary *)okcollect callback:(RCTResponseSenderBlock)callback {
+    [OkHiWrapper startDigitalAddressVerification:okcollect callback:^(NSDictionary *result, NSDictionary *error) {
         if (callback) {
             callback(@[result ?: [NSNull null], error ?: [NSNull null]]);
         }
     }];
 }
 
-- (void)startPhysicalVerification:(NSDictionary *)okcollect callback:(RCTResponseSenderBlock)callback {
-    [OkHiWrapper startPhysicalVerification:okcollect callback:^(NSDictionary *result, NSDictionary *error) {
+- (void)startPhysicalAddressVerification:(NSDictionary *)okcollect callback:(RCTResponseSenderBlock)callback {
+    [OkHiWrapper startPhysicalAddressVerification:okcollect callback:^(NSDictionary *result, NSDictionary *error) {
         if (callback) {
             callback(@[result ?: [NSNull null], error ?: [NSNull null]]);
         }
     }];
 }
 
-- (void)startDigitalAndPhysicalVerification:(NSDictionary *)okcollect callback:(RCTResponseSenderBlock)callback {
-    [OkHiWrapper startDigitalAndPhysicalVerification:okcollect callback:^(NSDictionary *result, NSDictionary *error) {
+- (void)startDigitalAndPhysicalAddressVerification:(NSDictionary *)okcollect callback:(RCTResponseSenderBlock)callback {
+    [OkHiWrapper startDigitalAndPhysicalAddressVerification:okcollect callback:^(NSDictionary *result, NSDictionary *error) {
         if (callback) {
             callback(@[result ?: [NSNull null], error ?: [NSNull null]]);
         }

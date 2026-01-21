@@ -117,7 +117,7 @@ import React
 
   // MARK: - Digital Verification
 
-  @objc public static func startDigitalVerification(_ okcollect: NSDictionary, callback: @escaping (NSDictionary?, NSDictionary?) -> Void) {
+  @objc public static func startDigitalAddressVerification(_ okcollect: NSDictionary, callback: @escaping (NSDictionary?, NSDictionary?) -> Void) {
     DispatchQueue.main.async {
       guard let vc = RCTPresentedViewController() else {
         let errorResult: NSDictionary = ["code": "unknown", "message": "Unable to retrieve current view controller"]
@@ -140,7 +140,7 @@ import React
 
   // MARK: - Physical Verification
 
-  @objc public static func startPhysicalVerification(_ okcollect: NSDictionary, callback: @escaping (NSDictionary?, NSDictionary?) -> Void) {
+  @objc public static func startPhysicalAddressVerification(_ okcollect: NSDictionary, callback: @escaping (NSDictionary?, NSDictionary?) -> Void) {
     DispatchQueue.main.async {
       guard let vc = RCTPresentedViewController() else {
         let errorResult: NSDictionary = ["code": "unknown", "message": "Unable to retrieve current view controller"]
@@ -163,7 +163,7 @@ import React
 
   // MARK: - Digital and Physical Verification
 
-  @objc public static func startDigitalAndPhysicalVerification(_ okcollect: NSDictionary, callback: @escaping (NSDictionary?, NSDictionary?) -> Void) {
+  @objc public static func startDigitalAndPhysicalAddressVerification(_ okcollect: NSDictionary, callback: @escaping (NSDictionary?, NSDictionary?) -> Void) {
     DispatchQueue.main.async {
       guard let vc = RCTPresentedViewController() else {
         let errorResult: NSDictionary = ["code": "unknown", "message": "Unable to retrieve current view controller"]
