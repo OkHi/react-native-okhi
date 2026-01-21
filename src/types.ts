@@ -5,10 +5,10 @@ export type OkHiAuth = {
 };
 
 export type OkHiUser = {
-  firstName?: string;
-  lastName?: string;
+  firstName: string;
+  lastName: string;
   phone: string;
-  email?: string;
+  email: string;
   okhiUserId?: string;
   token?: string;
   appUserId?: string;
