@@ -84,6 +84,6 @@ export type OkHiException = {
 };
 
 export type OkHiSuccessResponse = {
-    user: OkHiUser,
-    location: OkHiLocation
-}
+  user: OkHiUser;
+  location: OkHiLocation;
+};
