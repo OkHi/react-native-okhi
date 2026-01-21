@@ -79,7 +79,9 @@ export function ResultModal({
           {entries.map(([key, val]) => (
             <View key={key} style={styles.objectRow}>
               <Text style={styles.objectKey}>{key}:</Text>
-              <View style={styles.objectValue}>{renderValue(val, depth + 1)}</View>
+              <View style={styles.objectValue}>
+                {renderValue(val, depth + 1)}
+              </View>
             </View>
           ))}
         </View>
@@ -105,7 +107,10 @@ export function ResultModal({
             </TouchableOpacity>
           </View>
 
-          <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+          <ScrollView
+            style={styles.content}
+            showsVerticalScrollIndicator={false}
+          >
             {renderValue(data)}
           </ScrollView>
 

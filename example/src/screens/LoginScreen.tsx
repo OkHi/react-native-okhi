@@ -18,9 +18,18 @@ import { ResultModal } from '../components/ResultModal';
 type Environment = 'prod' | 'sandbox' | 'dev';
 
 const ENVIRONMENT_CREDENTIALS = {
-  prod: { branchId: 'bWpVwm65jy', clientKey: '3db1617f-b25b-4a80-8165-8077b4d1ea44' },
-  sandbox: { branchId: 'B0lKOrJaUN', clientKey: '73957af9-faef-4c9f-ad27-e0abe969f76a' },
-  dev: { branchId: 'OGUXBJeocZ', clientKey: 'd76eb1f5-12a2-47a7-a6b6-2de88a5bc739' },
+  prod: {
+    branchId: 'bWpVwm65jy',
+    clientKey: '3db1617f-b25b-4a80-8165-8077b4d1ea44',
+  },
+  sandbox: {
+    branchId: 'B0lKOrJaUN',
+    clientKey: '73957af9-faef-4c9f-ad27-e0abe969f76a',
+  },
+  dev: {
+    branchId: 'OGUXBJeocZ',
+    clientKey: 'd76eb1f5-12a2-47a7-a6b6-2de88a5bc739',
+  },
 };
 
 function genAppUserId(): string {
@@ -117,7 +126,10 @@ export function LoginScreen({ navigation }: any) {
       // Save login state and user info
       await AsyncStorage.setItem('isLoggedIn', 'true');
       await AsyncStorage.setItem('userEmail', user.email.trim());
-      await AsyncStorage.setItem('userName', `${user.firstName.trim()} ${user.lastName.trim()}`);
+      await AsyncStorage.setItem(
+        'userName',
+        `${user.firstName.trim()} ${user.lastName.trim()}`
+      );
       await AsyncStorage.setItem('environment', environment);
 
       setLoginResult(result);
@@ -136,7 +148,8 @@ export function LoginScreen({ navigation }: any) {
     }
   };
 
-  const isFormValid = user.email && user.firstName && user.lastName && user.phone;
+  const isFormValid =
+    user.email && user.firstName && user.lastName && user.phone;
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -202,8 +215,8 @@ export function LoginScreen({ navigation }: any) {
               autoCorrect={false}
               placeholder="kiano@okhi.co"
               value={user.email}
-              onChangeText={email => {
-                setUser(prev => ({ ...prev, email }));
+              onChangeText={(email) => {
+                setUser((prev) => ({ ...prev, email }));
                 setValidationErrors([]);
               }}
             />
@@ -216,8 +229,8 @@ export function LoginScreen({ navigation }: any) {
               autoCorrect={false}
               placeholder="+254..."
               value={user.phone}
-              onChangeText={phone => {
-                setUser(prev => ({ ...prev, phone }));
+              onChangeText={(phone) => {
+                setUser((prev) => ({ ...prev, phone }));
                 setValidationErrors([]);
               }}
             />
@@ -230,8 +243,8 @@ export function LoginScreen({ navigation }: any) {
               autoCorrect={false}
               placeholder="John"
               value={user.firstName}
-              onChangeText={firstName => {
-                setUser(prev => ({ ...prev, firstName }));
+              onChangeText={(firstName) => {
+                setUser((prev) => ({ ...prev, firstName }));
                 setValidationErrors([]);
               }}
             />
@@ -244,8 +257,8 @@ export function LoginScreen({ navigation }: any) {
               autoCorrect={false}
               placeholder="Doe"
               value={user.lastName}
-              onChangeText={lastName => {
-                setUser(prev => ({ ...prev, lastName }));
+              onChangeText={(lastName) => {
+                setUser((prev) => ({ ...prev, lastName }));
                 setValidationErrors([]);
               }}
             />

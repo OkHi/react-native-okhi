@@ -157,7 +157,9 @@ export function HelpersScreen({ navigation }: any) {
       setResultTitle(title);
       setShowResult(true);
     } catch (error) {
-      setHelperResult({ error: error instanceof Error ? error.message : String(error) });
+      setHelperResult({
+        error: error instanceof Error ? error.message : String(error),
+      });
       setResultTitle(`${title} - Error`);
       setShowResult(true);
     }
@@ -189,7 +191,7 @@ export function HelpersScreen({ navigation }: any) {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Check Permissions & Status</Text>
           <View style={styles.cardContainer}>
-            {checkHelpers.map(helper => (
+            {checkHelpers.map((helper) => (
               <Card
                 key={helper.name}
                 title={helper.title}
@@ -204,7 +206,7 @@ export function HelpersScreen({ navigation }: any) {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Request Permissions & Actions</Text>
           <View style={styles.cardContainer}>
-            {actionHelpers.map(helper => (
+            {actionHelpers.map((helper) => (
               <Card
                 key={helper.name}
                 title={helper.title}

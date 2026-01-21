@@ -29,7 +29,7 @@ export const Input = forwardRef<TextInput, InputProps>(
         </View>
       </View>
     );
-  },
+  }
 );
 
 Input.displayName = 'Input';
