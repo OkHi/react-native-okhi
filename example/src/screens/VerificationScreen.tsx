@@ -54,6 +54,10 @@ export function VerificationScreen({ navigation }: any) {
         const appUserId = await AsyncStorage.getItem('appUserId');
         const env = await AsyncStorage.getItem('environment');
 
+        if (name) setUserName(name);
+        if (email) setUserEmail(email);
+        if (env) setEnvironment(env);
+
         const user: OkHiUser = {
           email: email || '',
           firstName: firstName || '',
@@ -82,10 +86,6 @@ export function VerificationScreen({ navigation }: any) {
             withPermissionsRequest: false,
           },
         });
-
-        if (name) setUserName(name);
-        if (email) setUserEmail(email);
-        if (env) setEnvironment(env);
       } catch (error) {
         console.error('Failed to load user info:', error);
       } finally {
