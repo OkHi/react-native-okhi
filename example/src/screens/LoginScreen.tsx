@@ -10,27 +10,12 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as OkHi from 'react-native-okhi';
 import { Input } from '../components/Input';
 import { Button } from '../components/Button';
 import { ResultModal } from '../components/ResultModal';
+import * as OkHi from 'react-native-okhi';
 
 type Environment = 'prod' | 'sandbox' | 'dev';
-
-const ENVIRONMENT_CREDENTIALS = {
-  prod: {
-    branchId: 'bWpVwm65jy',
-    clientKey: '3db1617f-b25b-4a80-8165-8077b4d1ea44',
-  },
-  sandbox: {
-    branchId: 'B0lKOrJaUN',
-    clientKey: '73957af9-faef-4c9f-ad27-e0abe969f76a',
-  },
-  dev: {
-    branchId: 'OGUXBJeocZ',
-    clientKey: 'd76eb1f5-12a2-47a7-a6b6-2de88a5bc739',
-  },
-};
 
 function genAppUserId(): string {
   return Math.random().toString(36).substring(2, 8);
@@ -39,8 +24,6 @@ function genAppUserId(): string {
 export function LoginScreen({ navigation }: any) {
   const appUserIdRef = useRef<string>('');
   const [loading, setLoading] = useState(false);
-  const [showResult, setShowResult] = useState(false);
-  const [loginResult, setLoginResult] = useState<any>(null);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [environment, setEnvironment] = useState<Environment>('prod');
 
@@ -104,45 +87,22 @@ export function LoginScreen({ navigation }: any) {
     if (!validateForm()) {
       return;
     }
-
     setLoading(true);
     try {
-      const credentials = ENVIRONMENT_CREDENTIALS[environment];
-
-      const result = await OkHi.login({
-        auth: {
-          branchId: credentials.branchId,
-          clientKey: credentials.clientKey,
-        },
-        user: {
-          email: user.email.trim(),
-          firstName: user.firstName.trim(),
-          lastName: user.lastName.trim(),
-          phone: user.phone.trim(),
-          appUserId: appUserIdRef.current,
-        },
-      });
-
-      // Save login state and user info
-      await AsyncStorage.setItem('isLoggedIn', 'true');
-      await AsyncStorage.setItem('userEmail', user.email.trim());
-      await AsyncStorage.setItem(
-        'userName',
-        `${user.firstName.trim()} ${user.lastName.trim()}`
-      );
-      await AsyncStorage.setItem('environment', environment);
-
-      setLoginResult(result);
-      setShowResult(true);
-
-      // Navigate to verification screen after showing result
-      setTimeout(() => {
-        setShowResult(false);
-        navigation.replace('Verification');
-      }, 2000);
+      await Promise.all([
+        AsyncStorage.setItem('phone', user.phone),
+        AsyncStorage.setItem('isLoggedIn', 'true'),
+        AsyncStorage.setItem('userEmail', user.email.trim()),
+        AsyncStorage.setItem('firstName', `${user.firstName.trim()}`),
+        AsyncStorage.setItem('lastName', `${user.lastName.trim()}`),
+        AsyncStorage.setItem('userName', `${user.firstName.trim()} ${user.lastName.trim()}`),
+        AsyncStorage.setItem('environment', environment),
+      ]);
+      setLoading(false);
+      navigation.replace('Verification');
     } catch (error) {
-      setLoginResult({ error: error });
-      setShowResult(true);
+      setLoading(false);
+      return;
     } finally {
       setLoading(false);
     }
@@ -273,13 +233,6 @@ export function LoginScreen({ navigation }: any) {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-
-      <ResultModal
-        visible={showResult}
-        onClose={() => setShowResult(false)}
-        title="Login Response"
-        data={loginResult}
-      />
     </SafeAreaView>
   );
 }

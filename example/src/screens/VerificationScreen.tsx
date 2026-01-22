@@ -11,8 +11,30 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as OkHi from 'react-native-okhi';
 import { Card } from '../components/Card';
 import { ResultModal } from '../components/ResultModal';
+import { OkHiUser } from 'react-native-okhi';
+
+type Environment = 'prod' | 'sandbox' | 'dev';
+
+const ENVIRONMENT_CREDENTIALS: Record<
+  Environment,
+  { branchId: string; clientKey: string }
+> = {
+  prod: {
+    branchId: 'bWpVwm65jy',
+    clientKey: '3db1617f-b25b-4a80-8165-8077b4d1ea44',
+  },
+  sandbox: {
+    branchId: 'B0lKOrJaUN',
+    clientKey: '73957af9-faef-4c9f-ad27-e0abe969f76a',
+  },
+  dev: {
+    branchId: 'OGUXBJeocZ',
+    clientKey: 'd76eb1f5-12a2-47a7-a6b6-2de88a5bc739',
+  },
+};
 
 export function VerificationScreen({ navigation }: any) {
+  const [loading, setIsLoading] = useState(true);
   const [showResult, setShowResult] = useState(false);
   const [verificationResult, setVerificationResult] = useState<any>(null);
   const [resultTitle, setResultTitle] = useState('');
@@ -23,13 +45,50 @@ export function VerificationScreen({ navigation }: any) {
 
   useEffect(() => {
     const loadUserInfo = async () => {
-      const name = await AsyncStorage.getItem('userName');
-      const email = await AsyncStorage.getItem('userEmail');
-      const env = await AsyncStorage.getItem('environment');
+      const [name, email, firstName, lastName, phone, appUserId, env] =
+        await Promise.all([
+          AsyncStorage.getItem('userName'),
+          AsyncStorage.getItem('userEmail'),
+          AsyncStorage.getItem('firstName'),
+          AsyncStorage.getItem('lastName'),
+          AsyncStorage.getItem('phone'),
+          AsyncStorage.getItem('appUserId'),
+          AsyncStorage.getItem('environment'),
+        ]);
 
-      if (name) setUserName(name);
-      if (email) setUserEmail(email);
-      if (env) setEnvironment(env);
+      const user: OkHiUser = {
+        email: email || '',
+        firstName: firstName || '',
+        lastName: lastName || '',
+        phone: phone || '',
+        appUserId: appUserId || '',
+      };
+
+      const envKey: Environment = (
+        env === 'prod' || env === 'sandbox' || env === 'dev' ? env : 'prod'
+      ) as Environment;
+
+      OkHi.login({
+        auth: {
+          branchId: ENVIRONMENT_CREDENTIALS[envKey].branchId,
+          clientKey: ENVIRONMENT_CREDENTIALS[envKey].clientKey,
+          env: envKey,
+        },
+        user,
+        appContext: {
+          name: 'OkHi App',
+          build: '1.0.0',
+          version: '1',
+        },
+        configuration: {
+          withPermissionsRequest: false,
+        },
+      }).finally(() => {
+        setIsLoading(false);
+        if (name) setUserName(name);
+        if (email) setUserEmail(email);
+        if (env) setEnvironment(env);
+      });
     };
 
     loadUserInfo();
@@ -130,6 +189,7 @@ export function VerificationScreen({ navigation }: any) {
             onPress={() =>
               handleVerification('digital', 'Digital Verification')
             }
+            disabled={loading}
           />
 
           <Card
@@ -139,6 +199,7 @@ export function VerificationScreen({ navigation }: any) {
             onPress={() =>
               handleVerification('physical', 'Physical Verification')
             }
+            disabled={loading}
           />
 
           <Card
@@ -148,6 +209,7 @@ export function VerificationScreen({ navigation }: any) {
             onPress={() =>
               handleVerification('both', 'Digital + Physical Verification')
             }
+            disabled={loading}
           />
 
           <Card
@@ -155,6 +217,7 @@ export function VerificationScreen({ navigation }: any) {
             description="Create an address without verification (saves to addressbook)"
             icon="📍"
             onPress={() => handleVerification('address', 'Create Address')}
+            disabled={loading}
           />
 
           <Card
@@ -162,7 +225,7 @@ export function VerificationScreen({ navigation }: any) {
             description="Verify a previously saved address (must create address first)"
             icon="💾"
             onPress={() => handleVerification('saved', 'Verify Saved Address')}
-            disabled={!locationIdRef.current}
+            disabled={!locationIdRef.current || loading}
           />
         </View>
       </ScrollView>
