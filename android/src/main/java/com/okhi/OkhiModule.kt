@@ -222,6 +222,114 @@ class OkhiModule(reactContext: ReactApplicationContext) : NativeOkhiSpec(reactCo
     return nativeOkCollect
   }
 
+  // Helper Methods
+
+  override fun isLocationServicesEnabled(callback: Callback?) {
+    val result = OkHi.isLocationServicesEnabled(reactApplicationContext.applicationContext)
+    callback?.invoke(result, null)
+  }
+
+  override fun canOpenProtectedApps(callback: Callback?) {
+    val result = OkHi.canOpenProtectedApps(reactApplicationContext.applicationContext)
+    callback?.invoke(result, null)
+  }
+
+  override fun getLocationAccuracyLevel(callback: Callback?) {
+    val result = OkHi.getLocationAccuracyLevel(reactApplicationContext.applicationContext)
+    callback?.invoke(result.toString(), null)
+  }
+
+  override fun isBackgroundLocationPermissionGranted(callback: Callback?) {
+    val result = OkHi.isBackgroundLocationPermissionGranted(reactApplicationContext.applicationContext)
+    callback?.invoke(result, null)
+  }
+
+  override fun isCoarseLocationPermissionGranted(callback: Callback?) {
+    val result = OkHi.isCoarseLocationPermissionGranted(reactApplicationContext.applicationContext)
+    callback?.invoke(result, null)
+  }
+
+  override fun isFineLocationPermissionGranted(callback: Callback?) {
+    val result = OkHi.isFineLocationPermissionGranted(reactApplicationContext.applicationContext)
+    callback?.invoke(result, null)
+  }
+
+  override fun isPlayServicesAvailable(callback: Callback?) {
+    val result = OkHi.isPlayServicesAvailable(reactApplicationContext.applicationContext)
+    callback?.invoke(result, null)
+  }
+
+  override fun isPostNotificationPermissionGranted(callback: Callback?) {
+    val result = OkHi.isPostNotificationPermissionGranted(reactApplicationContext.applicationContext)
+    callback?.invoke(result, null)
+  }
+
+  override fun openProtectedApps() {
+    OkHi.openProtectedApps(reactApplicationContext.applicationContext)
+  }
+
+  // Request Helpers
+
+  override fun requestLocationPermission(callback: Callback?) {
+    val activity = reactApplicationContext.currentActivity
+    if (activity == null) {
+      val error = Arguments.createMap().apply {
+        putString("code", "unknown")
+        putString("message", "unable to get current activity")
+      }
+      callback?.invoke(null, error)
+    } else {
+      OkHi.requestLocationPermission(activity) { result ->
+        callback?.invoke(result, null)
+      }
+    }
+  }
+
+  override fun requestBackgroundLocationPermission(callback: Callback?) {
+    val activity = reactApplicationContext.currentActivity
+    if (activity == null) {
+      val error = Arguments.createMap().apply {
+        putString("code", "unknown")
+        putString("message", "unable to get current activity")
+      }
+      callback?.invoke(null, error)
+    } else {
+      OkHi.requestBackgroundLocationPermission(activity) { result ->
+        callback?.invoke(result, null)
+      }
+    }
+  }
+
+  override fun requestEnableLocationServices(callback: Callback?) {
+    val activity = reactApplicationContext.currentActivity
+    if (activity == null) {
+      val error = Arguments.createMap().apply {
+        putString("code", "unknown")
+        putString("message", "unable to get current activity")
+      }
+      callback?.invoke(null, error)
+    } else {
+      OkHi.requestEnableLocationServices(activity) { result ->
+        callback?.invoke(result, null)
+      }
+    }
+  }
+
+  override fun requestPostNotificationPermissions(callback: Callback?) {
+    val activity = reactApplicationContext.currentActivity
+    if (activity == null) {
+      val error = Arguments.createMap().apply {
+        putString("code", "unknown")
+        putString("message", "unable to get current activity")
+      }
+      callback?.invoke(null, error)
+    } else {
+      OkHi.requestPostNotificationPermissions(activity) { result ->
+        callback?.invoke(result, null)
+      }
+    }
+  }
+
   companion object {
     const val NAME = "Okhi"
   }
