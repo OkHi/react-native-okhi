@@ -45,52 +45,52 @@ export function VerificationScreen({ navigation }: any) {
 
   useEffect(() => {
     const loadUserInfo = async () => {
-      const [name, email, firstName, lastName, phone, appUserId, env] =
-        await Promise.all([
-          AsyncStorage.getItem('userName'),
-          AsyncStorage.getItem('userEmail'),
-          AsyncStorage.getItem('firstName'),
-          AsyncStorage.getItem('lastName'),
-          AsyncStorage.getItem('phone'),
-          AsyncStorage.getItem('appUserId'),
-          AsyncStorage.getItem('environment'),
-        ]);
+      try {
+        const name = await AsyncStorage.getItem('userName');
+        const email = await AsyncStorage.getItem('userEmail');
+        const firstName = await AsyncStorage.getItem('firstName');
+        const lastName = await AsyncStorage.getItem('lastName');
+        const phone = await AsyncStorage.getItem('phone');
+        const appUserId = await AsyncStorage.getItem('appUserId');
+        const env = await AsyncStorage.getItem('environment');
 
-      const user: OkHiUser = {
-        email: email || '',
-        firstName: firstName || '',
-        lastName: lastName || '',
-        phone: phone || '',
-        appUserId: appUserId || '',
-      };
+        if (name) setUserName(name);
+        if (email) setUserEmail(email);
+        if (env) setEnvironment(env);
 
-      const envKey: Environment = (
-        env === 'prod' || env === 'sandbox' || env === 'dev' ? env : 'prod'
-      ) as Environment;
+        const user: OkHiUser = {
+          email: email || '',
+          firstName: firstName || '',
+          lastName: lastName || '',
+          phone: phone || '',
+          appUserId: appUserId || '',
+        };
 
-      OkHi.login({
-        auth: {
-          branchId: ENVIRONMENT_CREDENTIALS[envKey].branchId,
-          clientKey: ENVIRONMENT_CREDENTIALS[envKey].clientKey,
-          env: envKey,
-        },
-        user,
-        appContext: {
-          name: 'OkHi App',
-          build: '1.0.0',
-          version: '1',
-        },
-        configuration: {
-          withPermissionsRequest: false,
-        },
-      })
-        .then(console.log)
-        .finally(() => {
-          setIsLoading(false);
-          if (name) setUserName(name);
-          if (email) setUserEmail(email);
-          if (env) setEnvironment(env);
+        const envKey: Environment = (
+          env === 'prod' || env === 'sandbox' || env === 'dev' ? env : 'prod'
+        ) as Environment;
+
+        await OkHi.login({
+          auth: {
+            branchId: ENVIRONMENT_CREDENTIALS[envKey].branchId,
+            clientKey: ENVIRONMENT_CREDENTIALS[envKey].clientKey,
+            env: envKey,
+          },
+          user,
+          appContext: {
+            name: 'OkHi App',
+            build: '1.0.0',
+            version: '1',
+          },
+          configuration: {
+            withPermissionsRequest: false,
+          },
         });
+      } catch (error) {
+        console.error('Failed to load user info:', error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     loadUserInfo();
