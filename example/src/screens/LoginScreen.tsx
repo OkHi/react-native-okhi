@@ -89,20 +89,16 @@ export function LoginScreen({ navigation }: any) {
     }
     setLoading(true);
     try {
-      await Promise.all([
-        AsyncStorage.setItem('phone', user.phone),
-        AsyncStorage.setItem('isLoggedIn', 'true'),
-        AsyncStorage.setItem('userEmail', user.email.trim()),
-        AsyncStorage.setItem('firstName', `${user.firstName.trim()}`),
-        AsyncStorage.setItem('lastName', `${user.lastName.trim()}`),
-        AsyncStorage.setItem('userName', `${user.firstName.trim()} ${user.lastName.trim()}`),
-        AsyncStorage.setItem('environment', environment),
-      ]);
-      setLoading(false);
+      await AsyncStorage.setItem('phone', user.phone);
+      await AsyncStorage.setItem('isLoggedIn', 'true');
+      await AsyncStorage.setItem('userEmail', user.email.trim());
+      await AsyncStorage.setItem('firstName', user.firstName.trim());
+      await AsyncStorage.setItem('lastName', user.lastName.trim());
+      await AsyncStorage.setItem('userName', `${user.firstName.trim()} ${user.lastName.trim()}`);
+      await AsyncStorage.setItem('environment', environment);
       navigation.replace('Verification');
     } catch (error) {
-      setLoading(false);
-      return;
+      console.error('Failed to save user data:', error);
     } finally {
       setLoading(false);
     }
