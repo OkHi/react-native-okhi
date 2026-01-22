@@ -83,12 +83,14 @@ export function VerificationScreen({ navigation }: any) {
         configuration: {
           withPermissionsRequest: false,
         },
-      }).finally(() => {
-        setIsLoading(false);
-        if (name) setUserName(name);
-        if (email) setUserEmail(email);
-        if (env) setEnvironment(env);
-      });
+      })
+        .then(console.log)
+        .finally(() => {
+          setIsLoading(false);
+          if (name) setUserName(name);
+          if (email) setUserEmail(email);
+          if (env) setEnvironment(env);
+        });
     };
 
     loadUserInfo();

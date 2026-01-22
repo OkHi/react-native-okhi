@@ -2537,7 +2537,7 @@ PODS:
     - React-perflogger (= 0.83.0)
     - React-utils (= 0.83.0)
     - SocketRocket
-  - ReactNativeOkHi (0.1.0):
+  - ReactNativeOkHi (1.2.32-beta.4):
     - boost
     - DoubleConversion
     - fast_float
@@ -3052,7 +3052,7 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: 23e2bca1661f8781e55fcc05a151fc1df97bc1fb
   ReactCodegen: 10a61330b137caaad6f7fbe7f5d0e7a40d621700
   ReactCommon: c6cd81778336e767e27fe63c6707dd6b735fff5c
-  ReactNativeOkHi: 7583fea4b0f0c0cf3e12019ec6fbe600404dfd91
+  ReactNativeOkHi: d72fcf38d340a180ddcc41e0ad515e8f95f63b37
   RNCAsyncStorage: 302f2fac014fd450046c120567ca364632da682b
   RNCClipboard: 962296f7af77f6c039b683e21c2e2255af9c05df
   RNGestureHandler: 77eecab5fd636666ca73a55bb61e2f1a685b7e84
