@@ -54,7 +54,7 @@ import UserNotifications
     let auth = OkHiAuth(
       branchId: branchId,
       clientKey: clientKey,
-      environment: env == "prod" ? .prod : .sandbox,
+      environment: env,
       appContext: nativeAppContext
     )
     
