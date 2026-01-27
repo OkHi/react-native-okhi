@@ -8,6 +8,7 @@ export function multiply(a: number, b: number): number {
 }
 
 export function login(credentials: OkHiLogin): Promise<string[] | null> {
+  console.log(credentials);
   return new Promise((resolve) => {
     Okhi.login(credentials, (results) => {
       resolve(results);
