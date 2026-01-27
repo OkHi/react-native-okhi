@@ -35,7 +35,7 @@ const ENVIRONMENT_CREDENTIALS: Record<
     clientKey: 'bcb6e880-5294-4045-b0c7-5303cc1a9983',
   },
   dev: {
-    branchId: 'UD3tyqVt50',
+    branchId: 'OGUXBJeocZ',
     clientKey: 'd76eb1f5-12a2-47a7-a6b6-2de88a5bc739',
   },
 };
