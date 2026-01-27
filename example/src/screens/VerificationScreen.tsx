@@ -1,17 +1,24 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as OkHi from 'react-native-okhi';
 import { Card } from '../components/Card';
 import { ResultModal } from '../components/ResultModal';
-import { OkHiUser } from 'react-native-okhi';
+import { OkHiUser, OkHiSuccessResponse } from 'react-native-okhi';
+import type {
+  StoredAddress,
+  VerificationType,
+} from '../components/AddressCard';
+
+const ADDRESSES_STORAGE_KEY = 'okhi_verified_addresses';
 
 type Environment = 'prod' | 'sandbox' | 'dev';
 
@@ -25,13 +32,20 @@ const ENVIRONMENT_CREDENTIALS: Record<
   },
   sandbox: {
     branchId: 'B0lKOrJaUN',
-    clientKey: '73957af9-faef-4c9f-ad27-e0abe969f76a',
+    clientKey: 'bcb6e880-5294-4045-b0c7-5303cc1a9983',
   },
   dev: {
-    branchId: 'OGUXBJeocZ',
+    branchId: 'UD3tyqVt50',
     clientKey: 'd76eb1f5-12a2-47a7-a6b6-2de88a5bc739',
   },
 };
+
+function getGreeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'Good morning';
+  if (hour < 17) return 'Good afternoon';
+  return 'Good evening';
+}
 
 export function VerificationScreen({ navigation }: any) {
   const [loading, setIsLoading] = useState(true);
@@ -41,7 +55,28 @@ export function VerificationScreen({ navigation }: any) {
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [environment, setEnvironment] = useState('');
+  const [addressCount, setAddressCount] = useState(0);
   const locationIdRef = useRef<string | null>(null);
+  const addressCardAnim = useRef(new Animated.Value(0)).current;
+
+  const loadAddressCount = useCallback(async () => {
+    try {
+      const stored = await AsyncStorage.getItem(ADDRESSES_STORAGE_KEY);
+      if (stored) {
+        const addresses: StoredAddress[] = JSON.parse(stored);
+        setAddressCount(addresses.length);
+        if (addresses.length > 0) {
+          Animated.spring(addressCardAnim, {
+            toValue: 1,
+            friction: 8,
+            useNativeDriver: true,
+          }).start();
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load address count:', error);
+    }
+  }, [addressCardAnim]);
 
   useEffect(() => {
     const loadUserInfo = async () => {
@@ -94,14 +129,69 @@ export function VerificationScreen({ navigation }: any) {
     };
 
     loadUserInfo();
-  }, []);
+    loadAddressCount();
+  }, [loadAddressCount]);
+
+  // Reload address count when screen comes into focus
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      loadAddressCount();
+    });
+    return unsubscribe;
+  }, [navigation, loadAddressCount]);
+
+  const saveAddress = async (
+    result: OkHiSuccessResponse,
+    verificationType: VerificationType
+  ) => {
+    try {
+      const stored = await AsyncStorage.getItem(ADDRESSES_STORAGE_KEY);
+      const addresses: StoredAddress[] = stored ? JSON.parse(stored) : [];
+
+      // Check if address with same ID already exists
+      const existingIndex = addresses.findIndex(
+        (addr) => addr.location.id === result.location.id
+      );
+
+      const newAddress: StoredAddress = {
+        location: result.location,
+        verificationType,
+        timestamp: Date.now(),
+      };
+
+      if (existingIndex >= 0) {
+        // Update existing address
+        addresses[existingIndex] = newAddress;
+      } else {
+        // Add new address
+        addresses.push(newAddress);
+      }
+
+      await AsyncStorage.setItem(
+        ADDRESSES_STORAGE_KEY,
+        JSON.stringify(addresses)
+      );
+      setAddressCount(addresses.length);
+
+      // Animate the address card if this is the first address
+      if (addresses.length === 1) {
+        Animated.spring(addressCardAnim, {
+          toValue: 1,
+          friction: 8,
+          useNativeDriver: true,
+        }).start();
+      }
+    } catch (error) {
+      console.error('Failed to save address:', error);
+    }
+  };
 
   const handleVerification = async (
     type: 'digital' | 'physical' | 'both' | 'address' | 'saved',
     title: string
   ) => {
     try {
-      let result;
+      let result: OkHiSuccessResponse | undefined;
 
       switch (type) {
         case 'digital':
@@ -115,7 +205,9 @@ export function VerificationScreen({ navigation }: any) {
           break;
         case 'address':
           result = await OkHi.createAddress();
-          locationIdRef.current = result.location.id || null;
+          if (result?.location?.id) {
+            locationIdRef.current = result.location.id;
+          }
           break;
         case 'saved':
           if (locationIdRef.current) {
@@ -123,11 +215,21 @@ export function VerificationScreen({ navigation }: any) {
               locationId: locationIdRef.current,
             });
           } else {
-            result = {
+            setVerificationResult({
               error: 'No saved location ID. Please create an address first.',
-            };
+            });
+            setResultTitle(`${title} - Error`);
+            setShowResult(true);
+            return;
           }
           break;
+      }
+
+      if (result?.location) {
+        // Map the type to VerificationType
+        const verificationType: VerificationType =
+          type === 'saved' ? 'digital' : type;
+        await saveAddress(result, verificationType);
       }
 
       setVerificationResult(result);
@@ -142,38 +244,63 @@ export function VerificationScreen({ navigation }: any) {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
-        <View style={styles.spacer} />
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Helpers')}
-          style={styles.helpersButton}
-        >
-          <Text style={styles.helpersButtonText}>Helpers →</Text>
-        </TouchableOpacity>
-      </View>
-
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         {userName && (
-          <View style={styles.userInfoContainer}>
-            <View style={styles.userInfoRow}>
-              <Text style={styles.userInfoLabel}>User:</Text>
-              <Text style={styles.userInfoValue}>{userName}</Text>
-            </View>
-            <View style={styles.userInfoRow}>
-              <Text style={styles.userInfoLabel}>Email:</Text>
-              <Text style={styles.userInfoValue}>{userEmail}</Text>
-            </View>
-            <View style={styles.userInfoRow}>
-              <Text style={styles.userInfoLabel}>Environment:</Text>
-              <Text style={[styles.userInfoValue, styles.environmentBadge]}>
-                {environment.toUpperCase()}
-              </Text>
+          <View style={styles.greetingContainer}>
+            <Text style={styles.greeting}>
+              {getGreeting()}, {userName.split(' ')[0]}
+            </Text>
+            <View style={styles.userMetaContainer}>
+              <Text style={styles.userMeta}>{userEmail}</Text>
+              <View style={styles.envDot} />
+              <Text style={styles.envText}>{environment.toUpperCase()}</Text>
             </View>
           </View>
+        )}
+
+        {addressCount > 0 && (
+          <Animated.View
+            style={[
+              styles.addressesCardWrapper,
+              {
+                opacity: addressCardAnim,
+                transform: [
+                  {
+                    scale: addressCardAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0.95, 1],
+                    }),
+                  },
+                ],
+              },
+            ]}
+          >
+            <TouchableOpacity
+              style={styles.addressesCard}
+              onPress={() => navigation.navigate('Addresses')}
+              activeOpacity={0.8}
+            >
+              <View style={styles.addressesCardContent}>
+                <View style={styles.addressesIconContainer}>
+                  <Text style={styles.addressesIcon}>📍</Text>
+                </View>
+                <View style={styles.addressesTextContainer}>
+                  <Text style={styles.addressesCardTitle}>My Addresses</Text>
+                  <Text style={styles.addressesCardSubtitle}>
+                    {addressCount} address{addressCount === 1 ? '' : 'es'} in
+                    verification
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.addressesArrow}>
+                <Text style={styles.addressesArrowText}>→</Text>
+              </View>
+            </TouchableOpacity>
+          </Animated.View>
         )}
 
         <View style={styles.titleContainer}>
@@ -229,6 +356,14 @@ export function VerificationScreen({ navigation }: any) {
             onPress={() => handleVerification('saved', 'Verify Saved Address')}
             disabled={!locationIdRef.current || loading}
           />
+
+          <Card
+            title="Helpers"
+            description="Test helper methods for permissions and location services"
+            icon="🛠️"
+            onPress={() => navigation.navigate('Helpers')}
+            disabled={loading}
+          />
         </View>
       </ScrollView>
 
@@ -248,75 +383,114 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F8F9FA',
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 12,
-  },
-  spacer: {
-    width: 1,
-  },
-  helpersButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-  },
-  helpersButtonText: {
-    fontSize: 16,
-    color: '#005D67',
-    fontWeight: '600',
-  },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
     padding: 24,
-    paddingTop: 12,
+    paddingTop: 20,
   },
-  userInfoContainer: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 24,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+  greetingContainer: {
+    marginBottom: 28,
   },
-  userInfoRow: {
+  greeting: {
+    fontSize: 26,
+    fontWeight: '800',
+    color: '#1A1A1A',
+    marginBottom: 6,
+    letterSpacing: -0.3,
+  },
+  userMetaContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
   },
-  userInfoLabel: {
+  userMeta: {
     fontSize: 14,
-    fontWeight: '600',
     color: '#757575',
-    width: 100,
-  },
-  userInfoValue: {
-    flex: 1,
-    fontSize: 14,
-    color: '#1A1A1A',
     fontWeight: '500',
   },
-  environmentBadge: {
+  envDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#BDBDBD',
+    marginHorizontal: 8,
+  },
+  envText: {
+    fontSize: 12,
     color: '#005D67',
     fontWeight: '700',
+    letterSpacing: 0.5,
+  },
+  addressesCardWrapper: {
+    marginBottom: 28,
+  },
+  addressesCard: {
+    backgroundColor: '#005D67',
+    borderRadius: 16,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    shadowColor: '#005D67',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  addressesCardContent: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  addressesIconContainer: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 14,
+  },
+  addressesIcon: {
+    fontSize: 22,
+  },
+  addressesTextContainer: {
+    flex: 1,
+  },
+  addressesCardTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    marginBottom: 2,
+  },
+  addressesCardSubtitle: {
+    fontSize: 13,
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontWeight: '500',
+  },
+  addressesArrow: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 12,
+  },
+  addressesArrowText: {
+    fontSize: 16,
+    color: '#FFFFFF',
+    fontWeight: '600',
   },
   titleContainer: {
     marginBottom: 24,
   },
   title: {
-    fontSize: 28,
-    fontWeight: '800',
+    fontSize: 22,
+    fontWeight: '700',
     color: '#1A1A1A',
-    marginBottom: 8,
+    marginBottom: 6,
   },
   subtitle: {
     fontSize: 15,
