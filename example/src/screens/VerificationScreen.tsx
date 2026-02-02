@@ -31,8 +31,8 @@ const ENVIRONMENT_CREDENTIALS: Record<
     clientKey: '3db1617f-b25b-4a80-8165-8077b4d1ea44',
   },
   sandbox: {
-    branchId: 'B0lKOrJaUN',
-    clientKey: 'bcb6e880-5294-4045-b0c7-5303cc1a9983',
+    branchId: 'bWpVwm65jy',
+    clientKey: '3db1617f-b25b-4a80-8165-8077b4d1ea44',
   },
   dev: {
     branchId: 'OGUXBJeocZ',
