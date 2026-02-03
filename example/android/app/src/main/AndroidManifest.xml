@@ -27,6 +27,22 @@
       android:theme="@style/AppTheme"
       android:usesCleartextTraffic="${usesCleartextTraffic}"
       android:supportsRtl="true">
+
+      <!-- 📝 Custom notification title -->
+    <meta-data
+        android:name="io.okhi.android.notification_title"
+        android:value="Address verification" />
+
+    <!-- 📝 Custom notification message -->
+    <meta-data
+        android:name="io.okhi.android.notification_text"
+        android:value="Currently verifying your address" />
+
+    <!-- 🎨 Custom notification icon -->
+    <meta-data
+        android:name="io.okhi.android.notification_icon"
+        android:resource="@mipmap/ic_launcher" />
+        
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
