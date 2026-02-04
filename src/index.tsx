@@ -3,10 +3,6 @@ import Okhi from './NativeOkhi';
 import type { OkCollect, OkHiLogin, OkHiSuccessResponse } from './types';
 export type * from './types';
 
-export function multiply(a: number, b: number): number {
-  return Okhi.multiply(a, b);
-}
-
 export function login(credentials: OkHiLogin): Promise<string[] | null> {
   return new Promise((resolve) => {
     Okhi.login(credentials, (results) => {

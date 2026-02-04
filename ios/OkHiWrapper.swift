@@ -17,10 +17,6 @@ import UserNotifications
     okVerify.delegate = self
   }
   
-  @objc public static func multiply(_ a: Double, _ b: Double) -> NSNumber {
-    return NSNumber(value: a * b)
-  }
-  
   @objc public static func login(_ credentials: NSDictionary, callback: @escaping ([String]?) -> Void) {
     // Extract auth dictionary
     guard let authDict = credentials["auth"] as? NSDictionary,

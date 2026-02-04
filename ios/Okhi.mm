@@ -8,10 +8,6 @@
 #endif
 
 @implementation Okhi
-- (NSNumber *)multiply:(double)a b:(double)b {
-    return [OkHiWrapper multiply:a :b];
-}
-
 - (void)login:(NSDictionary *)credentials callback:(RCTResponseSenderBlock)callback {
     [OkHiWrapper login:credentials callback:^(NSArray<NSString *> *results) {
         if (callback) {
