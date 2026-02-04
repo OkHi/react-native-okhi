@@ -139,6 +139,38 @@ await OkHi.login({
 const { user, location } = await OkHi.startDigitalAddressVerification();
 ```
 
+### Full Example
+
+```tsx
+import { Button, Text, View } from 'react-native';
+import * as OkHi from 'react-native-okhi';
+
+export default function Dashboard() {
+  useEffect(() => {
+    OkHi.login({
+      auth: { branchId: 'YOUR_BRANCH_ID', clientKey: 'YOUR_CLIENT_KEY' },
+      user: {
+        firstName: 'John',
+        lastName: 'Doe',
+        phone: '+254712345678',
+        email: 'john@example.com',
+      },
+    }).then(() => console.log('user logged in'));
+  }, []);
+
+  const onButtonPress = async () => {
+    const { user, location } = await OkHi.startDigitalAddressVerification();
+    console.log(`started verification for: ${location.id}`);
+  };
+
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', padding: 20 }}>
+      <Button title="Verify Address" onPress={onButtonPress} />
+    </View>
+  );
+}
+```
+
 ## License
 
 MIT © [OkHi](https://okhi.co)
