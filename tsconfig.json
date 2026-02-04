@@ -1,15 +1,19 @@
 {
   "compilerOptions": {
-    "composite": true,
+    "rootDir": ".",
+    "paths": {
+      "react-native-okhi": ["./src/index"]
+    },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
+    "customConditions": ["react-native-strict-api"],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "jsx": "react",
-    "lib": ["esnext"],
-    "module": "esnext",
-    "moduleResolution": "node",
-    "noEmit": false,
+    "jsx": "react-jsx",
+    "lib": ["ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "noImplicitUseStrict": false,
@@ -20,18 +24,8 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "esnext",
+    "target": "ESNext",
     "verbatimModuleSyntax": true
   },
-  "exclude": [
-    "**/node_modules",
-    "**/lib",
-    "**/.eslintrc.js",
-    "**/.prettierrc.js",
-    "**/jest.config.js",
-    "**/babel.config.js",
-    "**/metro.config.js",
-    "**/tsconfig.json"
-  ],
-  "include": ["src/**/*", "nitrogen/**/*.json"]
+  "exclude": ["node_modules", "lib", "example"]
 }
