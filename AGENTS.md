@@ -41,10 +41,10 @@ await OkHi.requestEnableLocationServices();
 
 ```bash
 # Using npm
-npm install react-native-okhi
+npm install react-native-okhi@beta
 
 # Using yarn
-yarn add react-native-okhi
+yarn add react-native-okhi@beta
 ```
 
 After installation, run:
