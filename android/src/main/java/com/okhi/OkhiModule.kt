@@ -50,10 +50,6 @@ class OkhiModule(reactContext: ReactApplicationContext) : NativeOkhiSpec(reactCo
     return NAME
   }
 
-  override fun multiply(a: Double, b: Double): Double {
-    return a * b
-  }
-
   override fun login(credentials: ReadableMap?, callback: Callback?) {
     if (credentials == null) {
       callback?.invoke(null)
