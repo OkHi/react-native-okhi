@@ -6,8 +6,6 @@
 [![license](https://img.shields.io/npm/l/react-native-okhi.svg?style=flat-square)](https://github.com/OkHi/react-native-okhi/blob/master/LICENSE)
 [![platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android-lightgrey?style=flat-square)](#requirements)
 
-[Documentation](#documentation) · [Quick Start](#quick-start) · [API Reference](#api-reference)
-
 </div>
 
 ## Quick Start
