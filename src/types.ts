@@ -155,7 +155,7 @@ export type OkHiLoginConfiguration = {
  * Complete login configuration for authenticating with OkHi.
  *
  * @remarks
- * This is the primary configuration object passed to the {@link login} function.
+ * This is the primary configuration object passed to the `login()` function.
  * It combines authentication credentials, user information, and optional settings.
  *
  * @example
