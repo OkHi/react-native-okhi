@@ -1,7 +1,8 @@
 import { Platform } from 'react-native';
 import Okhi from './NativeOkhi';
 import type { OkCollect, OkHiLogin, OkHiSuccessResponse } from './types';
-export type * from './types';
+import { OkHiException } from './types';
+export * from './types';
 
 export function login(credentials: OkHiLogin): Promise<string[] | null> {
   return new Promise((resolve) => {
@@ -35,7 +36,7 @@ function processVerificationResponse(
   response: unknown,
   error: unknown,
   resolve: (value: OkHiSuccessResponse) => void,
-  reject: (reason: { code: string; message: string }) => void
+  reject: (reason: OkHiException) => void
 ) {
   try {
     const res = response as { user: string; location: string };
@@ -45,22 +46,17 @@ function processVerificationResponse(
         location: JSON.parse(res.location),
       });
     } else if (error != null) {
-      const err = error as { code: string; message: string };
-      reject({
-        code: err.code,
-        message: err.message,
-      });
+      const err = error as { code?: string; message?: string };
+      reject(OkHiException.fromNativeError(err));
     } else {
-      reject({
-        code: 'unknown',
-        message: 'unable to complete operation - unknown response',
-      });
+      reject(
+        new OkHiException(OkHiException.UNKNOWN, 'An unknown error occurred')
+      );
     }
   } catch {
-    reject({
-      code: 'unknown',
-      message: 'unable to complete operation - unknown error',
-    });
+    reject(
+      new OkHiException(OkHiException.UNKNOWN, 'An unknown error occurred')
+    );
   }
 }
 
@@ -116,11 +112,11 @@ function processBooleanResponse(
   result: unknown,
   error: unknown,
   resolve: (value: boolean) => void,
-  reject: (reason: { code: string; message: string }) => void
+  reject: (reason: OkHiException) => void
 ) {
   if (error != null) {
-    const err = error as { code: string; message: string };
-    reject({ code: err.code, message: err.message });
+    const err = error as { code?: string; message?: string };
+    reject(OkHiException.fromNativeError(err));
   } else {
     resolve(result as boolean);
   }
@@ -131,11 +127,11 @@ function processStringResponse(
   result: unknown,
   error: unknown,
   resolve: (value: string) => void,
-  reject: (reason: { code: string; message: string }) => void
+  reject: (reason: OkHiException) => void
 ) {
   if (error != null) {
-    const err = error as { code: string; message: string };
-    reject({ code: err.code, message: err.message });
+    const err = error as { code?: string; message?: string };
+    reject(OkHiException.fromNativeError(err));
   } else {
     resolve(result as string);
   }
@@ -243,10 +239,12 @@ export function requestEnableLocationServices(): Promise<boolean> {
 export function requestPostNotificationPermissions(): Promise<boolean> {
   return new Promise((resolve, reject) => {
     if (Platform.OS === 'ios') {
-      reject({
-        code: 'unsupported_platform',
-        message: 'operation not supported',
-      });
+      reject(
+        new OkHiException(
+          OkHiException.UNSUPPORTED_DEVICE,
+          'Notification permission request is not supported on iOS. Use iOS-specific notification APIs.'
+        )
+      );
     } else {
       Okhi.requestPostNotificationPermissions((result, error) => {
         processBooleanResponse(result, error, resolve, reject);
