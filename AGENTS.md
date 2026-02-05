@@ -24,7 +24,7 @@ await OkHi.startDigitalAndPhysicalAddressVerification(config?);
 // Create address without verification (verify later)
 await OkHi.createAddress(config?);
 
-// Permission helpers
+// Permission helpers (optional — the SDK handles permissions internally)
 await OkHi.isLocationServicesEnabled();
 await OkHi.isFineLocationPermissionGranted();
 await OkHi.isBackgroundLocationPermissionGranted();
@@ -317,6 +317,10 @@ await OkHi.login(credentials);
 
 ### Step 2: Start Verification
 
+> **Important:** You do NOT need to manually request permissions before calling verification methods. The SDK handles all required permissions (location, background location, notifications) internally. Just call the verification method directly — the library will prompt the user for any missing permissions as part of the flow.
+>
+> **Do NOT** write a `requestPermissions` function that manually checks and requests each permission. This is unnecessary and creates a worse user experience.
+
 #### Digital Verification (Fastest)
 
 Verifies address using GPS, WiFi, and cellular signals remotely:
@@ -455,7 +459,9 @@ try {
 
 ---
 
-## Permission Helper Functions
+## Permission Helper Functions (Optional — Advanced Use Only)
+
+> **Note:** You do NOT need to use these functions for a standard integration. The verification methods (`startDigitalAddressVerification`, `startPhysicalAddressVerification`, etc.) handle all required permissions internally. These helpers are exposed only for advanced use cases, such as building custom pre-flight checks or diagnostic screens. **Do not call these before starting verification — the SDK already does this for you.**
 
 ### Check Permissions
 
