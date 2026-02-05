@@ -241,7 +241,7 @@ import OkHi
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        OkHi.startMonitoring() // ADD THIS LINE
+        OK.startMonitoring() // ADD THIS LINE
         return true
     }
 }
@@ -258,7 +258,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [OkHi startMonitoring]; // ADD THIS LINE
+  [OK startMonitoring]; // ADD THIS LINE
 
   self.moduleName = @"YourAppName";
   self.initialProps = @{};
