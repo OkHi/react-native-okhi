@@ -604,24 +604,6 @@ export default function AddressVerificationScreen() {
     }
   };
 
-  const handleCreateAndVerifyLater = async () => {
-    try {
-      // Create address without verification
-      const result = await OkHi.createAddress();
-      const locationId = result.location.id;
-
-      // Save locationId to verify later
-      Alert.alert('Address Created', `Location ID: ${locationId}`);
-
-      // Later, verify with:
-      // await OkHi.startDigitalAddressVerification({ locationId });
-    } catch (error) {
-      if (error instanceof OkHi.OkHiException) {
-        Alert.alert('Error', error.message);
-      }
-    }
-  };
-
   return (
     <View style={{ flex: 1, justifyContent: 'center', padding: 20 }}>
       {!isLoggedIn ? (
@@ -633,10 +615,6 @@ export default function AddressVerificationScreen() {
             onPress={handleVerifyAddress}
           />
           <View style={{ height: 20 }} />
-          <Button
-            title="Create Address (Verify Later)"
-            onPress={handleCreateAndVerifyLater}
-          />
         </>
       )}
 
