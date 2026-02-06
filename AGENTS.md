@@ -295,6 +295,8 @@ import type {
 
 Login must be called before any verification. It initializes the SDK with your credentials and user information.
 
+> **When to call login:** The login function should be called once you have an authenticated user in your app. A common place to call login is immediately after the app dashboard is rendered, for example in a banking app after a user successfully signs in. It initializes OkHi and enables your users to resume verification if they switch devices, as well as enables re-verification of previously unknown addresses.
+
 ```typescript
 import * as OkHi from 'react-native-okhi';
 import type { OkHiLogin } from 'react-native-okhi';
@@ -542,6 +544,11 @@ export default function AddressVerificationScreen() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [address, setAddress] = useState<string | null>(null);
 
+  // Call login once you have an authenticated user in your app.
+  // A common place is immediately after the app dashboard is rendered,
+  // e.g., in a banking app after a user successfully signs in.
+  // It initializes OkHi and enables users to resume verification if they
+  // switch devices, as well as enables re-verification of previously unknown addresses.
   const handleLogin = async () => {
     const credentials: OkHiLogin = {
       auth: {
@@ -604,24 +611,6 @@ export default function AddressVerificationScreen() {
     }
   };
 
-  const handleCreateAndVerifyLater = async () => {
-    try {
-      // Create address without verification
-      const result = await OkHi.createAddress();
-      const locationId = result.location.id;
-
-      // Save locationId to verify later
-      Alert.alert('Address Created', `Location ID: ${locationId}`);
-
-      // Later, verify with:
-      // await OkHi.startDigitalAddressVerification({ locationId });
-    } catch (error) {
-      if (error instanceof OkHi.OkHiException) {
-        Alert.alert('Error', error.message);
-      }
-    }
-  };
-
   return (
     <View style={{ flex: 1, justifyContent: 'center', padding: 20 }}>
       {!isLoggedIn ? (
@@ -633,10 +622,6 @@ export default function AddressVerificationScreen() {
             onPress={handleVerifyAddress}
           />
           <View style={{ height: 20 }} />
-          <Button
-            title="Create Address (Verify Later)"
-            onPress={handleCreateAndVerifyLater}
-          />
         </>
       )}
 
@@ -727,3 +712,105 @@ if (canOpen) {
 ### Error: UNAUTHENTICATED
 
 Make sure to call `OkHi.login()` before any verification function.
+
+---
+
+## Integration Audit Checklist
+
+Use this checklist to verify that a React Native project has correctly integrated `react-native-okhi`. For each item, check the specified file(s) and verify the required configuration is present.
+
+### Android Checklist
+
+| # | Check | File(s) to Inspect | What to Look For | Required |
+|---|-------|-------------------|------------------|----------|
+| A1 | OkHi Maven repository | `android/build.gradle` | `maven { url "https://repo.okhi.io/artifactory/maven" }` in `allprojects.repositories` block | Yes |
+| A2 | Minimum SDK version | `android/build.gradle` or `android/app/build.gradle` | `minSdkVersion >= 24` (or `minSdk >= 24`) | Yes |
+| A3 | Fine location permission | `android/app/src/main/AndroidManifest.xml` | `<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />` | Yes |
+| A4 | Coarse location permission | `android/app/src/main/AndroidManifest.xml` | `<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />` | Yes |
+| A5 | Background location permission | `android/app/src/main/AndroidManifest.xml` | `<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />` | Yes |
+| A6 | Internet permission | `android/app/src/main/AndroidManifest.xml` | `<uses-permission android:name="android.permission.INTERNET" />` | Yes |
+| A7 | Post notifications permission | `android/app/src/main/AndroidManifest.xml` | `<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />` | Yes |
+| A8 | Foreground service permission | `android/app/src/main/AndroidManifest.xml` | `<uses-permission android:name="android.permission.FOREGROUND_SERVICE" ... />` | Yes |
+| A9 | Foreground service location permission | `android/app/src/main/AndroidManifest.xml` | `<uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />` | Yes |
+
+### iOS Checklist
+
+| # | Check | File(s) to Inspect | What to Look For | Required |
+|---|-------|-------------------|------------------|----------|
+| I1 | Minimum iOS version | `ios/Podfile` or Xcode project | `platform :ios, '12.0'` or higher | Yes |
+| I2 | Location always permission | `ios/[AppName]/Info.plist` | `<key>NSLocationAlwaysUsageDescription</key>` with a description string | Yes |
+| I3 | Location when-in-use permission | `ios/[AppName]/Info.plist` | `<key>NSLocationWhenInUseUsageDescription</key>` with a description string | Yes |
+| I4 | Location always+when-in-use permission | `ios/[AppName]/Info.plist` | `<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>` with a description string | Yes |
+| I5 | Background modes enabled | `ios/[AppName]/Info.plist` | `<key>UIBackgroundModes</key>` array containing `location` and `fetch` | Yes |
+| I6 | AppDelegate OkHi import (Swift) | `ios/[AppName]/AppDelegate.swift` | `import OkHi` at the top of the file | Yes (if Swift) |
+| I7 | AppDelegate OkHi import (Obj-C) | `ios/[AppName]/AppDelegate.mm` or `.m` | `@import OkHi;` at the top of the file | Yes (if Obj-C) |
+| I8 | AppDelegate startMonitoring (Swift) | `ios/[AppName]/AppDelegate.swift` | `OK.startMonitoring()` called in `application(_:didFinishLaunchingWithOptions:)` | Yes (if Swift) |
+| I9 | AppDelegate startMonitoring (Obj-C) | `ios/[AppName]/AppDelegate.mm` or `.m` | `[OK startMonitoring];` called in `application:didFinishLaunchingWithOptions:` | Yes (if Obj-C) |
+| I10 | Pods installed | `ios/Podfile.lock` | Contains `OkHi` pod entry | Yes |
+
+### Code Integration Checklist
+
+| # | Check | File(s) to Inspect | What to Look For | Required |
+|---|-------|-------------------|------------------|----------|
+| C1 | Library imported correctly | TypeScript/JavaScript source files | `import * as OkHi from 'react-native-okhi';` | Yes |
+| C2 | Login called before verification | TypeScript/JavaScript source files | `OkHi.login({ auth: { branchId, clientKey }, user: { ... } })` is called and awaited | Yes |
+| C3 | Login has valid auth config | TypeScript/JavaScript source files | `auth` object contains `branchId` and `clientKey` (non-empty strings) | Yes |
+| C4 | Login has valid user config | TypeScript/JavaScript source files | `user` object contains `firstName`, `lastName`, `phone` (international format), and optionally `email` | Yes |
+| C5 | Login called at appropriate time | TypeScript/JavaScript source files | Login is called after user authentication (e.g., in dashboard/home screen, not on app launch before auth) | Yes |
+| C6 | Verification function called | TypeScript/JavaScript source files | At least one of: `startDigitalAddressVerification()`, `startPhysicalAddressVerification()`, `startDigitalAndPhysicalAddressVerification()`, or `createAddress()` | Yes |
+| C7 | Error handling implemented | TypeScript/JavaScript source files | `try/catch` block around verification calls with `OkHiException` handling | Recommended |
+| C8 | User cancellation handled | TypeScript/JavaScript source files | Check for `OkHiException.USER_CLOSED` error code (user dismissed flow) | Recommended |
+| C9 | No manual permission requests | TypeScript/JavaScript source files | Should NOT have custom permission request logic before calling verification (SDK handles this) | Yes |
+
+### Audit Procedure for Agents
+
+When auditing an integration, follow these steps:
+
+1. **Identify project type**: Check if it's a bare React Native project or Expo project
+   - Expo: Look for `app.json` or `app.config.js` with `expo` key
+   - Bare: Standard React Native structure with `android/` and `ios/` directories
+
+2. **For Expo projects**: Verify `npx expo prebuild` was run (native directories exist)
+
+3. **Check Android configuration**:
+   ```bash
+   # Files to read:
+   android/build.gradle
+   android/app/build.gradle
+   android/app/src/main/AndroidManifest.xml
+   ```
+
+4. **Check iOS configuration**:
+   ```bash
+   # Files to read:
+   ios/Podfile
+   ios/[AppName]/Info.plist
+   ios/[AppName]/AppDelegate.swift  # or AppDelegate.mm
+   ```
+
+5. **Check code integration**:
+   ```bash
+   # Search for OkHi usage:
+   grep -r "react-native-okhi" src/
+   grep -r "OkHi.login" src/
+   grep -r "startDigitalAddressVerification\|startPhysicalAddressVerification\|createAddress" src/
+   ```
+
+6. **Report findings**: For each checklist item, report:
+   - ✅ **PASS**: Configuration is correct
+   - ❌ **FAIL**: Configuration is missing or incorrect (provide fix)
+   - ⚠️ **WARN**: Recommended but not required (provide suggestion)
+
+### Common Issues and Fixes
+
+| Issue | Symptom | Fix |
+|-------|---------|-----|
+| Maven repo missing | Build fails with "Could not resolve io.okhi..." | Add OkHi Maven URL to `android/build.gradle` |
+| minSdk too low | Build fails with SDK version error | Set `minSdkVersion = 24` in `android/build.gradle` |
+| Missing permissions (Android) | Runtime permission errors or crashes | Add all required `<uses-permission>` entries |
+| Missing Info.plist keys | iOS crashes or permission dialogs don't appear | Add all NSLocation*UsageDescription keys |
+| Background modes not enabled | Verification stops when app is backgrounded | Add `UIBackgroundModes` with `location` and `fetch` |
+| startMonitoring not called | iOS verification doesn't resume after app restart | Add `OK.startMonitoring()` to AppDelegate |
+| Login not called | `UNAUTHENTICATED` error on verification | Ensure `OkHi.login()` is called and awaited before verification |
+| Login called too early | Login fails or returns unexpected errors | Call login after user has authenticated in your app |
+| Manual permission handling | Permissions requested twice, poor UX | Remove custom permission logic; SDK handles permissions |
