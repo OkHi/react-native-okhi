@@ -34,8 +34,15 @@ export * from './types';
  * This must be called before any verification functions. It establishes
  * the user session and validates your API credentials.
  *
- * The login persists for the duration of the app session. You should call
- * this when your user signs in or when starting an address verification flow.
+ * **When to call login:** The login function should be called once you have
+ * an authenticated user in your app. A common place to call login is immediately
+ * after the app dashboard is rendered, for example in a banking app after a user
+ * successfully signs in.
+ *
+ * It initializes OkHi and enables your users to resume verification if they
+ * switch devices, as well as enables re-verification of previously unknown addresses.
+ *
+ * The login persists for the duration of the app session.
  *
  * @param credentials - The login configuration containing auth credentials and user info
  * @returns A promise that resolves with an array of permission strings that were granted,

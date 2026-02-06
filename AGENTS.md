@@ -295,6 +295,8 @@ import type {
 
 Login must be called before any verification. It initializes the SDK with your credentials and user information.
 
+> **When to call login:** The login function should be called once you have an authenticated user in your app. A common place to call login is immediately after the app dashboard is rendered, for example in a banking app after a user successfully signs in. It initializes OkHi and enables your users to resume verification if they switch devices, as well as enables re-verification of previously unknown addresses.
+
 ```typescript
 import * as OkHi from 'react-native-okhi';
 import type { OkHiLogin } from 'react-native-okhi';
@@ -542,6 +544,11 @@ export default function AddressVerificationScreen() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [address, setAddress] = useState<string | null>(null);
 
+  // Call login once you have an authenticated user in your app.
+  // A common place is immediately after the app dashboard is rendered,
+  // e.g., in a banking app after a user successfully signs in.
+  // It initializes OkHi and enables users to resume verification if they
+  // switch devices, as well as enables re-verification of previously unknown addresses.
   const handleLogin = async () => {
     const credentials: OkHiLogin = {
       auth: {
