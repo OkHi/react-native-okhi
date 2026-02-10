@@ -75,9 +75,9 @@ npx expo run:android
 
 ## Android Configuration
 
-### 1. Add OkHi Maven Repository
+### 1. Add OkHi Maven Repository and Kotlin Version
 
-Edit `android/build.gradle` to add the OkHi Maven repository:
+Edit `android/build.gradle` to add the OkHi Maven repository and ensure the Kotlin version is compatible:
 
 ```gradle
 buildscript {
@@ -87,7 +87,7 @@ buildscript {
         compileSdkVersion = 35
         targetSdkVersion = 35
         ndkVersion = "27.1.12297006"
-        kotlinVersion = "2.0.21"
+        kotlinVersion = "2.1.21" // REQUIRED: minimum 2.1.21 — the native OkHi Android SDK is compiled with Kotlin 2.1.21
     }
     repositories {
         google()
@@ -427,8 +427,8 @@ try {
         console.log('Invalid phone number');
         break;
       case OkHi.OkHiException.SERVICE_UNAVAILABLE:
-        // OkHi service is down
-        console.log('Service temporarily unavailable');
+        // Device service is down
+        console.log('location services unavailable');
         break;
       case OkHi.OkHiException.UNSUPPORTED_DEVICE:
         // Device not supported (e.g., no Play Services)
@@ -454,7 +454,7 @@ try {
 | `permission_denied`   | `OkHiException.PERMISSION_DENIED`   | Location permission not granted      |
 | `unauthenticated`     | `OkHiException.UNAUTHENTICATED`     | Must call `login()` first            |
 | `invalid_phone`       | `OkHiException.INVALID_PHONE`       | Phone number format invalid          |
-| `service_unavailable` | `OkHiException.SERVICE_UNAVAILABLE` | OkHi service temporarily down        |
+| `service_unavailable` | `OkHiException.SERVICE_UNAVAILABLE` | Location services unavailable         |
 | `unsupported_device`  | `OkHiException.UNSUPPORTED_DEVICE`  | Device not supported                 |
 | `fatal_exit`          | `OkHiException.FATAL_EXIT`          | SDK crashed unexpectedly             |
 | `unknown`             | `OkHiException.UNKNOWN`             | Unexpected error                     |
@@ -660,22 +660,36 @@ export default function AddressVerificationScreen() {
 
 ### Types
 
-| Type                  | Description                                             |
-| --------------------- | ------------------------------------------------------- |
-| `OkHiLogin`           | Login configuration (auth + user + options)             |
-| `OkHiAuth`            | Authentication credentials (branchId, clientKey)        |
-| `OkHiUser`            | User information (name, phone, email)                   |
-| `OkCollect`           | Verification UI configuration                           |
-| `OkCollectStyle`      | UI styling (color, logo)                                |
-| `OkCollectConfig`     | UI behavior (streetView, addressTypes)                  |
-| `OkHiSuccessResponse` | Verification result (user + location)                   |
-| `OkHiLocation`        | Address data (id, coordinates, formatted address, etc.) |
-| `OkHiException`       | Error class with code and message                       |
-| `OkHiErrorCode`       | Union type of all error codes                           |
+| Type                  | Description                                                |
+| --------------------- | ---------------------------------------------------------- |
+| `OkHiLogin`           | Login configuration (auth + user + options)                |
+| `OkHiAuth`            | Authentication credentials (branchId, clientKey)           |
+| `OkHiUser`            | User information (name, phone, email)                      |
+| `OkCollect`           | Address Collection UI configuration                        |
+| `OkCollectStyle`      | UI styling (color, logo)                                   |
+| `OkCollectConfig`     | UI behavior (streetView, addressTypes)                     |
+| `OkHiSuccessResponse` | verification started successfully result (user + location) |
+| `OkHiLocation`        | Address data (id, coordinates, formatted address, etc.)    |
+| `OkHiException`       | Error class with code and message                          |
+| `OkHiErrorCode`       | Union type of all error codes                              |
 
 ---
 
 ## Troubleshooting
+
+### Android: Kotlin compilation error (`compileDebugKotlin FAILED`)
+
+The native OkHi Android SDK (`io.okhi.android:okhi`) is compiled with **Kotlin 2.1.21**. If the app uses a lower Kotlin version (e.g., 1.9.x), the build will fail with a `compileDebugKotlin` error. Fix by setting `kotlinVersion` in `android/build.gradle`:
+
+```gradle
+buildscript {
+    ext {
+        kotlinVersion = "2.1.21" // Must be >= 2.1.21
+    }
+}
+```
+
+> **Note:** The library's `getExtOrDefault` function uses the app's `kotlinVersion` if set, and only falls back to the library's default otherwise. So the app **must** set a compatible version.
 
 ### Android: "Maven repository not found"
 
@@ -721,58 +735,61 @@ Use this checklist to verify that a React Native project has correctly integrate
 
 ### Android Checklist
 
-| # | Check | File(s) to Inspect | What to Look For | Required |
-|---|-------|-------------------|------------------|----------|
-| A1 | OkHi Maven repository | `android/build.gradle` | `maven { url "https://repo.okhi.io/artifactory/maven" }` in `allprojects.repositories` block | Yes |
-| A2 | Minimum SDK version | `android/build.gradle` or `android/app/build.gradle` | `minSdkVersion >= 24` (or `minSdk >= 24`) | Yes |
-| A3 | Fine location permission | `android/app/src/main/AndroidManifest.xml` | `<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />` | Yes |
-| A4 | Coarse location permission | `android/app/src/main/AndroidManifest.xml` | `<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />` | Yes |
-| A5 | Background location permission | `android/app/src/main/AndroidManifest.xml` | `<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />` | Yes |
-| A6 | Internet permission | `android/app/src/main/AndroidManifest.xml` | `<uses-permission android:name="android.permission.INTERNET" />` | Yes |
-| A7 | Post notifications permission | `android/app/src/main/AndroidManifest.xml` | `<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />` | Yes |
-| A8 | Foreground service permission | `android/app/src/main/AndroidManifest.xml` | `<uses-permission android:name="android.permission.FOREGROUND_SERVICE" ... />` | Yes |
-| A9 | Foreground service location permission | `android/app/src/main/AndroidManifest.xml` | `<uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />` | Yes |
+| #   | Check                                  | File(s) to Inspect                                   | What to Look For                                                                             | Required |
+| --- | -------------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------- |
+| A1  | OkHi Maven repository                  | `android/build.gradle`                               | `maven { url "https://repo.okhi.io/artifactory/maven" }` in `allprojects.repositories` block | Yes      |
+| A2  | Kotlin version >= 2.1.21               | `android/build.gradle`                               | `kotlinVersion = "2.1.21"` (or higher) in `buildscript.ext`                                  | Yes      |
+| A3  | Minimum SDK version                    | `android/build.gradle` or `android/app/build.gradle` | `minSdkVersion >= 24` (or `minSdk >= 24`)                                                    | Yes      |
+| A4  | Fine location permission               | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />`                 | Yes      |
+| A5  | Coarse location permission             | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />`               | Yes      |
+| A6  | Background location permission         | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />`           | Yes      |
+| A7  | Internet permission                    | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.INTERNET" />`                             | Yes      |
+| A8  | Post notifications permission          | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />`                   | Yes      |
+| A9  | Foreground service permission          | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.FOREGROUND_SERVICE" ... />`               | Yes      |
+| A10 | Foreground service location permission | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />`          | Yes      |
 
 ### iOS Checklist
 
-| # | Check | File(s) to Inspect | What to Look For | Required |
-|---|-------|-------------------|------------------|----------|
-| I1 | Minimum iOS version | `ios/Podfile` or Xcode project | `platform :ios, '12.0'` or higher | Yes |
-| I2 | Location always permission | `ios/[AppName]/Info.plist` | `<key>NSLocationAlwaysUsageDescription</key>` with a description string | Yes |
-| I3 | Location when-in-use permission | `ios/[AppName]/Info.plist` | `<key>NSLocationWhenInUseUsageDescription</key>` with a description string | Yes |
-| I4 | Location always+when-in-use permission | `ios/[AppName]/Info.plist` | `<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>` with a description string | Yes |
-| I5 | Background modes enabled | `ios/[AppName]/Info.plist` | `<key>UIBackgroundModes</key>` array containing `location` and `fetch` | Yes |
-| I6 | AppDelegate OkHi import (Swift) | `ios/[AppName]/AppDelegate.swift` | `import OkHi` at the top of the file | Yes (if Swift) |
-| I7 | AppDelegate OkHi import (Obj-C) | `ios/[AppName]/AppDelegate.mm` or `.m` | `@import OkHi;` at the top of the file | Yes (if Obj-C) |
-| I8 | AppDelegate startMonitoring (Swift) | `ios/[AppName]/AppDelegate.swift` | `OK.startMonitoring()` called in `application(_:didFinishLaunchingWithOptions:)` | Yes (if Swift) |
-| I9 | AppDelegate startMonitoring (Obj-C) | `ios/[AppName]/AppDelegate.mm` or `.m` | `[OK startMonitoring];` called in `application:didFinishLaunchingWithOptions:` | Yes (if Obj-C) |
-| I10 | Pods installed | `ios/Podfile.lock` | Contains `OkHi` pod entry | Yes |
+| #   | Check                                  | File(s) to Inspect                     | What to Look For                                                                    | Required       |
+| --- | -------------------------------------- | -------------------------------------- | ----------------------------------------------------------------------------------- | -------------- |
+| I1  | Minimum iOS version                    | `ios/Podfile` or Xcode project         | `platform :ios, '12.0'` or higher                                                   | Yes            |
+| I2  | Location always permission             | `ios/[AppName]/Info.plist`             | `<key>NSLocationAlwaysUsageDescription</key>` with a description string             | Yes            |
+| I3  | Location when-in-use permission        | `ios/[AppName]/Info.plist`             | `<key>NSLocationWhenInUseUsageDescription</key>` with a description string          | Yes            |
+| I4  | Location always+when-in-use permission | `ios/[AppName]/Info.plist`             | `<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>` with a description string | Yes            |
+| I5  | Background modes enabled               | `ios/[AppName]/Info.plist`             | `<key>UIBackgroundModes</key>` array containing `location` and `fetch`              | Yes            |
+| I6  | AppDelegate OkHi import (Swift)        | `ios/[AppName]/AppDelegate.swift`      | `import OkHi` at the top of the file                                                | Yes (if Swift) |
+| I7  | AppDelegate OkHi import (Obj-C)        | `ios/[AppName]/AppDelegate.mm` or `.m` | `@import OkHi;` at the top of the file                                              | Yes (if Obj-C) |
+| I8  | AppDelegate startMonitoring (Swift)    | `ios/[AppName]/AppDelegate.swift`      | `OK.startMonitoring()` called in `application(_:didFinishLaunchingWithOptions:)`    | Yes (if Swift) |
+| I9  | AppDelegate startMonitoring (Obj-C)    | `ios/[AppName]/AppDelegate.mm` or `.m` | `[OK startMonitoring];` called in `application:didFinishLaunchingWithOptions:`      | Yes (if Obj-C) |
+| I10 | Pods installed                         | `ios/Podfile.lock`                     | Contains `OkHi` pod entry                                                           | Yes            |
 
 ### Code Integration Checklist
 
-| # | Check | File(s) to Inspect | What to Look For | Required |
-|---|-------|-------------------|------------------|----------|
-| C1 | Library imported correctly | TypeScript/JavaScript source files | `import * as OkHi from 'react-native-okhi';` | Yes |
-| C2 | Login called before verification | TypeScript/JavaScript source files | `OkHi.login({ auth: { branchId, clientKey }, user: { ... } })` is called and awaited | Yes |
-| C3 | Login has valid auth config | TypeScript/JavaScript source files | `auth` object contains `branchId` and `clientKey` (non-empty strings) | Yes |
-| C4 | Login has valid user config | TypeScript/JavaScript source files | `user` object contains `firstName`, `lastName`, `phone` (international format), and optionally `email` | Yes |
-| C5 | Login called at appropriate time | TypeScript/JavaScript source files | Login is called after user authentication (e.g., in dashboard/home screen, not on app launch before auth) | Yes |
-| C6 | Verification function called | TypeScript/JavaScript source files | At least one of: `startDigitalAddressVerification()`, `startPhysicalAddressVerification()`, `startDigitalAndPhysicalAddressVerification()`, or `createAddress()` | Yes |
-| C7 | Error handling implemented | TypeScript/JavaScript source files | `try/catch` block around verification calls with `OkHiException` handling | Recommended |
-| C8 | User cancellation handled | TypeScript/JavaScript source files | Check for `OkHiException.USER_CLOSED` error code (user dismissed flow) | Recommended |
-| C9 | No manual permission requests | TypeScript/JavaScript source files | Should NOT have custom permission request logic before calling verification (SDK handles this) | Yes |
+| #   | Check                            | File(s) to Inspect                 | What to Look For                                                                                                                                                 | Required    |
+| --- | -------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| C1  | Library imported correctly       | TypeScript/JavaScript source files | `import * as OkHi from 'react-native-okhi';`                                                                                                                     | Yes         |
+| C2  | Login called before verification | TypeScript/JavaScript source files | `OkHi.login({ auth: { branchId, clientKey }, user: { ... } })` is called and awaited                                                                             | Yes         |
+| C3  | Login has valid auth config      | TypeScript/JavaScript source files | `auth` object contains `branchId` and `clientKey` (non-empty strings)                                                                                            | Yes         |
+| C4  | Login has valid user config      | TypeScript/JavaScript source files | `user` object contains `firstName`, `lastName`, `phone` (international format), and optionally `email`                                                           | Yes         |
+| C5  | Login called at appropriate time | TypeScript/JavaScript source files | Login is called after user authentication (e.g., in dashboard/home screen, not on app launch before auth)                                                        | Yes         |
+| C6  | Verification function called     | TypeScript/JavaScript source files | At least one of: `startDigitalAddressVerification()`, `startPhysicalAddressVerification()`, `startDigitalAndPhysicalAddressVerification()`, or `createAddress()` | Yes         |
+| C7  | Error handling implemented       | TypeScript/JavaScript source files | `try/catch` block around verification calls with `OkHiException` handling                                                                                        | Recommended |
+| C8  | User cancellation handled        | TypeScript/JavaScript source files | Check for `OkHiException.USER_CLOSED` error code (user dismissed flow)                                                                                           | Recommended |
+| C9  | No manual permission requests    | TypeScript/JavaScript source files | Should NOT have custom permission request logic before calling verification (SDK handles this)                                                                   | Yes         |
 
 ### Audit Procedure for Agents
 
 When auditing an integration, follow these steps:
 
 1. **Identify project type**: Check if it's a bare React Native project or Expo project
+
    - Expo: Look for `app.json` or `app.config.js` with `expo` key
    - Bare: Standard React Native structure with `android/` and `ios/` directories
 
 2. **For Expo projects**: Verify `npx expo prebuild` was run (native directories exist)
 
 3. **Check Android configuration**:
+
    ```bash
    # Files to read:
    android/build.gradle
@@ -781,6 +798,7 @@ When auditing an integration, follow these steps:
    ```
 
 4. **Check iOS configuration**:
+
    ```bash
    # Files to read:
    ios/Podfile
@@ -789,6 +807,7 @@ When auditing an integration, follow these steps:
    ```
 
 5. **Check code integration**:
+
    ```bash
    # Search for OkHi usage:
    grep -r "react-native-okhi" src/
@@ -803,14 +822,15 @@ When auditing an integration, follow these steps:
 
 ### Common Issues and Fixes
 
-| Issue | Symptom | Fix |
-|-------|---------|-----|
-| Maven repo missing | Build fails with "Could not resolve io.okhi..." | Add OkHi Maven URL to `android/build.gradle` |
-| minSdk too low | Build fails with SDK version error | Set `minSdkVersion = 24` in `android/build.gradle` |
-| Missing permissions (Android) | Runtime permission errors or crashes | Add all required `<uses-permission>` entries |
-| Missing Info.plist keys | iOS crashes or permission dialogs don't appear | Add all NSLocation*UsageDescription keys |
-| Background modes not enabled | Verification stops when app is backgrounded | Add `UIBackgroundModes` with `location` and `fetch` |
-| startMonitoring not called | iOS verification doesn't resume after app restart | Add `OK.startMonitoring()` to AppDelegate |
-| Login not called | `UNAUTHENTICATED` error on verification | Ensure `OkHi.login()` is called and awaited before verification |
-| Login called too early | Login fails or returns unexpected errors | Call login after user has authenticated in your app |
-| Manual permission handling | Permissions requested twice, poor UX | Remove custom permission logic; SDK handles permissions |
+| Issue                         | Symptom                                           | Fix                                                             |
+| ----------------------------- | ------------------------------------------------- | --------------------------------------------------------------- |
+| Kotlin version too low        | `compileDebugKotlin FAILED` during Android build  | Set `kotlinVersion = "2.1.21"` in app's `android/build.gradle`  |
+| Maven repo missing            | Build fails with "Could not resolve io.okhi..."   | Add OkHi Maven URL to `android/build.gradle`                    |
+| minSdk too low                | Build fails with SDK version error                | Set `minSdkVersion = 24` in `android/build.gradle`              |
+| Missing permissions (Android) | Runtime permission errors or crashes              | Add all required `<uses-permission>` entries                    |
+| Missing Info.plist keys       | iOS crashes or permission dialogs don't appear    | Add all NSLocation\*UsageDescription keys                       |
+| Background modes not enabled  | Verification stops when app is backgrounded       | Add `UIBackgroundModes` with `location` and `fetch`             |
+| startMonitoring not called    | iOS verification doesn't resume after app restart | Add `OK.startMonitoring()` to AppDelegate                       |
+| Login not called              | `UNAUTHENTICATED` error on verification           | Ensure `OkHi.login()` is called and awaited before verification |
+| Login called too early        | Login fails or returns unexpected errors          | Call login after user has authenticated in your app             |
+| Manual permission handling    | Permissions requested twice, poor UX              | Remove custom permission logic; SDK handles permissions         |
