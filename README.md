@@ -172,6 +172,11 @@ export default function Dashboard() {
 }
 ```
 
+## Documentation
+
+- [Official Guide](https://docs.okhi.com/latest/code-libraries/react-native-guide) — Full integration guide
+- [AGENTS.md](./AGENTS.md) — AI agent integration reference
+
 ## License
 
 MIT © [OkHi](https://okhi.co)
