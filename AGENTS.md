@@ -454,7 +454,7 @@ try {
 | `permission_denied`   | `OkHiException.PERMISSION_DENIED`   | Location permission not granted      |
 | `unauthenticated`     | `OkHiException.UNAUTHENTICATED`     | Must call `login()` first            |
 | `invalid_phone`       | `OkHiException.INVALID_PHONE`       | Phone number format invalid          |
-| `service_unavailable` | `OkHiException.SERVICE_UNAVAILABLE` | OkHi service temporarily down        |
+| `service_unavailable` | `OkHiException.SERVICE_UNAVAILABLE` | Location services unavailable         |
 | `unsupported_device`  | `OkHiException.UNSUPPORTED_DEVICE`  | Device not supported                 |
 | `fatal_exit`          | `OkHiException.FATAL_EXIT`          | SDK crashed unexpectedly             |
 | `unknown`             | `OkHiException.UNKNOWN`             | Unexpected error                     |
