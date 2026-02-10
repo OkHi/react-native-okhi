@@ -75,9 +75,9 @@ npx expo run:android
 
 ## Android Configuration
 
-### 1. Add OkHi Maven Repository
+### 1. Add OkHi Maven Repository and Kotlin Version
 
-Edit `android/build.gradle` to add the OkHi Maven repository:
+Edit `android/build.gradle` to add the OkHi Maven repository and ensure the Kotlin version is compatible:
 
 ```gradle
 buildscript {
@@ -87,7 +87,7 @@ buildscript {
         compileSdkVersion = 35
         targetSdkVersion = 35
         ndkVersion = "27.1.12297006"
-        kotlinVersion = "2.0.21"
+        kotlinVersion = "2.1.21" // REQUIRED: minimum 2.1.21 — the native OkHi Android SDK is compiled with Kotlin 2.1.21
     }
     repositories {
         google()
@@ -677,6 +677,20 @@ export default function AddressVerificationScreen() {
 
 ## Troubleshooting
 
+### Android: Kotlin compilation error (`compileDebugKotlin FAILED`)
+
+The native OkHi Android SDK (`io.okhi.android:okhi`) is compiled with **Kotlin 2.1.21**. If the app uses a lower Kotlin version (e.g., 1.9.x), the build will fail with a `compileDebugKotlin` error. Fix by setting `kotlinVersion` in `android/build.gradle`:
+
+```gradle
+buildscript {
+    ext {
+        kotlinVersion = "2.1.21" // Must be >= 2.1.21
+    }
+}
+```
+
+> **Note:** The library's `getExtOrDefault` function uses the app's `kotlinVersion` if set, and only falls back to the library's default otherwise. So the app **must** set a compatible version.
+
 ### Android: "Maven repository not found"
 
 Ensure you added the OkHi Maven repository to `android/build.gradle` in the `allprojects.repositories` block.
@@ -724,14 +738,15 @@ Use this checklist to verify that a React Native project has correctly integrate
 | #   | Check                                  | File(s) to Inspect                                   | What to Look For                                                                             | Required |
 | --- | -------------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------- |
 | A1  | OkHi Maven repository                  | `android/build.gradle`                               | `maven { url "https://repo.okhi.io/artifactory/maven" }` in `allprojects.repositories` block | Yes      |
-| A2  | Minimum SDK version                    | `android/build.gradle` or `android/app/build.gradle` | `minSdkVersion >= 24` (or `minSdk >= 24`)                                                    | Yes      |
-| A3  | Fine location permission               | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />`                 | Yes      |
-| A4  | Coarse location permission             | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />`               | Yes      |
-| A5  | Background location permission         | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />`           | Yes      |
-| A6  | Internet permission                    | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.INTERNET" />`                             | Yes      |
-| A7  | Post notifications permission          | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />`                   | Yes      |
-| A8  | Foreground service permission          | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.FOREGROUND_SERVICE" ... />`               | Yes      |
-| A9  | Foreground service location permission | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />`          | Yes      |
+| A2  | Kotlin version >= 2.1.21               | `android/build.gradle`                               | `kotlinVersion = "2.1.21"` (or higher) in `buildscript.ext`                                  | Yes      |
+| A3  | Minimum SDK version                    | `android/build.gradle` or `android/app/build.gradle` | `minSdkVersion >= 24` (or `minSdk >= 24`)                                                    | Yes      |
+| A4  | Fine location permission               | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />`                 | Yes      |
+| A5  | Coarse location permission             | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />`               | Yes      |
+| A6  | Background location permission         | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />`           | Yes      |
+| A7  | Internet permission                    | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.INTERNET" />`                             | Yes      |
+| A8  | Post notifications permission          | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />`                   | Yes      |
+| A9  | Foreground service permission          | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.FOREGROUND_SERVICE" ... />`               | Yes      |
+| A10 | Foreground service location permission | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />`          | Yes      |
 
 ### iOS Checklist
 
@@ -809,6 +824,7 @@ When auditing an integration, follow these steps:
 
 | Issue                         | Symptom                                           | Fix                                                             |
 | ----------------------------- | ------------------------------------------------- | --------------------------------------------------------------- |
+| Kotlin version too low        | `compileDebugKotlin FAILED` during Android build  | Set `kotlinVersion = "2.1.21"` in app's `android/build.gradle`  |
 | Maven repo missing            | Build fails with "Could not resolve io.okhi..."   | Add OkHi Maven URL to `android/build.gradle`                    |
 | minSdk too low                | Build fails with SDK version error                | Set `minSdkVersion = 24` in `android/build.gradle`              |
 | Missing permissions (Android) | Runtime permission errors or crashes              | Add all required `<uses-permission>` entries                    |
