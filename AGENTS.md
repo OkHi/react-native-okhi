@@ -87,7 +87,7 @@ buildscript {
         compileSdkVersion = 35
         targetSdkVersion = 35
         ndkVersion = "27.1.12297006"
-        kotlinVersion = "2.1.21" // REQUIRED: minimum 2.1.21 — the native OkHi Android SDK is compiled with Kotlin 2.1.21
+        kotlinVersion = "2.0.21" // REQUIRED: minimum 2.0.21 — the native OkHi Android SDK produces Kotlin 2.0.0 metadata
     }
     repositories {
         google()
@@ -679,17 +679,19 @@ export default function AddressVerificationScreen() {
 
 ### Android: Kotlin compilation error (`compileDebugKotlin FAILED`)
 
-The native OkHi Android SDK (`io.okhi.android:okhi`) is compiled with **Kotlin 2.1.21**. If the app uses a lower Kotlin version (e.g., 1.9.x), the build will fail with a `compileDebugKotlin` error. Fix by setting `kotlinVersion` in `android/build.gradle`:
+The native OkHi Android SDK (`io.okhi.android:okhi`) produces **Kotlin 2.0.0 metadata**. If the app uses a Kotlin version below 2.0 (e.g., 1.9.x), the build will fail with a `compileDebugKotlin` error because Kotlin 1.9 can only read metadata up to 2.0.0. Fix by setting `kotlinVersion` in `android/build.gradle`:
 
 ```gradle
 buildscript {
     ext {
-        kotlinVersion = "2.1.21" // Must be >= 2.1.21
+        kotlinVersion = "2.0.21" // Must be >= 2.0.21
     }
 }
 ```
 
-> **Note:** The library's `getExtOrDefault` function uses the app's `kotlinVersion` if set, and only falls back to the library's default otherwise. So the app **must** set a compatible version.
+> **Note:** The library's `getExtOrDefault` function uses the app's `kotlinVersion` if set, and only falls back to the library's default otherwise. So the app **must** set a compatible version (>= 2.0.21).
+>
+> Apps on Kotlin 1.9.x **must** upgrade to at least 2.0.21. Kotlin 2.0 is backwards compatible with 1.9 source code.
 
 ### Android: "Maven repository not found"
 
@@ -738,7 +740,7 @@ Use this checklist to verify that a React Native project has correctly integrate
 | #   | Check                                  | File(s) to Inspect                                   | What to Look For                                                                             | Required |
 | --- | -------------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------- |
 | A1  | OkHi Maven repository                  | `android/build.gradle`                               | `maven { url "https://repo.okhi.io/artifactory/maven" }` in `allprojects.repositories` block | Yes      |
-| A2  | Kotlin version >= 2.1.21               | `android/build.gradle`                               | `kotlinVersion = "2.1.21"` (or higher) in `buildscript.ext`                                  | Yes      |
+| A2  | Kotlin version >= 2.0.21               | `android/build.gradle`                               | `kotlinVersion = "2.0.21"` (or higher) in `buildscript.ext`                                  | Yes      |
 | A3  | Minimum SDK version                    | `android/build.gradle` or `android/app/build.gradle` | `minSdkVersion >= 24` (or `minSdk >= 24`)                                                    | Yes      |
 | A4  | Fine location permission               | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />`                 | Yes      |
 | A5  | Coarse location permission             | `android/app/src/main/AndroidManifest.xml`           | `<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />`               | Yes      |
@@ -824,7 +826,7 @@ When auditing an integration, follow these steps:
 
 | Issue                         | Symptom                                           | Fix                                                             |
 | ----------------------------- | ------------------------------------------------- | --------------------------------------------------------------- |
-| Kotlin version too low        | `compileDebugKotlin FAILED` during Android build  | Set `kotlinVersion = "2.1.21"` in app's `android/build.gradle`  |
+| Kotlin version too low        | `compileDebugKotlin FAILED` during Android build  | Set `kotlinVersion = "2.0.21"` in app's `android/build.gradle`  |
 | Maven repo missing            | Build fails with "Could not resolve io.okhi..."   | Add OkHi Maven URL to `android/build.gradle`                    |
 | minSdk too low                | Build fails with SDK version error                | Set `minSdkVersion = 24` in `android/build.gradle`              |
 | Missing permissions (Android) | Runtime permission errors or crashes              | Add all required `<uses-permission>` entries                    |
