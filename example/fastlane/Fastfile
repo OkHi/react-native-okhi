@@ -22,7 +22,8 @@ platform :ios do
       configuration: "Release",
       clean: true,
       output_directory: "./build",
-      output_name: "OkHiApp.ipa"
+      output_name: "OkHiApp.ipa",
+      xcargs: "-allowProvisioningUpdates"
     )
 
     upload_to_testflight(
