@@ -31,7 +31,7 @@ jobs:
           xcode-version: ${{ env.XCODE_VERSION }}
 
       - name: Setup Ruby
-        uses: ruby/setup-ruby@a4ebc64b8e1286a1a0be3cdc5a13371289795bbe # v1.237.0
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3'
           bundler-cache: false
