@@ -1,6 +1,6 @@
 {
   "name": "react-native-okhi",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "The OkHi React Native library enables you to collect and verify addresses from your users",
   "license": "MIT",
   "repository": "https://github.com/OkHi/react-native-okhi",

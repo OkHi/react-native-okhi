@@ -85,6 +85,29 @@ export function login(credentials: OkHiLogin): Promise<string[] | null> {
   });
 }
 
+// Converts snake_case keys to camelCase recursively
+function toCamelCase(obj: Record<string, unknown>): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
+  for (const key of Object.keys(obj)) {
+    const camelKey = key.replace(/_([a-z])/g, (_, letter) =>
+      letter.toUpperCase()
+    );
+    const value = obj[key];
+    if (Array.isArray(value)) {
+      result[camelKey] = value.map((item) =>
+        item !== null && typeof item === 'object' && !Array.isArray(item)
+          ? toCamelCase(item as Record<string, unknown>)
+          : item
+      );
+    } else if (value !== null && typeof value === 'object') {
+      result[camelKey] = toCamelCase(value as Record<string, unknown>);
+    } else {
+      result[camelKey] = value;
+    }
+  }
+  return result;
+}
+
 // Helper to build config with defaults
 function buildConfig(okcollect?: OkCollect) {
   return {
@@ -116,7 +139,9 @@ function processVerificationResponse(
     if (response != null) {
       resolve({
         user: JSON.parse(res.user),
-        location: JSON.parse(res.location),
+        location: toCamelCase(
+          JSON.parse(res.location)
+        ) as OkHiSuccessResponse['location'],
       });
     } else if (error != null) {
       const err = error as { code?: string; message?: string };
