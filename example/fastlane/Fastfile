@@ -23,7 +23,7 @@ platform :ios do
       clean: true,
       output_directory: "./build",
       output_name: "OkHiApp.ipa",
-      xcargs: "-allowProvisioningUpdates"
+      xcargs: "-allowProvisioningUpdates -authenticationKeyPath '#{ENV["ASC_KEY_P8_PATH"]}' -authenticationKeyID '#{ENV["ASC_KEY_ID"]}' -authenticationKeyIssuerID '#{ENV["ASC_ISSUER_ID"]}'"
     )
 
     upload_to_testflight(
