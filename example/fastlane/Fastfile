@@ -19,6 +19,7 @@ platform :ios do
       workspace: "ios/OkHiApp.xcworkspace",
       scheme: "OkHiApp",
       export_method: "app-store",
+      export_team_id: "ZV9VNGTKRL",
       configuration: "Release",
       clean: true,
       output_directory: "./build",

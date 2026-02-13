@@ -59,18 +59,18 @@ jobs:
         env:
           ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
         run: |
-          mkdir -p ~/private_keys
-          echo "$ASC_KEY_P8" > ~/private_keys/AuthKey.p8
+          mkdir -p $HOME/private_keys
+          echo "$ASC_KEY_P8" > $HOME/private_keys/AuthKey.p8
+          echo "ASC_KEY_P8_PATH=$HOME/private_keys/AuthKey.p8" >> $GITHUB_ENV
 
       - name: Build and upload to TestFlight
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
-          ASC_KEY_P8_PATH: ~/private_keys/AuthKey.p8
         run: |
           cd example
           bundle exec fastlane beta
 
       - name: Cleanup API key
         if: always()
-        run: rm -f ~/private_keys/AuthKey.p8
+        run: rm -f $HOME/private_keys/AuthKey.p8
