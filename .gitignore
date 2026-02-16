@@ -84,3 +84,7 @@ android/generated
 
 # React Native Nitro Modules
 nitrogen/
+
+# Fastlane
+example/fastlane/report.xml
+example/fastlane/README.md
