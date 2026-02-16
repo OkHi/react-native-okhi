@@ -8,7 +8,7 @@ PODS:
   - hermes-engine (0.14.0):
     - hermes-engine/Pre-built (= 0.14.0)
   - hermes-engine/Pre-built (0.14.0)
-  - OkHi (1.10.11)
+  - OkHi (1.10.12)
   - RCT-Folly (2024.11.18.00):
     - boost
     - DoubleConversion
@@ -2537,14 +2537,14 @@ PODS:
     - React-perflogger (= 0.83.0)
     - React-utils (= 0.83.0)
     - SocketRocket
-  - ReactNativeOkHi (2.0.4):
+  - ReactNativeOkHi (2.0.5):
     - boost
     - DoubleConversion
     - fast_float
     - fmt
     - glog
     - hermes-engine
-    - OkHi (= 1.10.11)
+    - OkHi (= 1.10.12)
     - RCT-Folly
     - RCT-Folly/Fabric
     - RCTRequired
@@ -2981,7 +2981,7 @@ SPEC CHECKSUMS:
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
   hermes-engine: 9653d3d352f70adb2b47ef2b26c4d8fbc700716e
-  OkHi: 75e90e324b00643c92bb9c1b556cfa7cd0b7a4bd
+  OkHi: 4d650aba5965f3c376cab72d4b90c9c28cb8802e
   RCT-Folly: 59ec0ac1f2f39672a0c6e6cecdd39383b764646f
   RCTDeprecation: 2b70c6e3abe00396cefd8913efbf6a2db01a2b36
   RCTRequired: f3540eee8094231581d40c5c6d41b0f170237a81
@@ -3052,7 +3052,7 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: 23e2bca1661f8781e55fcc05a151fc1df97bc1fb
   ReactCodegen: 10a61330b137caaad6f7fbe7f5d0e7a40d621700
   ReactCommon: c6cd81778336e767e27fe63c6707dd6b735fff5c
-  ReactNativeOkHi: a6263d03d2a95c0c9e61a46846f4a3e803a320cb
+  ReactNativeOkHi: 9be2277c03acb21c02f575bc01b3d2290f54b864
   RNCAsyncStorage: 302f2fac014fd450046c120567ca364632da682b
   RNCClipboard: 962296f7af77f6c039b683e21c2e2255af9c05df
   RNGestureHandler: 77eecab5fd636666ca73a55bb61e2f1a685b7e84
