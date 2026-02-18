@@ -253,12 +253,15 @@ export function VerificationScreen({ navigation }: any) {
     try {
       const result = await OkHi.logout();
       setLogoutResult(result);
+      console.log('ran result', result);
     } catch {
       setLogoutResult(null);
     } finally {
       setIsLoggingOut(false);
       setShowSettings(false);
-      setShowLogoutResult(true);
+      // Delay until the bottom sheet's close animation (220ms) finishes.
+      // On iOS, a second Modal won't present while another is still animating.
+      setTimeout(() => setShowLogoutResult(true), 300);
     }
   };
 
