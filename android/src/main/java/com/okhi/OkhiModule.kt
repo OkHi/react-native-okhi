@@ -102,7 +102,7 @@ class OkhiModule(reactContext: ReactApplicationContext) : NativeOkhiSpec(reactCo
   }
 
   override fun logout(callback: Callback?) {
-    OkHi.logout(reactApplicationContext) { results ->
+    OkHi.logout(reactApplicationContext.applicationContext) { results ->
       if (results != null) {
         val writableArray = Arguments.createArray()
         for (result in results) {
