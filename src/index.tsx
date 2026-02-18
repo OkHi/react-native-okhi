@@ -380,6 +380,30 @@ export function createAddress(
   });
 }
 
+/**
+ * Logs out the current user and stops all active address verifications.
+ *
+ * @returns A promise that resolves with an array of location IDs whose
+ * verification was stopped, or `null` if no verifications were active.
+ *
+ * @example
+ * ```typescript
+ * import * as OkHi from 'react-native-okhi';
+ *
+ * const stoppedLocationIds = await OkHi.logout();
+ * if (stoppedLocationIds) {
+ *   console.log('Stopped verification for:', stoppedLocationIds);
+ * }
+ * ```
+ *
+ * @see {@link login} - To log in a user
+ */
+export function logout(): Promise<string[] | null> {
+  return new Promise((resolve) => {
+    Okhi.logout(resolve);
+  });
+}
+
 // Helper to process boolean response
 function processBooleanResponse(
   result: unknown,
