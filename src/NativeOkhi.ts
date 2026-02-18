@@ -5,6 +5,7 @@ export interface Spec extends TurboModule {
     credentials: Object,
     callback: (results: string[] | null) => void
   ): void;
+  logout(callback: (results: string[] | null) => void): void;
   startDigitalAddressVerification(
     okcollect: Object,
     callback: (result?: Object, error?: Object) => void

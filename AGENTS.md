@@ -82,10 +82,10 @@ Edit `android/build.gradle` to add the OkHi Maven repository and ensure the Kotl
 ```gradle
 buildscript {
     ext {
-        buildToolsVersion = "35.0.0"
+        buildToolsVersion = "36.0.0"
         minSdkVersion = 24
-        compileSdkVersion = 35
-        targetSdkVersion = 35
+        compileSdkVersion = 36
+        targetSdkVersion = 36
         ndkVersion = "27.1.12297006"
         kotlinVersion = "2.0.21" // REQUIRED: minimum 2.0.21 — the native OkHi Android SDK produces Kotlin 2.0.0 metadata
     }
@@ -115,11 +115,11 @@ Ensure `android/app/build.gradle` has the correct SDK versions:
 
 ```gradle
 android {
-    compileSdk = 35  // or higher
+    compileSdk = 36  // or higher
 
     defaultConfig {
         minSdk = 24      // minimum 21, recommended 24
-        targetSdk = 35   // or higher
+        targetSdk = 36   // or higher
     }
 }
 ```
