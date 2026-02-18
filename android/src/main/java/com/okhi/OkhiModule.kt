@@ -101,6 +101,20 @@ class OkhiModule(reactContext: ReactApplicationContext) : NativeOkhiSpec(reactCo
     }
   }
 
+  override fun logout(callback: Callback?) {
+    OkHi.logout(reactApplicationContext) { results ->
+      if (results != null) {
+        val writableArray = Arguments.createArray()
+        for (result in results) {
+          writableArray.pushString(result)
+        }
+        callback?.invoke(writableArray)
+      } else {
+        callback?.invoke(null)
+      }
+    }
+  }
+
   override fun startDigitalAddressVerification(okcollect: ReadableMap?, callback: Callback?) {
     currentCallback = callback
     val activity = reactApplicationContext.currentActivity

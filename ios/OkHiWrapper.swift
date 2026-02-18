@@ -295,6 +295,12 @@ import UserNotifications
     let errorResult: NSDictionary = ["code": "unsupported_platform", "message": "Requesting post notification permissions is not supported on iOS"]
     callback(nil, errorResult)
   }
+  
+  @objc public static func logout(callback: @escaping ([String]?) -> Void) {
+    OK.shared.logout { results in
+      callback(results)
+    }
+  }
 }
 
 

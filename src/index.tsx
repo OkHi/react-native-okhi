@@ -380,6 +380,12 @@ export function createAddress(
   });
 }
 
+export function logout(): Promise<string[] | null> {
+  return new Promise((resolve) => {
+    Okhi.logout(resolve);
+  });
+}
+
 // Helper to process boolean response
 function processBooleanResponse(
   result: unknown,
