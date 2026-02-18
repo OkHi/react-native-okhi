@@ -73,7 +73,7 @@ repositories {
 def kotlin_version = getExtOrDefault("kotlinVersion")
 
 dependencies {
-  implementation 'io.okhi.android:okhi:1.0.7'
+  implementation 'io.okhi.android:okhi:1.0.8'
   implementation "com.facebook.react:react-android"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
