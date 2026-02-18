@@ -115,11 +115,11 @@ Ensure `android/app/build.gradle` has the correct SDK versions:
 
 ```gradle
 android {
-    compileSdk = 35  // or higher
+    compileSdk = 36  // or higher
 
     defaultConfig {
         minSdk = 24      // minimum 21, recommended 24
-        targetSdk = 35   // or higher
+        targetSdk = 36   // or higher
     }
 }
 ```
