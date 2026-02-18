@@ -12,6 +12,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as OkHi from 'react-native-okhi';
 import { Card } from '../components/Card';
 import { ResultModal } from '../components/ResultModal';
+import { LogoutBottomSheet } from '../components/LogoutBottomSheet';
+import { LogoutResultModal } from '../components/LogoutResultModal';
 import { OkHiUser, OkHiSuccessResponse } from 'react-native-okhi';
 import type {
   StoredAddress,
@@ -56,6 +58,10 @@ export function VerificationScreen({ navigation }: any) {
   const [userEmail, setUserEmail] = useState('');
   const [environment, setEnvironment] = useState('');
   const [addressCount, setAddressCount] = useState(0);
+  const [showSettings, setShowSettings] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [logoutResult, setLogoutResult] = useState<string[] | null>(null);
+  const [showLogoutResult, setShowLogoutResult] = useState(false);
   const locationIdRef = useRef<string | null>(null);
   const addressCardAnim = useRef(new Animated.Value(0)).current;
 
@@ -242,6 +248,25 @@ export function VerificationScreen({ navigation }: any) {
     }
   };
 
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      const result = await OkHi.logout();
+      setLogoutResult(result);
+    } catch {
+      setLogoutResult(null);
+    } finally {
+      setIsLoggingOut(false);
+      setShowSettings(false);
+      setShowLogoutResult(true);
+    }
+  };
+
+  const handleLogoutDone = () => {
+    setShowLogoutResult(false);
+    navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView
@@ -249,18 +274,29 @@ export function VerificationScreen({ navigation }: any) {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {userName && (
-          <View style={styles.greetingContainer}>
-            <Text style={styles.greeting}>
-              {getGreeting()}, {userName.split(' ')[0]}
-            </Text>
-            <View style={styles.userMetaContainer}>
-              <Text style={styles.userMeta}>{userEmail}</Text>
-              <View style={styles.envDot} />
-              <Text style={styles.envText}>{environment.toUpperCase()}</Text>
+        <View style={styles.headerRow}>
+          {userName ? (
+            <View style={styles.greetingContainer}>
+              <Text style={styles.greeting} numberOfLines={2}>
+                {getGreeting()}, {userName.split(' ')[0]}
+              </Text>
+              <View style={styles.userMetaContainer}>
+                <Text style={styles.userMeta}>{userEmail}</Text>
+                <View style={styles.envDot} />
+                <Text style={styles.envText}>{environment.toUpperCase()}</Text>
+              </View>
             </View>
-          </View>
-        )}
+          ) : (
+            <View style={styles.greetingPlaceholder} />
+          )}
+          <TouchableOpacity
+            style={styles.cogButton}
+            onPress={() => setShowSettings(true)}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.cogIcon}>⚙</Text>
+          </TouchableOpacity>
+        </View>
 
         {addressCount > 0 && (
           <Animated.View
@@ -374,6 +410,19 @@ export function VerificationScreen({ navigation }: any) {
         data={verificationResult}
         locationId={verificationResult?.location?.id}
       />
+
+      <LogoutBottomSheet
+        visible={showSettings}
+        onClose={() => setShowSettings(false)}
+        onLogout={handleLogout}
+        isLoggingOut={isLoggingOut}
+      />
+
+      <LogoutResultModal
+        visible={showLogoutResult}
+        locationIds={logoutResult}
+        onDone={handleLogoutDone}
+      />
     </SafeAreaView>
   );
 }
@@ -390,8 +439,30 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingTop: 20,
   },
-  greetingContainer: {
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
     marginBottom: 28,
+  },
+  greetingContainer: {
+    flex: 1,
+    marginRight: 12,
+  },
+  greetingPlaceholder: {
+    flex: 1,
+  },
+  cogButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#EEEEEE',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 2,
+  },
+  cogIcon: {
+    fontSize: 20,
+    color: '#424242',
   },
   greeting: {
     fontSize: 26,
