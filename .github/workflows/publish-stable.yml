@@ -41,12 +41,7 @@ jobs:
       - name: Build
         run: yarn prepare
 
-      - name: Determine npm tag
-        id: npm-tag
-        run: |
-          echo "tag=latest" >> $GITHUB_OUTPUT
-
       - name: Publish
-        run: npm publish --provenance --access public --tag ${{ steps.npm-tag.outputs.tag }}
+        run: npm publish --provenance --access public --tag latest
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
