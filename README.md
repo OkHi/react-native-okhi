@@ -110,7 +110,7 @@ Add permissions to `AndroidManifest.xml`:
 > **Note:** Requires a development build. This library won't work with Expo Go.
 
 ```bash
-npx expo install react-native-okhi@beta
+npx expo install react-native-okhi
 npx expo prebuild
 npx expo run:ios  # or run:android
 ```
