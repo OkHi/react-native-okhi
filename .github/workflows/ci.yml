@@ -205,7 +205,9 @@ jobs:
         working-directory: example
 
       - name: Install CocoaPods
-        run: bundle exec pod install --project-directory=ios
+        run: |
+          bundle exec pod repo update --verbose
+          bundle exec pod install --project-directory=ios
         working-directory: example
 
       - name: Write App Store Connect API key
