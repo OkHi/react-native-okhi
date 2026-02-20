@@ -5,7 +5,6 @@ on:
     branches:
       - master
       - develop
-      - fastlane
     tags:
       - 'v*'
   pull_request:
@@ -48,7 +47,6 @@ jobs:
         run: yarn prepare
 
   build-android:
-    if: github.ref != 'refs/heads/fastlane'
     runs-on: ubuntu-latest
 
     strategy:
@@ -119,7 +117,6 @@ jobs:
           yarn turbo run build:android --cache-dir="${{ env.TURBO_CACHE_DIR }}"
 
   build-ios:
-    if: github.ref != 'refs/heads/fastlane'
     runs-on: macos-latest
 
     strategy:
@@ -186,7 +183,7 @@ jobs:
 
   testflight:
     needs: [lint, build-library]
-    if: github.ref == 'refs/heads/fastlane'
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
     runs-on: macos-latest
     permissions:
       contents: read
