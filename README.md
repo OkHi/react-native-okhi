@@ -5,7 +5,7 @@
 [![npm version](https://img.shields.io/npm/v/react-native-okhi.svg?style=flat-square)](https://www.npmjs.com/package/react-native-okhi)
 [![license](https://img.shields.io/npm/l/react-native-okhi.svg?style=flat-square)](https://github.com/OkHi/react-native-okhi/blob/master/LICENSE)
 [![platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android-lightgrey?style=flat-square)](#requirements)
-[![CI](https://img.shields.io/github/actions/workflow/status/OkHi/react-native-okhi/ci.yml?style=flat-square)](https://github.com/OkHi/react-native-okhi/actions/workflows/ci.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/OkHi/react-native-okhi/ci.yml?branch=master&style=flat-square)](https://github.com/OkHi/react-native-okhi/actions/workflows/ci.yml)
 
 </div>
 
