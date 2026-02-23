@@ -280,6 +280,14 @@ jobs:
           JAVA_OPTS: '-XX:MaxHeapSize=6g'
         run: bundle exec fastlane android internal
 
+      - name: Upload AAB artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: example/android/app/build/outputs/bundle/release/app-release.aab
+          retention-days: 7
+
   publish:
     needs: [lint, build-library, build-android, build-ios]
     if: startsWith(github.ref, 'refs/tags/v')
