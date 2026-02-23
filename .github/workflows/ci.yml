@@ -181,6 +181,52 @@ jobs:
         run: |
           yarn turbo run build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}"
 
+  testflight:
+    needs: [lint, build-library]
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
+    runs-on: macos-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Use Xcode 16.4
+        uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
+        with:
+          xcode-version: '16.4'
+
+      - name: Install Ruby dependencies
+        run: bundle install
+        working-directory: example
+
+      - name: Install CocoaPods
+        run: |
+          bundle exec pod repo update --verbose
+          bundle exec pod install --project-directory=ios
+        working-directory: example
+
+      - name: Write App Store Connect API key
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+        run: echo "$ASC_KEY_P8" > /tmp/asc_key.p8
+
+      - name: Build and upload to TestFlight
+        working-directory: example
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8_PATH: /tmp/asc_key.p8
+        run: bundle exec fastlane beta
+
+      - name: Clean up API key
+        if: always()
+        run: rm -f /tmp/asc_key.p8
+
   publish:
     needs: [lint, build-library, build-android, build-ios]
     if: startsWith(github.ref, 'refs/tags/v')
