@@ -82,7 +82,7 @@ android {
         applicationId "io.okhi.rn"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
+        versionCode project.hasProperty('versionCode') ? project.versionCode.toInteger() : 2
         versionName "1.1"
     }
     signingConfigs {
