@@ -8,7 +8,7 @@ PODS:
   - hermes-engine (0.14.0):
     - hermes-engine/Pre-built (= 0.14.0)
   - hermes-engine/Pre-built (0.14.0)
-  - OkHi (1.10.13)
+  - OkHi (1.10.14)
   - RCT-Folly (2024.11.18.00):
     - boost
     - DoubleConversion
@@ -2537,14 +2537,14 @@ PODS:
     - React-perflogger (= 0.83.0)
     - React-utils (= 0.83.0)
     - SocketRocket
-  - ReactNativeOkHi (2.0.7):
+  - ReactNativeOkHi (2.0.13):
     - boost
     - DoubleConversion
     - fast_float
     - fmt
     - glog
     - hermes-engine
-    - OkHi (= 1.10.13)
+    - OkHi (= 1.10.14)
     - RCT-Folly
     - RCT-Folly/Fabric
     - RCTRequired
@@ -2650,7 +2650,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - RNScreens (4.20.0):
+  - RNScreens (4.23.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -2677,10 +2677,10 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNScreens/common (= 4.20.0)
+    - RNScreens/common (= 4.23.0)
     - SocketRocket
     - Yoga
-  - RNScreens/common (4.20.0):
+  - RNScreens/common (4.23.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -2981,7 +2981,7 @@ SPEC CHECKSUMS:
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
   hermes-engine: 9653d3d352f70adb2b47ef2b26c4d8fbc700716e
-  OkHi: 5e0c88e3edd80bd35770776fdbf0432d26caa19c
+  OkHi: f0728e8fd3a65b984b1271d9825087e2cd0be091
   RCT-Folly: 59ec0ac1f2f39672a0c6e6cecdd39383b764646f
   RCTDeprecation: 2b70c6e3abe00396cefd8913efbf6a2db01a2b36
   RCTRequired: f3540eee8094231581d40c5c6d41b0f170237a81
@@ -3052,11 +3052,11 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: 23e2bca1661f8781e55fcc05a151fc1df97bc1fb
   ReactCodegen: 10a61330b137caaad6f7fbe7f5d0e7a40d621700
   ReactCommon: c6cd81778336e767e27fe63c6707dd6b735fff5c
-  ReactNativeOkHi: 18732d92da6f65e93895c6eba42e80bc57ce3361
+  ReactNativeOkHi: 81de79ae8faa906012175bfb44d3fe1cd585267c
   RNCAsyncStorage: 302f2fac014fd450046c120567ca364632da682b
   RNCClipboard: 962296f7af77f6c039b683e21c2e2255af9c05df
   RNGestureHandler: 77eecab5fd636666ca73a55bb61e2f1a685b7e84
-  RNScreens: b2a5c76af24a02a2fd71bfce42780fdd9c79cc6d
+  RNScreens: ec8bdc9f024d5828e5adf4f5e8870d5260cff616
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 6ca93c8c13f56baeec55eb608577619b17a4d64e
 
