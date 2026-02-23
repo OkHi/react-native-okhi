@@ -88,3 +88,5 @@ nitrogen/
 # Fastlane
 example/fastlane/report.xml
 example/fastlane/README.md
+example/android/app/google-services.json
+example/ios/OkHiApp/GoogleService-Info.plist
