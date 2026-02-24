@@ -70,6 +70,13 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
+      - name: Write app credentials
+        env:
+          APP_CREDENTIALS_JSON: ${{ secrets.APP_CREDENTIALS_JSON }}
+        run: |
+          mkdir -p example/src/config
+          echo "$APP_CREDENTIALS_JSON" > example/src/config/credentials.json
+
       - name: Install JDK
         uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
         with:
@@ -156,6 +163,13 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
+      - name: Write app credentials
+        env:
+          APP_CREDENTIALS_JSON: ${{ secrets.APP_CREDENTIALS_JSON }}
+        run: |
+          mkdir -p example/src/config
+          echo "$APP_CREDENTIALS_JSON" > example/src/config/credentials.json
+
       - name: Use Xcode 16.4
         uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
         with:
@@ -207,6 +221,13 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
+      - name: Write app credentials
+        env:
+          APP_CREDENTIALS_JSON: ${{ secrets.APP_CREDENTIALS_JSON }}
+        run: |
+          mkdir -p example/src/config
+          echo "$APP_CREDENTIALS_JSON" > example/src/config/credentials.json
+
       - name: Use Xcode 16.4
         uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
         with:
@@ -252,6 +273,13 @@ jobs:
 
       - name: Setup
         uses: ./.github/actions/setup
+
+      - name: Write app credentials
+        env:
+          APP_CREDENTIALS_JSON: ${{ secrets.APP_CREDENTIALS_JSON }}
+        run: |
+          mkdir -p example/src/config
+          echo "$APP_CREDENTIALS_JSON" > example/src/config/credentials.json
 
       - name: Install JDK
         uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
