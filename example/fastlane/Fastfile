@@ -34,3 +34,44 @@ platform :ios do
     )
   end
 end
+
+platform :android do
+  desc "Build signed AAB and upload to Play Store Internal Testing"
+  lane :internal do
+    require 'base64'
+
+    # Decode keystore from base64 secret and write to a temp file
+    keystore_path = "/tmp/release.keystore"
+    File.write(keystore_path, Base64.decode64(ENV["ANDROID_KEYSTORE_BASE64"]))
+
+    # Always-increasing version code: minutes since Unix epoch (~29M in Feb 2026)
+    version_code = (Time.now.to_i / 60).to_i
+
+    gradle(
+      task: "bundle",
+      build_type: "Release",
+      project_dir: "android/",
+      properties: {
+        "android.injected.signing.store.file" => keystore_path,
+        "android.injected.signing.store.password" => ENV["ANDROID_STORE_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["ANDROID_KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["ANDROID_KEY_PASSWORD"],
+        "versionCode" => version_code.to_s,
+      }
+    )
+
+    upload_to_play_store(
+      track: "internal",
+      release_status: "completed",
+      json_key_data: ENV["PLAY_STORE_JSON_KEY"],
+      aab: "android/app/build/outputs/bundle/release/app-release.aab",
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+    )
+  ensure
+    File.delete(keystore_path) if File.exist?(keystore_path)
+  end
+end
