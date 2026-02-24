@@ -88,3 +88,4 @@ nitrogen/
 # Fastlane
 example/fastlane/report.xml
 example/fastlane/README.md
+example/release.keystore
