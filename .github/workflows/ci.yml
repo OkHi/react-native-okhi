@@ -195,7 +195,7 @@ jobs:
 
   testflight:
     needs: [lint, build-library]
-    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     runs-on: macos-latest
     permissions:
       contents: read
@@ -241,7 +241,7 @@ jobs:
 
   play-store:
     needs: [lint, build-library]
-    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     permissions:
       contents: read

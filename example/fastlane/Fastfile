@@ -44,8 +44,8 @@ platform :android do
     keystore_path = "/tmp/release.keystore"
     File.write(keystore_path, Base64.decode64(ENV["ANDROID_KEYSTORE_BASE64"]))
 
-    # Always-increasing version code: minutes since Unix epoch (~29M in Feb 2026)
-    version_code = (Time.now.to_i / 60).to_i
+    # Always-increasing version code: seconds since 2024-01-01 (~40M in Feb 2026, never collides on retry)
+    version_code = (Time.now.to_i - 1_700_000_000)
 
     gradle(
       task: "bundle",
