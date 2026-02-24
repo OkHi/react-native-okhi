@@ -5,7 +5,6 @@ on:
     branches:
       - master
       - develop
-      - apk-upload-artifact
     tags:
       - 'v*'
   pull_request:
