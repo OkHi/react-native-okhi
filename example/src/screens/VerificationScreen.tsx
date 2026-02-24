@@ -19,6 +19,7 @@ import type {
   StoredAddress,
   VerificationType,
 } from '../components/AddressCard';
+import credentials from '../config/credentials.json';
 
 const ADDRESSES_STORAGE_KEY = 'okhi_verified_addresses';
 
@@ -27,20 +28,7 @@ type Environment = 'prod' | 'sandbox' | 'dev';
 const ENVIRONMENT_CREDENTIALS: Record<
   Environment,
   { branchId: string; clientKey: string }
-> = {
-  prod: {
-    branchId: 'bWpVwm65jy',
-    clientKey: '3db1617f-b25b-4a80-8165-8077b4d1ea44',
-  },
-  sandbox: {
-    branchId: 'bWpVwm65jy',
-    clientKey: '3db1617f-b25b-4a80-8165-8077b4d1ea44',
-  },
-  dev: {
-    branchId: 'OGUXBJeocZ',
-    clientKey: 'd76eb1f5-12a2-47a7-a6b6-2de88a5bc739',
-  },
-};
+> = credentials;
 
 function getGreeting(): string {
   const hour = new Date().getHours();
