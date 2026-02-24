@@ -229,7 +229,7 @@ jobs:
 
   play-store:
     needs: [lint, build-library]
-    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/android-fastlane'
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     permissions:
       contents: read
