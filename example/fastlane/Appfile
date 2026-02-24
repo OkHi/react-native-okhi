@@ -1,2 +1,5 @@
 app_identifier("io.okhi.rn")
 team_id("ZV9VNGTKRL")
+
+# Android
+package_name("io.okhi.rn")
