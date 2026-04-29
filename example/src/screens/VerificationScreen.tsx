@@ -14,6 +14,7 @@ import { Card } from '../components/Card';
 import { ResultModal } from '../components/ResultModal';
 import { LogoutBottomSheet } from '../components/LogoutBottomSheet';
 import { LogoutResultModal } from '../components/LogoutResultModal';
+import { LoginResultModal } from '../components/LoginResultModal';
 import { OkHiUser, OkHiSuccessResponse } from 'react-native-okhi';
 import type {
   StoredAddress,
@@ -50,6 +51,8 @@ export function VerificationScreen({ navigation }: any) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [logoutResult, setLogoutResult] = useState<string[] | null>(null);
   const [showLogoutResult, setShowLogoutResult] = useState(false);
+  const [loginLocationIds, setLoginLocationIds] = useState<string[] | null>(null);
+  const [showLoginResult, setShowLoginResult] = useState(false);
   const locationIdRef = useRef<string | null>(null);
   const addressCardAnim = useRef(new Animated.Value(0)).current;
 
@@ -99,7 +102,7 @@ export function VerificationScreen({ navigation }: any) {
           env === 'prod' || env === 'sandbox' || env === 'dev' ? env : 'prod'
         ) as Environment;
 
-        await OkHi.login({
+        const result = await OkHi.login({
           auth: {
             branchId: ENVIRONMENT_CREDENTIALS[envKey].branchId,
             clientKey: ENVIRONMENT_CREDENTIALS[envKey].clientKey,
@@ -115,6 +118,8 @@ export function VerificationScreen({ navigation }: any) {
             withPermissionsRequest: false,
           },
         });
+        setLoginLocationIds(result);
+        setShowLoginResult(true);
       } catch (error) {
         console.error('Failed to load user info:', error);
       } finally {
@@ -251,6 +256,10 @@ export function VerificationScreen({ navigation }: any) {
       // On iOS, a second Modal won't present while another is still animating.
       setTimeout(() => setShowLogoutResult(true), 300);
     }
+  };
+
+  const handleLoginResultDone = () => {
+    setShowLoginResult(false);
   };
 
   const handleLogoutDone = () => {
@@ -407,6 +416,12 @@ export function VerificationScreen({ navigation }: any) {
         onClose={() => setShowSettings(false)}
         onLogout={handleLogout}
         isLoggingOut={isLoggingOut}
+      />
+
+      <LoginResultModal
+        visible={showLoginResult}
+        locationIds={loginLocationIds}
+        onDone={handleLoginResultDone}
       />
 
       <LogoutResultModal
