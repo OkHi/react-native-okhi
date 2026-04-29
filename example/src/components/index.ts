@@ -4,3 +4,4 @@ export { Input } from './Input';
 export { ResultModal } from './ResultModal';
 export { LogoutBottomSheet } from './LogoutBottomSheet';
 export { LogoutResultModal } from './LogoutResultModal';
+export { LoginResultModal } from './LoginResultModal';
