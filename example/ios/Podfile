@@ -30,12 +30,12 @@ target 'OkHiApp' do
       # :ccache_enabled => true
     )
 
-    # Fix for Xcode 26.4 build error
     installer.pods_project.targets.each do |target|
-      if target.name == 'fmt'
-        target.build_configurations.each do |config|
-          config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
-        end
+      target.build_configurations.each do |config|
+        # Fix for non-modular header errors with react-native-firebase static frameworks
+        config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+        # Fix for Xcode 26.4 build error
+        config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17' if target.name == 'fmt'
       end
     end
   end
