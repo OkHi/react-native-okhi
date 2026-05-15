@@ -92,3 +92,5 @@ example/release.keystore
 
 # App credentials (injected at build time from CI secrets)
 example/src/config/credentials.json
+example/android/app/google-services.json
+example/ios/OkHiApp/GoogleService-Info.plist
