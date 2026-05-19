@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import crashlytics from '@react-native-firebase/crashlytics';
 import * as OkHi from 'react-native-okhi';
 import { Card } from '../components/Card';
 import { ResultModal } from '../components/ResultModal';
@@ -400,6 +401,14 @@ export function VerificationScreen({ navigation }: any) {
             onPress={() => navigation.navigate('Helpers')}
             disabled={loading}
           />
+
+          <Card
+            title="Trigger Crash"
+            description="Force a crash to test Crashlytics crash reporting"
+            icon="💥"
+            onPress={() => crashlytics().crash()}
+            style={styles.crashCard}
+          />
         </View>
       </ScrollView>
 
@@ -576,5 +585,9 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     marginTop: 8,
+  },
+  crashCard: {
+    borderColor: '#FF5252',
+    backgroundColor: '#FFF5F5',
   },
 });
