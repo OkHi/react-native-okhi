@@ -97,12 +97,9 @@ export function LoginScreen({ navigation }: any) {
       await AsyncStorage.setItem('lastName', user.lastName.trim());
       await AsyncStorage.setItem('userName', `${user.firstName.trim()} ${user.lastName.trim()}`);
       await AsyncStorage.setItem('environment', environment);
-      await crashlytics().setUserId(appUserIdRef.current);
-      await crashlytics().setAttributes({
-        appUserId: appUserIdRef.current,
-        environment,
-      });
       navigation.replace('Verification');
+      crashlytics().setUserId(appUserIdRef.current).catch(() => {});
+      crashlytics().setAttributes({ appUserId: appUserIdRef.current, environment }).catch(() => {});
     } catch (error) {
       console.error('Failed to save user data:', error);
     } finally {
