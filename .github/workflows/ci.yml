@@ -77,6 +77,11 @@ jobs:
           mkdir -p example/src/config
           echo "$APP_CREDENTIALS_JSON" > example/src/config/credentials.json
 
+      - name: Write Firebase Android config
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo "$GOOGLE_SERVICES_JSON" | base64 -d > example/android/app/google-services.json
+
       - name: Install JDK
         uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
         with:
@@ -170,6 +175,11 @@ jobs:
           mkdir -p example/src/config
           echo "$APP_CREDENTIALS_JSON" > example/src/config/credentials.json
 
+      - name: Write Firebase iOS config
+        env:
+          GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
+        run: echo "$GOOGLE_SERVICE_INFO_PLIST" | base64 -d > example/ios/OkHiApp/GoogleService-Info.plist
+
       - name: Use Xcode ${{ env.XCODE_VERSION }}
         uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
         with:
@@ -227,6 +237,11 @@ jobs:
         run: |
           mkdir -p example/src/config
           echo "$APP_CREDENTIALS_JSON" > example/src/config/credentials.json
+
+      - name: Write Firebase iOS config
+        env:
+          GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
+        run: echo "$GOOGLE_SERVICE_INFO_PLIST" | base64 -d > example/ios/OkHiApp/GoogleService-Info.plist
 
       - name: Use Xcode 26
         uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
@@ -300,6 +315,11 @@ jobs:
           key: ${{ runner.os }}-gradle-release-${{ hashFiles('example/android/gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-release-
+
+      - name: Write Firebase Android config
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo "$GOOGLE_SERVICES_JSON" | base64 -d > example/android/app/google-services.json
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
