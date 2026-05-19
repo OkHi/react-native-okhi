@@ -2774,6 +2774,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-firebase/analytics@npm:^22.4.0":
+  version: 22.4.0
+  resolution: "@react-native-firebase/analytics@npm:22.4.0"
+  dependencies:
+    superstruct: "npm:^2.0.2"
+  peerDependencies:
+    "@react-native-firebase/app": 22.4.0
+  checksum: 10c0/ffc114e9225da6d23d4b1efed9f666fb79defa193150a9999833812d19dfc9035d357603aec060989824cc922e815fe4555153aceea443b77c436e1958ff5fe8
+  languageName: node
+  linkType: hard
+
 "@react-native-firebase/app@npm:^22.4.0":
   version: 22.4.0
   resolution: "@react-native-firebase/app@npm:22.4.0"
@@ -7852,6 +7863,7 @@ __metadata:
     "@react-native-community/cli": "npm:20.0.0"
     "@react-native-community/cli-platform-android": "npm:20.0.0"
     "@react-native-community/cli-platform-ios": "npm:20.0.0"
+    "@react-native-firebase/analytics": "npm:^22.4.0"
     "@react-native-firebase/app": "npm:^22.4.0"
     "@react-native/babel-preset": "npm:0.83.0"
     "@react-native/metro-config": "npm:0.83.0"
@@ -9312,6 +9324,13 @@ __metadata:
   version: 1.1.2
   resolution: "strnum@npm:1.1.2"
   checksum: 10c0/a0fce2498fa3c64ce64a40dada41beb91cabe3caefa910e467dc0518ef2ebd7e4d10f8c2202a6104f1410254cae245066c0e94e2521fb4061a5cb41831952392
+  languageName: node
+  linkType: hard
+
+"superstruct@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "superstruct@npm:2.0.2"
+  checksum: 10c0/c6853db5240b4920f47b3c864dd1e23ede6819ea399ad29a65387d746374f6958c5f1c5b7e5bb152d9db117a74973e5005056d9bb83c24e26f18ec6bfae4a718
   languageName: node
   linkType: hard
 
