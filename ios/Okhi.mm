@@ -8,6 +8,9 @@
 #endif
 
 @implementation Okhi
+
+RCT_EXPORT_MODULE()
+
 - (void)login:(NSDictionary *)credentials callback:(RCTResponseSenderBlock)callback {
   [OkHiWrapper login:credentials callback:^(NSArray<NSString *> *results) {
     if (callback) {
