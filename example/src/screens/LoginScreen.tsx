@@ -99,12 +99,8 @@ export function LoginScreen({ navigation }: any) {
       await AsyncStorage.setItem('environment', environment);
       await crashlytics().setUserId(appUserIdRef.current);
       await crashlytics().setAttributes({
-        email: user.email.trim(),
-        firstName: user.firstName.trim(),
-        lastName: user.lastName.trim(),
-        phone: user.phone.trim(),
-        environment,
         appUserId: appUserIdRef.current,
+        environment,
       });
       navigation.replace('Verification');
     } catch (error) {
