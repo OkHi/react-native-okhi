@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { Input } from '../components/Input';
 import { Button } from '../components/Button';
 import { ResultModal } from '../components/ResultModal';
@@ -96,6 +97,15 @@ export function LoginScreen({ navigation }: any) {
       await AsyncStorage.setItem('lastName', user.lastName.trim());
       await AsyncStorage.setItem('userName', `${user.firstName.trim()} ${user.lastName.trim()}`);
       await AsyncStorage.setItem('environment', environment);
+      await crashlytics().setUserId(appUserIdRef.current);
+      await crashlytics().setAttributes({
+        email: user.email.trim(),
+        firstName: user.firstName.trim(),
+        lastName: user.lastName.trim(),
+        phone: user.phone.trim(),
+        environment,
+        appUserId: appUserIdRef.current,
+      });
       navigation.replace('Verification');
     } catch (error) {
       console.error('Failed to save user data:', error);

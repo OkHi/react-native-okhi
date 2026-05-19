@@ -36,7 +36,7 @@ target 'OkHiApp' do
         # Prevent RNFB pods from being wrapped in a framework module so React
         # headers they import are not "owned" by a foreign module, which causes
         # hard cross-module declaration errors in dependent pods.
-        if ['RNFBApp', 'RNFBAnalytics'].include?(target.name)
+        if ['RNFBApp', 'RNFBAnalytics', 'RNFBCrashlytics'].include?(target.name)
           config.build_settings['DEFINES_MODULE'] = 'NO'
         end
         config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17' if target.name == 'fmt'
