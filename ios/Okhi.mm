@@ -170,9 +170,4 @@ RCT_EXPORT_MODULE()
   return std::make_shared<facebook::react::NativeOkhiSpecJSI>(params);
 }
 
-+ (NSString *)moduleName
-{
-  return @"Okhi";
-}
-
 @end
