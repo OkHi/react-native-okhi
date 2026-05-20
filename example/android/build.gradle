@@ -22,6 +22,7 @@ buildscript {
 allprojects {
   repositories {
     maven { url "https://repo.okhi.io/artifactory/maven" } // <- add this
+    maven { url "https://repo.okhi.io/artifactory/maven-dev" } // <- add this
   }
 }
 
