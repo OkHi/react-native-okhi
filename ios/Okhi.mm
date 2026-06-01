@@ -8,6 +8,7 @@
 #endif
 
 @implementation Okhi
+RCT_EXPORT_MODULE(Okhi)
 - (void)login:(NSDictionary *)credentials callback:(RCTResponseSenderBlock)callback {
   [OkHiWrapper login:credentials callback:^(NSArray<NSString *> *results) {
     if (callback) {
@@ -165,11 +166,6 @@
 (const facebook::react::ObjCTurboModule::InitParams &)params
 {
   return std::make_shared<facebook::react::NativeOkhiSpecJSI>(params);
-}
-
-+ (NSString *)moduleName
-{
-  return @"Okhi";
 }
 
 @end
