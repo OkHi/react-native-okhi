@@ -1,174 +1,182 @@
-# OkHi React Native
+<div align="left">
 
-The official OkHi React Native library will enable you to start collecting and verifying your user's addresses.
+# react-native-okhi
 
-# Prerequisites
+[![npm version](https://img.shields.io/npm/v/react-native-okhi.svg?style=flat-square)](https://www.npmjs.com/package/react-native-okhi)
+[![license](https://img.shields.io/npm/l/react-native-okhi.svg?style=flat-square)](https://github.com/OkHi/react-native-okhi/blob/master/LICENSE)
+[![platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android-lightgrey?style=flat-square)](#requirements)
+[![CI](https://img.shields.io/github/actions/workflow/status/OkHi/react-native-okhi/ci.yml?branch=master&style=flat-square)](https://github.com/OkHi/react-native-okhi/actions/workflows/ci.yml)
 
-## OkHi Client Key and Branch Id
+</div>
 
-First you need to obtain your OkHi client key and branch ID. You can get these by signing up [here](https://docs.google.com/forms/d/e/1FAIpQLSed2rhgKQ8iv-xiJrJnDqOTaPiP6c7oE7DzrhTPF_d3VTihDQ/viewform).
-Use your sandbox keys while you test and develop, and your production mode keys before you publish your app.
+## Quick Start
 
-## Android
+### 1. Install
 
-### Change your minSdkVersion target
-
-This library targets android devices >= SDK 23. Make sure you're targeting at-least the same by modifying your `android/build.gradle` file
-
-```gradle
-minSdkVersion = 23
+```bash
+npm install react-native-okhi
+# or
+yarn add react-native-okhi
 ```
 
-### Add necessary permissions to your `AndroidManifest.xml`
+### 2. Configure native projects
 
-```xml
-<manifest ...>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    ...
+<details>
+<summary><b>iOS Setup</b></summary>
 
-    <application>
-    ...
-    </application>
-​
-</manifest>
+Install pods:
+
+```bash
+cd ios && pod install && cd ..
 ```
 
-If you're targeting Android versions > 8 and you're using the OkVerify library you need to make sure your users select on "Allow always" when granting permissions otherwise the verification process won't work.
-
-## iOS
-
-### Enable background mode in your application
-
-OkHi obtains verification signals in the background, to enable this make sure to add "Location updates" and "Background fetch" to your Background Modes under Signing & Capabilities of your target.
-
-![background modes](https://storage.googleapis.com/okhi-cdn/files/Screenshot%202021-11-02%20at%2008.01.13.png)
-
-### Change your deployment target
-
-All OkHi React Native libraries target ios devices >= 12. Make sure you're targeting at-least the same by modifying your both your Podfile and deployment target in xcode.
-
-![deployemnttarget](https://storage.googleapis.com/okhi-cdn/files/Screenshot%202021-11-02%20at%2018.09.04.png)
-
-Podile located under: `ios/Podfile`
-
-```xml
-platform :ios, '12.0'
-```
-
-### Add necessary permissions to your `Info.plist`
+Add to `Info.plist`:
 
 ```xml
 <key>NSLocationWhenInUseUsageDescription</key>
-<string>String that explains why you need when in use location permission</string>
+<string>Grant to enable creating addresses at your current location.</string>
 <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-<string>String that explains why you need always location permission</string>
+<string>Grant to enable creating and verifying your addresses.</string>
 ```
 
-## Installation
+Enable Background Modes in Xcode → Signing & Capabilities:
 
-Run the bellow command in the root directory of your React Native project.
+- ✅ Location updates
+- ✅ Background fetch
 
-```yaml
-yarn add react-native-okhi react-native-webview
+Add to `AppDelegate.mm`:
+
+```objc
+@import OkHi;
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+  [OK startMonitoring];
+  // ... rest of your code
+}
 ```
 
-Finally install all required pods by running the following command in the ios directory
+If using swift `AppDelegate.swift`:
 
+```swift
+import OkHi
+
+@main
+class AppDelegate: UIResponder, UIApplicationDelegate {
+
+  func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+  ) -> Bool {
+
+    OK.startMonitoring() // add this
+    return true
+  }
+}
 ```
-cd ios/ && pod install && cd ../
+
+</details>
+
+<details>
+<summary><b>Android Setup</b></summary>
+
+Add OkHi Maven repository to `android/build.gradle`:
+
+```gradle
+allprojects {
+    repositories {
+        maven { url "https://repo.okhi.io/artifactory/maven" }
+    }
+}
 ```
 
-# Usage
+Add permissions to `AndroidManifest.xml`:
 
-## Initialization
+```xml
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE" android:foregroundServiceType="location" />
+```
 
-Add the following initialization code to your index.js file. Replace my_branch_id and my_client_key with the keys provided to you after sign up.
+</details>
 
-```javascript
+<details>
+<summary><b>Expo Setup</b></summary>
+
+> **Note:** Requires a development build. This library won't work with Expo Go.
+
+```bash
+npx expo install react-native-okhi
+npx expo prebuild
+npx expo run:ios  # or run:android
+```
+
+</details>
+
+### 3. Verify an address
+
+```typescript
 import * as OkHi from 'react-native-okhi';
 
-OkHi.initialize({
-  credentials: {
-    branchId: '<my_branch_id>',
-    clientKey: '<my_client_key>',
+// Step 1
+await OkHi.login({
+  auth: {
+    branchId: 'YOUR_BRANCH_ID',
+    clientKey: 'YOUR_CLIENT_KEY',
   },
-  context: {
-    mode: 'sandbox',
+  user: {
+    firstName: 'John',
+    lastName: 'Doe',
+    phone: '+254712345678',
+    email: 'john@example.com',
   },
-  notification: {
-    title: 'Address verification in progress',
-    text: 'Tap here to view your verification status.',
-    channelId: 'okhi',
-    channelName: 'OkHi Channel',
-    channelDescription: 'OkHi verification alerts',
-  },
-})
-  .then(() => console.log('init done'))
-  .catch(console.log);
+});
+
+// Step 2
+const { user, location } = await OkHi.startDigitalAddressVerification();
 ```
 
-## Address Creation and Verification
+### Full Example
 
-```javascript
-import React, { useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
-import { OkHiLocationManager, canStartVerification } from 'react-native-okhi';
+```tsx
+import { Button, Text, View } from 'react-native';
+import * as OkHi from 'react-native-okhi';
 
-const App = () => {
-  const [launch, setLaunch] = useState(false);
-
+export default function Dashboard() {
   useEffect(() => {
-    canStartVerification({ requestServices: true }).then((result) => {
-      setLaunch(result);
-    }); // checks & requests for required services for verification to run
-  });
+    OkHi.login({
+      auth: { branchId: 'YOUR_BRANCH_ID', clientKey: 'YOUR_CLIENT_KEY' },
+      user: {
+        firstName: 'John',
+        lastName: 'Doe',
+        phone: '+254712345678',
+        email: 'john@example.com',
+      },
+    }).then(() => console.log('user logged in'));
+  }, []);
 
-  const user = {
-    phone: '+254712345678', // required
-    firstName: 'Julius',
-    lastName: 'Kiano',
+  const onButtonPress = async () => {
+    const { user, location } = await OkHi.startDigitalAddressVerification();
+    console.log(`started verification for: ${location.id}`);
   };
-
-  const handleOnSuccess = async (response) => {
-    console.log(response.user); // user information
-    console.log(response.location); // address information
-    await response.startVerification();
-  };
-
-  const handleOnError = (error) => {
-    console.log(error.code); // user information
-    console.log(error.message); // address information
-    setLaunch(false);
-  };
-
-  if (launch) {
-    return (
-      <View style={{ flex: 1 }}>
-        <OkHiLocationManager
-          user={user}
-          launch={launch}
-          onSuccess={handleOnSuccess}
-          onCloseRequest={() => setLaunch(false)} // called when user taps on the top right close button
-          onError={handleOnError}
-        />
-      </View>
-    );
-  }
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Loading..</Text>
+    <View style={{ flex: 1, justifyContent: 'center', padding: 20 }}>
+      <Button title="Verify Address" onPress={onButtonPress} />
     </View>
   );
-};
-
-export default App;
+}
 ```
 
-# Documentation
+## Documentation
 
-- [Guide](https://docs.okhi.co/v/v5.1-beta/okhi-on-your-react-native-app)
-- [Best practices](https://docs.google.com/document/d/1kxolQJ4n6tEgReuqVLYpDVMW--xvqv5UQ7AdvrN0Uw0/edit)
+- [Official Guide](https://docs.okhi.com/latest/code-libraries/react-native-guide) — Full integration guide
+- [AGENTS.md](./AGENTS.md) — AI agent integration reference
+
+## License
+
+MIT © [OkHi](https://okhi.co)

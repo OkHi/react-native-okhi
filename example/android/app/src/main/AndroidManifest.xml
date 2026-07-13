@@ -1,7 +1,22 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.example.reactnativeokhi">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Location permissions (foreground & background) -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
+    <!-- Internet access (required for API communication) -->
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Notifications (required for foreground service notifications) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Foreground services (required for background verification tasks) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE"
+        android:foregroundServiceType="location" />
+        
 
     <application
       android:name=".MainApplication"
@@ -9,7 +24,25 @@
       android:icon="@mipmap/ic_launcher"
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
-      android:theme="@style/AppTheme">
+      android:theme="@style/AppTheme"
+      android:usesCleartextTraffic="${usesCleartextTraffic}"
+      android:supportsRtl="true">
+
+      <!-- 📝 Custom notification title -->
+    <meta-data
+        android:name="io.okhi.android.notification_title"
+        android:value="Address verification" />
+
+    <!-- 📝 Custom notification message -->
+    <meta-data
+        android:name="io.okhi.android.notification_text"
+        android:value="Currently verifying your address" />
+
+    <!-- 🎨 Custom notification icon -->
+    <meta-data
+        android:name="io.okhi.android.notification_icon"
+        android:resource="@mipmap/ic_launcher" />
+        
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
