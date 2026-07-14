@@ -22,27 +22,33 @@ class OkhiModule(reactContext: ReactApplicationContext) : NativeOkhiSpec(reactCo
 
   val okhiAddressVerificationCallback = object : OkHiAddressVerificationCallback() {
     override fun onClose() {
+      val cb = currentCallback
+      currentCallback = null
       val error = Arguments.createMap().apply {
         putString("code", "user_closed")
         putString("message", "user closed address creation")
       }
-      currentCallback?.invoke(null, error)
+      cb?.invoke(null, error)
     }
 
     override fun onError(e: OkHiException) {
+      val cb = currentCallback
+      currentCallback = null
       val error = Arguments.createMap().apply {
         putString("code", e.code)
         putString("message", e.message)
       }
-      currentCallback?.invoke(null, error)
+      cb?.invoke(null, error)
     }
 
     override fun onSuccess(response: OkHiSuccessResponse) {
-      val response = Arguments.createMap().apply {
+      val cb = currentCallback
+      currentCallback = null
+      val responseMap = Arguments.createMap().apply {
         putString("user", response.user.toJSON().toString())
         putString("location", response.location.toJSON().toString())
       }
-      currentCallback?.invoke(response, null)
+      cb?.invoke(responseMap, null)
     }
   }
 
@@ -194,7 +200,7 @@ class OkhiModule(reactContext: ReactApplicationContext) : NativeOkhiSpec(reactCo
     } else {
       val styleMap = okcollect.getMap("style")
       val color = styleMap?.getString("color") ?: "#005D67"
-      val logo = styleMap?.getString("color") ?: "https://cdn.okhi.co/icon.png"
+      val logo = styleMap?.getString("logo") ?: "https://cdn.okhi.co/icon.png"
 
       val configurationMap = okcollect.getMap("configuration")
       val streetView = configurationMap?.getBoolean("streetView") ?: true
