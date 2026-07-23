@@ -404,6 +404,42 @@ export function logout(): Promise<string[] | null> {
   });
 }
 
+/**
+ * Programmatically closes an in-progress address collection flow.
+ *
+ * @remarks
+ * Closes the address collection UI (started by {@link createAddress},
+ * {@link startDigitalAddressVerification}, {@link startPhysicalAddressVerification},
+ * or {@link startDigitalAndPhysicalAddressVerification}) without triggering
+ * the `user_closed` cancellation that a manual close (e.g. back button) would.
+ *
+ * If there is no active address collection session, the returned promise
+ * rejects.
+ *
+ * @returns A promise that resolves once the address collection flow has been closed.
+ *
+ * @example
+ * ```typescript
+ * import * as OkHi from 'react-native-okhi';
+ *
+ * await OkHi.closeAddressCollection();
+ * ```
+ *
+ * @see {@link createAddress} - Starts an address collection flow
+ */
+export function closeAddressCollection(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    Okhi.closeAddressCollection((error) => {
+      if (error != null) {
+        const err = error as { code?: string; message?: string };
+        reject(OkHiException.fromNativeError(err));
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
 // Helper to process boolean response
 function processBooleanResponse(
   result: unknown,
