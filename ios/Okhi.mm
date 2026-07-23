@@ -49,6 +49,14 @@ RCT_EXPORT_MODULE(Okhi)
   }];
 }
 
+- (void)closeAddressCollection:(RCTResponseSenderBlock)callback {
+  [OkHiWrapper closeAddressCollectionWithCallback:^(NSDictionary *error) {
+    if (callback) {
+      callback(@[error ?: [NSNull null]]);
+    }
+  }];
+}
+
 // MARK: - Helper Methods
 
 - (void)isLocationServicesEnabled:(RCTResponseSenderBlock)callback {
