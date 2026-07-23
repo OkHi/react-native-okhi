@@ -22,7 +22,10 @@ export interface Spec extends TurboModule {
     okcollect: Object,
     callback: (result?: Object, error?: Object) => void
   ): void;
-  closeAddressCollection(callback: (error?: Object) => void): void;
+  closeAddressCollection(
+    options: Object,
+    callback: (error?: Object) => void
+  ): void;
 
   // helpers
   isLocationServicesEnabled(
