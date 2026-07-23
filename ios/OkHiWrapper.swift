@@ -301,6 +301,19 @@ import UserNotifications
       callback(results)
     }
   }
+  
+  @objc public static func closeAddressCollection(callback: @escaping (NSDictionary?) -> Void) {
+      OK.shared.closeAddressCollection { exception in
+        DispatchQueue.main.async {
+          if exception != nil {
+            let errorResult: NSDictionary = ["code": exception?.code, "message": exception?.message]
+            callback(errorResult)
+          } else {
+            callback(nil)
+          }
+        }
+      }
+    }
 }
 
 
