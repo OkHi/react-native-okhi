@@ -193,6 +193,20 @@ class OkhiModule(reactContext: ReactApplicationContext) : NativeOkhiSpec(reactCo
     }
   }
 
+  override fun closeAddressCollection(callback: Callback?) {
+    OkHi.closeAddressCollection { exception ->
+      if (exception != null) {
+        val error = Arguments.createMap().apply {
+          putString("code", exception.code)
+          putString("message", exception.message)
+        }
+        callback?.invoke(error)
+      } else {
+        callback?.invoke(null)
+      }
+    }
+  }
+
   private fun parseOkCollect(okcollect: ReadableMap?): OkCollect {
     var nativeOkCollect: OkCollect? = null
     if (okcollect == null) {
