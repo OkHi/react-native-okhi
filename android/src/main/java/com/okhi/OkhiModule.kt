@@ -1,5 +1,7 @@
 package com.okhi
 
+import android.os.Handler
+import android.os.Looper
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Callback
 import com.facebook.react.bridge.ReactApplicationContext
@@ -19,6 +21,10 @@ import io.okhi.android.core.model.OkHiUser
 @ReactModule(name = OkhiModule.NAME)
 class OkhiModule(reactContext: ReactApplicationContext) : NativeOkhiSpec(reactContext) {
   var currentCallback: Callback? = null
+  private val mainHandler = Handler(Looper.getMainLooper())
+  // Non-null while a delayed closeAddressCollection() is scheduled but hasn't
+  // fired yet. Used to reject concurrent calls with close_in_progress.
+  private var closeRunnable: Runnable? = null
 
   val okhiAddressVerificationCallback = object : OkHiAddressVerificationCallback() {
     override fun onClose() {
@@ -193,18 +199,43 @@ class OkhiModule(reactContext: ReactApplicationContext) : NativeOkhiSpec(reactCo
     }
   }
 
-  override fun closeAddressCollection(callback: Callback?) {
-    OkHi.closeAddressCollection { exception ->
-      if (exception != null) {
-        val error = Arguments.createMap().apply {
-          putString("code", exception.code)
-          putString("message", exception.message)
+  override fun closeAddressCollection(options: ReadableMap?, callback: Callback?) {
+    val ms = if (options != null && options.hasKey("ms")) options.getDouble("ms").toLong() else 0L
+
+    if (ms < 0) {
+      val error = Arguments.createMap().apply {
+        putString("code", "bad_argument")
+        putString("message", "ms must be greater than or equal to 0")
+      }
+      callback?.invoke(error)
+      return
+    }
+
+    if (closeRunnable != null) {
+      val error = Arguments.createMap().apply {
+        putString("code", "close_in_progress")
+        putString("message", "A close of the address collection session is already in progress")
+      }
+      callback?.invoke(error)
+      return
+    }
+
+    val runnable = Runnable {
+      closeRunnable = null
+      OkHi.closeAddressCollection { exception ->
+        if (exception != null) {
+          val error = Arguments.createMap().apply {
+            putString("code", exception.code)
+            putString("message", exception.message)
+          }
+          callback?.invoke(error)
+        } else {
+          callback?.invoke(null)
         }
-        callback?.invoke(error)
-      } else {
-        callback?.invoke(null)
       }
     }
+    closeRunnable = runnable
+    mainHandler.postDelayed(runnable, ms)
   }
 
   private fun parseOkCollect(okcollect: ReadableMap?): OkCollect {
