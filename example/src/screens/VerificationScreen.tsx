@@ -51,7 +51,9 @@ export function VerificationScreen({ navigation }: any) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [logoutResult, setLogoutResult] = useState<string[] | null>(null);
   const [showLogoutResult, setShowLogoutResult] = useState(false);
-  const [loginLocationIds, setLoginLocationIds] = useState<string[] | null>(null);
+  const [loginLocationIds, setLoginLocationIds] = useState<string[] | null>(
+    null
+  );
   const [showLoginResult, setShowLoginResult] = useState(false);
   const locationIdRef = useRef<string | null>(null);
   const addressCardAnim = useRef(new Animated.Value(0)).current;
@@ -241,6 +243,55 @@ export function VerificationScreen({ navigation }: any) {
     }
   };
 
+  const handleTestCloseActiveSession = async () => {
+    const timer = setTimeout(async () => {
+      try {
+        clearTimeout(timer);
+        await OkHi.closeAddressCollection();
+        setVerificationResult({
+          message:
+            'Address collection closed programmatically, without onClose() firing.',
+        });
+        setResultTitle('closeAddressCollection() 🥳');
+      } catch (error) {
+        setVerificationResult({ error });
+        setResultTitle('closeAddressCollection() failed');
+      } finally {
+        setShowResult(true);
+      }
+    }, 10000);
+
+    OkHi.createAddress()
+      .then((result) => {
+        saveAddress(result, 'address');
+        setVerificationResult(result);
+        setResultTitle('Address created 🥳');
+        setTimeout(() => setShowResult(true), 300);
+      })
+      .catch((error) => {
+        // Should NOT happen for a programmatic close - user_closed is only
+        // expected when the user closes the flow themselves (e.g. back button).
+        setVerificationResult({ error });
+        setResultTitle('onClose() fired 🤔');
+        setTimeout(() => setShowResult(true), 300);
+      });
+  };
+
+  const handleTestCloseNoSession = async () => {
+    try {
+      await OkHi.closeAddressCollection();
+      setVerificationResult({
+        message:
+          'Unexpectedly succeeded with no active address collection session.',
+      });
+      setResultTitle('closeAddressCollection() 🤔');
+    } catch (error) {
+      setVerificationResult({ error });
+      setResultTitle('closeAddressCollection() failed as expected 🥳');
+    }
+    setShowResult(true);
+  };
+
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
@@ -382,6 +433,22 @@ export function VerificationScreen({ navigation }: any) {
             description="Create an address without verification (saves to addressbook)"
             icon="📍"
             onPress={() => handleVerification('address', 'Create Address')}
+            disabled={loading}
+          />
+
+          <Card
+            title="Test Close (Active Session)"
+            description="Starts address collection, then closes it programmatically after 10s. onClose() should NOT fire."
+            icon="⏱️"
+            onPress={handleTestCloseActiveSession}
+            disabled={loading}
+          />
+
+          <Card
+            title="Test Close (No Session)"
+            description="Calls closeAddressCollection() with nothing in progress. Expected to fail."
+            icon="🚫"
+            onPress={handleTestCloseNoSession}
             disabled={loading}
           />
 
