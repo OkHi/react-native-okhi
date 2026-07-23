@@ -11,7 +11,10 @@ import UserNotifications
   private var okVerify: OkVerify = OkVerify()
   private var currentPermissionCallback: ((NSNumber?, NSDictionary?) -> Void)?
   private var currentPermissionLevelRequest: String?
-  
+  // Non-nil while a delayed closeAddressCollection() is scheduled but hasn't
+  // fired yet. Used to reject concurrent calls with close_in_progress.
+  private static var closeWorkItem: DispatchWorkItem?
+
   private override init() {
     super.init()
     okVerify.delegate = self
@@ -299,6 +302,40 @@ import UserNotifications
   @objc public static func logout(callback: @escaping ([String]?) -> Void) {
     OK.shared.logout { results in
       callback(results)
+    }
+  }
+  
+  @objc public static func closeAddressCollection(_ options: NSDictionary, callback: @escaping (NSDictionary?) -> Void) {
+    let ms = (options["ms"] as? NSNumber)?.doubleValue ?? 0
+
+    guard ms >= 0 else {
+      let errorResult: NSDictionary = ["code": "bad_argument", "message": "ms must be greater than or equal to 0"]
+      callback(errorResult)
+      return
+    }
+
+    DispatchQueue.main.async {
+      guard OkHiWrapper.closeWorkItem == nil else {
+        let errorResult: NSDictionary = ["code": "close_in_progress", "message": "A close of the address collection session is already in progress"]
+        callback(errorResult)
+        return
+      }
+
+      let workItem = DispatchWorkItem {
+        OK.shared.closeAddressCollection { exception in
+          DispatchQueue.main.async {
+            OkHiWrapper.closeWorkItem = nil
+            if let exception = exception {
+              let errorResult: NSDictionary = ["code": exception.code, "message": exception.message]
+              callback(errorResult)
+            } else {
+              callback(nil)
+            }
+          }
+        }
+      }
+      OkHiWrapper.closeWorkItem = workItem
+      DispatchQueue.main.asyncAfter(deadline: .now() + ms / 1000.0, execute: workItem)
     }
   }
 }
