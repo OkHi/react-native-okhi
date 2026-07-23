@@ -244,42 +244,41 @@ export function VerificationScreen({ navigation }: any) {
   };
 
   const handleTestCloseActiveSession = async () => {
-    const timer = setTimeout(async () => {
-      try {
-        clearTimeout(timer);
-        await OkHi.closeAddressCollection();
-        setVerificationResult({
-          message:
-            'Address collection closed programmatically, without onClose() firing.',
-        });
-        setResultTitle('closeAddressCollection() 🥳');
-      } catch (error) {
-        setVerificationResult({ error });
-        setResultTitle('closeAddressCollection() failed');
-      } finally {
-        setShowResult(true);
-      }
-    }, 10000);
-
     OkHi.createAddress()
-      .then((result) => {
+      .then((result: OkHiSuccessResponse) => {
         saveAddress(result, 'address');
         setVerificationResult(result);
         setResultTitle('Address created 🥳');
         setTimeout(() => setShowResult(true), 300);
       })
-      .catch((error) => {
+      .catch((error: unknown) => {
         // Should NOT happen for a programmatic close - user_closed is only
         // expected when the user closes the flow themselves (e.g. back button).
         setVerificationResult({ error });
         setResultTitle('onClose() fired 🤔');
         setTimeout(() => setShowResult(true), 300);
       });
+
+    try {
+      // Delay is scheduled natively so it fires 10s from now regardless of
+      // whether this JS thread/timer is suspended in the meantime.
+      await OkHi.closeAddressCollection({ ms: 10000 });
+      setVerificationResult({
+        message:
+          'Address collection closed programmatically, without onClose() firing.',
+      });
+      setResultTitle('closeAddressCollection() 🥳');
+    } catch (error) {
+      setVerificationResult({ error });
+      setResultTitle('closeAddressCollection() failed');
+    } finally {
+      setTimeout(() => setShowResult(true), 300);
+    }
   };
 
   const handleTestCloseNoSession = async () => {
     try {
-      await OkHi.closeAddressCollection();
+      await OkHi.closeAddressCollection({ ms: 0 });
       setVerificationResult({
         message:
           'Unexpectedly succeeded with no active address collection session.',
