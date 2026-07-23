@@ -550,7 +550,9 @@ export type OkHiErrorCode =
   | 'service_unavailable'
   | 'unsupported_device'
   | 'unauthenticated'
-  | 'invalid_phone';
+  | 'invalid_phone'
+  | 'no_active_session'
+  | 'close_in_progress';
 
 /**
  * Error class for OkHi operations.
@@ -631,6 +633,16 @@ export class OkHiException extends Error {
   static readonly INVALID_PHONE: OkHiErrorCode = 'invalid_phone';
 
   /**
+   * There is no active address collection session to close.
+   */
+  static readonly NO_ACTIVE_SESSION: OkHiErrorCode = 'no_active_session';
+
+  /**
+   * A close of the address collection session is already in progress.
+   */
+  static readonly CLOSE_IN_PROGRESS: OkHiErrorCode = 'close_in_progress';
+
+  /**
    * Machine-readable error code.
    * Use this for programmatic error handling with switch statements.
    *
@@ -693,6 +705,10 @@ export class OkHiException extends Error {
         return OkHiException.UNAUTHENTICATED;
       case 'invalid_phone':
         return OkHiException.INVALID_PHONE;
+      case 'no_active_session':
+        return OkHiException.NO_ACTIVE_SESSION;
+      case 'close_in_progress':
+        return OkHiException.CLOSE_IN_PROGRESS;
       case 'unknown':
       case 'unknown_error': // Android-specific code mapped to unknown
       default:
