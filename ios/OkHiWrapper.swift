@@ -322,9 +322,9 @@ import UserNotifications
       }
 
       let workItem = DispatchWorkItem {
-        OkHiWrapper.closeWorkItem = nil
         OK.shared.closeAddressCollection { exception in
           DispatchQueue.main.async {
+            OkHiWrapper.closeWorkItem = nil
             if let exception = exception {
               let errorResult: NSDictionary = ["code": exception.code, "message": exception.message]
               callback(errorResult)

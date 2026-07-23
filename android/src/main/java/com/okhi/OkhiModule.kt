@@ -221,8 +221,8 @@ class OkhiModule(reactContext: ReactApplicationContext) : NativeOkhiSpec(reactCo
     }
 
     val runnable = Runnable {
-      closeRunnable = null
       OkHi.closeAddressCollection { exception ->
+        closeRunnable = null
         if (exception != null) {
           val error = Arguments.createMap().apply {
             putString("code", exception.code)
