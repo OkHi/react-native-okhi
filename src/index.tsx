@@ -23,7 +23,12 @@
 
 import { Platform } from 'react-native';
 import Okhi from './NativeOkhi';
-import type { OkCollect, OkHiLogin, OkHiSuccessResponse } from './types';
+import type {
+  OkCollect,
+  OkHiCloseAddressCollectionOptions,
+  OkHiLogin,
+  OkHiSuccessResponse,
+} from './types';
 import { OkHiException } from './types';
 export * from './types';
 
@@ -414,22 +419,35 @@ export function logout(): Promise<string[] | null> {
  * the `user_closed` cancellation that a manual close (e.g. back button) would.
  *
  * If there is no active address collection session, the returned promise
- * rejects.
+ * rejects. If a close is already scheduled, the returned promise rejects
+ * with {@link OkHiException.CLOSE_IN_PROGRESS}.
  *
+ * @param options - Close behavior, e.g. a delay before closing
  * @returns A promise that resolves once the address collection flow has been closed.
  *
  * @example
  * ```typescript
  * import * as OkHi from 'react-native-okhi';
  *
- * await OkHi.closeAddressCollection();
+ * await OkHi.closeAddressCollection({ ms: 0 });
+ * ```
+ *
+ * @example
+ * ```typescript
+ * import * as OkHi from 'react-native-okhi';
+ *
+ * // Close 10 seconds from now, scheduled natively so it still fires
+ * // while the address collection UI is in the foreground.
+ * await OkHi.closeAddressCollection({ ms: 10000 });
  * ```
  *
  * @see {@link createAddress} - Starts an address collection flow
  */
-export function closeAddressCollection(): Promise<void> {
+export function closeAddressCollection(
+  options: OkHiCloseAddressCollectionOptions
+): Promise<void> {
   return new Promise((resolve, reject) => {
-    Okhi.closeAddressCollection((error) => {
+    Okhi.closeAddressCollection({ ms: options.ms }, (error) => {
       if (error != null) {
         const err = error as { code?: string; message?: string };
         reject(OkHiException.fromNativeError(err));
