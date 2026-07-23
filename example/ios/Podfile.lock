@@ -3018,7 +3018,7 @@ SPEC CHECKSUMS:
   React-logger: 3fc17afd62cdb87324a345b107b06a90b3e2dea0
   React-Mapbuffer: d690542fbbded9d9526a0a883c439aa82e4cede3
   React-microtasksnativemodule: b908076184179c0fd0db8713b5140f6e6e0e56c7
-  react-native-safe-area-context: 0f4986a88ec555aff660503b483d6e4bd6980a9a
+  react-native-safe-area-context: 7ee594b2c2aa287757c1ba78ac70278305bc7807
   React-NativeModulesApple: 153a3effe2df7d35881f3f0c126c8182b8643e5a
   React-networking: 236c494a8d26fc5a776b3cfec7795a3e55143c91
   React-oscompat: aedc0afbded67280de6bb6bfac8cfde0389e2b33
@@ -3055,8 +3055,8 @@ SPEC CHECKSUMS:
   ReactNativeOkHi: e2ef43d48b83e347d0a7f17b0df0f30a288a69d8
   RNCAsyncStorage: 302f2fac014fd450046c120567ca364632da682b
   RNCClipboard: 962296f7af77f6c039b683e21c2e2255af9c05df
-  RNGestureHandler: 3776deb1fd8fe839a663fc60b7336e50c5f764ff
-  RNScreens: 7179cc1ba31b4e18ed29f10abf20c24a7961cf4c
+  RNGestureHandler: 336ce8e4fb4f4eb3e0b7c18e092684caa0ace5b5
+  RNScreens: afb30f9d9b3db890180d9ca0a5a26911b49179f5
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 6ca93c8c13f56baeec55eb608577619b17a4d64e
 
