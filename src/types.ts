@@ -345,6 +345,25 @@ export type OkCollect = {
 };
 
 /**
+ * Options for closing an in-progress address collection flow.
+ *
+ * @see {@link OkHiSuccessResponse} - Parent response type
+ */
+export type OkHiCloseAddressCollectionOptions = {
+  /**
+   * Delay, in milliseconds, before the address collection flow is closed.
+   * Pass `0` to close immediately.
+   *
+   * @remarks
+   * The delay is scheduled natively rather than via a JS timer, so it still
+   * fires while the address collection UI is in the foreground (on Android
+   * this runs as a separate `Activity`, which otherwise suspends JS timers
+   * on the host activity until it's paused).
+   */
+  ms: number;
+};
+
+/**
  * Comprehensive location data returned once verification starts successfully.
  *
  * @remarks
@@ -550,7 +569,10 @@ export type OkHiErrorCode =
   | 'service_unavailable'
   | 'unsupported_device'
   | 'unauthenticated'
-  | 'invalid_phone';
+  | 'invalid_phone'
+  | 'no_active_session'
+  | 'close_in_progress'
+  | 'bad_argument';
 
 /**
  * Error class for OkHi operations.
@@ -631,6 +653,21 @@ export class OkHiException extends Error {
   static readonly INVALID_PHONE: OkHiErrorCode = 'invalid_phone';
 
   /**
+   * There is no active address collection session to close.
+   */
+  static readonly NO_ACTIVE_SESSION: OkHiErrorCode = 'no_active_session';
+
+  /**
+   * A close of the address collection session is already in progress.
+   */
+  static readonly CLOSE_IN_PROGRESS: OkHiErrorCode = 'close_in_progress';
+
+  /**
+   * An argument passed to an OkHi function was invalid.
+   */
+  static readonly BAD_ARGUMENT: OkHiErrorCode = 'bad_argument';
+
+  /**
    * Machine-readable error code.
    * Use this for programmatic error handling with switch statements.
    *
@@ -693,6 +730,12 @@ export class OkHiException extends Error {
         return OkHiException.UNAUTHENTICATED;
       case 'invalid_phone':
         return OkHiException.INVALID_PHONE;
+      case 'no_active_session':
+        return OkHiException.NO_ACTIVE_SESSION;
+      case 'close_in_progress':
+        return OkHiException.CLOSE_IN_PROGRESS;
+      case 'bad_argument':
+        return OkHiException.BAD_ARGUMENT;
       case 'unknown':
       case 'unknown_error': // Android-specific code mapped to unknown
       default:
