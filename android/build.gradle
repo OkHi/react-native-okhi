@@ -67,7 +67,7 @@ android {
 repositories {
   mavenCentral()
   google()
-  // maven { url "https://repo.okhi.io/artifactory/maven" }
+  maven { url "https://artifactory.okhi.io/artifactory/maven" }
 }
 
 def kotlin_version = getExtOrDefault("kotlinVersion")
