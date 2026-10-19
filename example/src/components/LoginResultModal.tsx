@@ -7,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   Dimensions,
+  Platform,
 } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 
@@ -16,12 +17,78 @@ interface LoginResultModalProps {
   onDone: () => void;
 }
 
+type LoginResultCheck = {
+  status: 'ok' | 'warning' | 'error';
+  title: string;
+  message: string;
+};
+
+// The native SDKs resolve login with null, an empty array, or a list of location IDs.
+// Anything else means the bridge returned something unexpected.
+function checkLoginResult(value: unknown): LoginResultCheck {
+  if (value === null || value === undefined) {
+    return {
+      status: 'warning',
+      title: 'No Value Returned',
+      message: `login() returned ${value}. Check the credentials and user details.`,
+    };
+  }
+  if (!Array.isArray(value)) {
+    return {
+      status: 'error',
+      title: 'Unexpected Value',
+      message: `Expected string[] | null but got ${typeof value}.`,
+    };
+  }
+  const invalid = value.filter(
+    (id) => typeof id !== 'string' || id.trim().length === 0
+  );
+  if (invalid.length > 0) {
+    return {
+      status: 'error',
+      title: 'Invalid Location IDs',
+      message: `${invalid.length} of ${value.length} entr${
+        value.length === 1 ? 'y is' : 'ies are'
+      } not a non-empty string.`,
+    };
+  }
+  if (value.length === 0) {
+    return {
+      status: 'ok',
+      title: 'Logged In',
+      message: 'Login successful, no location IDs returned',
+    };
+  }
+  return {
+    status: 'ok',
+    title: 'Logged In',
+    message: `${value.length} location ID${
+      value.length === 1 ? '' : 's'
+    } returned`,
+  };
+}
+
+const STATUS_STYLES = {
+  ok: { icon: '✓', color: '#2E7D32', background: '#E8F5E9' },
+  warning: { icon: '!', color: '#E65100', background: '#FFF3E0' },
+  error: { icon: '✕', color: '#C62828', background: '#FFEBEE' },
+};
+
 export function LoginResultModal({
   visible,
   locationIds,
   onDone,
 }: LoginResultModalProps) {
-  const hasIds = Array.isArray(locationIds) && locationIds.length > 0;
+  const check = checkLoginResult(locationIds);
+  const statusStyle = STATUS_STYLES[check.status];
+  const hasIds =
+    check.status === 'ok' &&
+    Array.isArray(locationIds) &&
+    locationIds.length > 0;
+  const rawValue =
+    locationIds === undefined
+      ? 'undefined'
+      : JSON.stringify(locationIds, null, 2);
 
   const handleCopyAndContinue = () => {
     if (hasIds) {
@@ -39,28 +106,40 @@ export function LoginResultModal({
     >
       <View style={styles.overlay}>
         <View style={styles.card}>
-          <View style={styles.iconWrap}>
-            <Text style={styles.iconEmoji}>✓</Text>
+          <View
+            style={[
+              styles.iconWrap,
+              { backgroundColor: statusStyle.background },
+            ]}
+          >
+            <Text style={[styles.iconEmoji, { color: statusStyle.color }]}>
+              {statusStyle.icon}
+            </Text>
           </View>
 
-          <Text style={styles.title}>Logged In</Text>
-          <Text style={styles.subtitle}>
-            {hasIds
-              ? `${locationIds!.length} location ID${locationIds!.length === 1 ? '' : 's'} returned`
-              : 'Login successful'}
-          </Text>
+          <Text style={styles.title}>{check.title}</Text>
+          <Text style={styles.subtitle}>{check.message}</Text>
+
+          <View style={styles.divider} />
+          <Text style={styles.sectionLabel}>Returned Value</Text>
+          <ScrollView style={styles.rawValueBox} nestedScrollEnabled>
+            <Text style={styles.rawValueText} selectable>
+              {rawValue}
+            </Text>
+          </ScrollView>
 
           {hasIds && (
             <>
-              <View style={styles.divider} />
-              <Text style={styles.sectionLabel}>Location IDs</Text>
+              <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
+                Location IDs
+              </Text>
               <ScrollView
                 style={styles.idList}
                 showsVerticalScrollIndicator={false}
                 nestedScrollEnabled
               >
                 {locationIds!.map((id, index) => (
-                  <View key={id} style={styles.idRow}>
+                  <View key={`${index}-${id}`} style={styles.idRow}>
                     <View style={styles.idIndex}>
                       <Text style={styles.idIndexText}>{index + 1}</Text>
                     </View>
@@ -159,6 +238,22 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     alignSelf: 'flex-start',
     marginBottom: 10,
+  },
+  sectionLabelSpaced: {
+    marginTop: 16,
+  },
+  rawValueBox: {
+    width: '100%',
+    maxHeight: 120,
+    backgroundColor: '#F8F9FA',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  rawValueText: {
+    fontSize: 12,
+    color: '#424242',
+    fontFamily: Platform.select({ ios: 'Menlo', default: 'monospace' }),
   },
   idList: {
     width: '100%',
