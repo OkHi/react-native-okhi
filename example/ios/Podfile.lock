@@ -2536,7 +2536,7 @@ PODS:
     - React-perflogger (= 0.83.0)
     - React-utils (= 0.83.0)
     - SocketRocket
-  - ReactNativeOkHi (2.0.25):
+  - ReactNativeOkHi (2.0.26):
     - boost
     - DoubleConversion
     - fast_float
@@ -2620,7 +2620,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - RNGestureHandler (2.33.1):
+  - RNGestureHandler (3.4.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -3049,14 +3049,14 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: 23e2bca1661f8781e55fcc05a151fc1df97bc1fb
   ReactCodegen: 7fc8ea04a59f2182fc04721b60fe8a95b1859120
   ReactCommon: ac4ba7ee2c810157492ac424e77ea248f33c6ac4
-  ReactNativeOkHi: 9783b34e5e87a6aa9dd47865266909f5fc6b8ea9
+  ReactNativeOkHi: e56cd1acd235224d820a85c11307341b98ff7009
   RNCAsyncStorage: 8857fb173af29664cb90897903902dc8533e36cc
   RNCClipboard: 4eea71d801c880175c12f6ab14332ca86fed935f
-  RNGestureHandler: 52b097d9d25df26bdf7bfb7fbb85351e40df14e8
+  RNGestureHandler: e9ff303306ae93472a4881784d4450f231aaa95e
   RNScreens: 656e050942ae9445f5cc45d05d57f13ce7a4c8e4
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: faec420ba5f8a2bd196f26048a0557882d40e5b9
 
-PODFILE CHECKSUM: 978c25845af50c52cf9c351c17559efdad422f47
+PODFILE CHECKSUM: 4db7bfeeffb1e544e6a6d3598781cb462011a6c2
 
 COCOAPODS: 1.16.2
