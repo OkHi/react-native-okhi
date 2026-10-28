@@ -50,8 +50,10 @@ yarn add react-native-okhi
 After installation, run:
 
 ```bash
-# iOS
-cd ios && pod install && cd ..
+# iOS — the native OkHi SDK is distributed via SPM and requires dynamic frameworks;
+# set USE_FRAMEWORKS=dynamic and pass it to use_frameworks! in your Podfile (see
+# "iOS Configuration" below) before installing pods
+cd ios && USE_FRAMEWORKS=dynamic pod install && cd ..
 ```
 
 ### For Expo Projects
@@ -187,7 +189,23 @@ When address verification is running, Android shows a persistent notification. C
 
 ## iOS Configuration
 
-### 1. Add Location Permissions
+### 1. Configure Dynamic Framework Linkage
+
+The native OkHi iOS SDK is consumed via Swift Package Manager (SPM) and requires dynamic frameworks. Set `USE_FRAMEWORKS=dynamic` and pass it to `use_frameworks!` in your `ios/Podfile` **before** running `pod install`:
+
+```ruby
+linkage = ENV['USE_FRAMEWORKS'] || 'dynamic'
+ENV['USE_FRAMEWORKS'] = linkage
+use_frameworks! :linkage => linkage.to_sym
+```
+
+Then install pods as usual:
+
+```bash
+cd ios && USE_FRAMEWORKS=dynamic pod install && cd ..
+```
+
+### 2. Add Location Permissions
 
 Edit `ios/[YourAppName]/Info.plist` to add location permission descriptions:
 
@@ -206,7 +224,7 @@ Edit `ios/[YourAppName]/Info.plist` to add location permission descriptions:
 </dict>
 ```
 
-### 2. Enable Background Modes
+### 3. Enable Background Modes
 
 In Xcode:
 
@@ -228,7 +246,7 @@ Or add to `Info.plist`:
 </array>
 ```
 
-### 3. Configure AppDelegate
+### 4. Configure AppDelegate
 
 Add the OkHi monitoring start call to your AppDelegate.
 
@@ -702,7 +720,23 @@ Ensure you added the OkHi Maven repository to `android/build.gradle` in the `all
 Run `pod install` in the `ios` directory:
 
 ```bash
-cd ios && pod install && cd ..
+cd ios && USE_FRAMEWORKS=dynamic pod install && cd ..
+```
+
+### iOS: SPM / linking errors resolving `OkHi` (static framework linkage)
+
+The native OkHi iOS SDK is distributed via Swift Package Manager and requires **dynamic** frameworks. If your `Podfile` doesn't set `USE_FRAMEWORKS=dynamic` and pass it to `use_frameworks!`, pod installation or linking will fail. Fix by adding to your `ios/Podfile` before the `target` block:
+
+```ruby
+linkage = ENV['USE_FRAMEWORKS'] || 'dynamic'
+ENV['USE_FRAMEWORKS'] = linkage
+use_frameworks! :linkage => linkage.to_sym
+```
+
+Then reinstall pods:
+
+```bash
+cd ios && USE_FRAMEWORKS=dynamic pod install && cd ..
 ```
 
 ### Expo: "Native module not found"
@@ -755,6 +789,7 @@ Use this checklist to verify that a React Native project has correctly integrate
 | #   | Check                                  | File(s) to Inspect                     | What to Look For                                                                    | Required       |
 | --- | -------------------------------------- | -------------------------------------- | ----------------------------------------------------------------------------------- | -------------- |
 | I1  | Minimum iOS version                    | `ios/Podfile` or Xcode project         | `platform :ios, '12.0'` or higher                                                   | Yes            |
+| I1b | Dynamic framework linkage              | `ios/Podfile`                          | `use_frameworks! :linkage => :dynamic` (or `ENV['USE_FRAMEWORKS']` resolved to `dynamic`) set before the `target` block | Yes            |
 | I2  | Location always permission             | `ios/[AppName]/Info.plist`             | `<key>NSLocationAlwaysUsageDescription</key>` with a description string             | Yes            |
 | I3  | Location when-in-use permission        | `ios/[AppName]/Info.plist`             | `<key>NSLocationWhenInUseUsageDescription</key>` with a description string          | Yes            |
 | I4  | Location always+when-in-use permission | `ios/[AppName]/Info.plist`             | `<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>` with a description string | Yes            |
@@ -828,6 +863,7 @@ When auditing an integration, follow these steps:
 | ----------------------------- | ------------------------------------------------- | --------------------------------------------------------------- |
 | Kotlin version too low        | `compileDebugKotlin FAILED` during Android build  | Set `kotlinVersion = "2.0.21"` in app's `android/build.gradle`  |
 | Maven repo missing            | Build fails with "Could not resolve io.okhi..."   | Add OkHi Maven URL to `android/build.gradle`                    |
+| Static framework linkage (iOS)| Pod install or linker errors resolving `OkHi`     | Set `USE_FRAMEWORKS=dynamic` and pass it to `use_frameworks!` in `ios/Podfile` before `pod install` |
 | minSdk too low                | Build fails with SDK version error                | Set `minSdkVersion = 24` in `android/build.gradle`              |
 | Missing permissions (Android) | Runtime permission errors or crashes              | Add all required `<uses-permission>` entries                    |
 | Missing Info.plist keys       | iOS crashes or permission dialogs don't appear    | Add all NSLocation\*UsageDescription keys                       |
