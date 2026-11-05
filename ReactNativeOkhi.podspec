@@ -1,5 +1,12 @@
 require "json"
 
+# Installs an automatic `pod install`-time workaround for an Xcode archive
+# bug that collides on OkHi's SPM-vendored xcframework signature file. See
+# ios/okhi_spm_signature_fix.rb for details. Loaded eagerly (not just inside
+# the `if defined?(spm_dependency)` branch below) so it's also active when
+# this podspec is linted or otherwise evaluated outside of `pod install`.
+require_relative "ios/okhi_spm_signature_fix"
+
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 
 Pod::Spec.new do |s|
