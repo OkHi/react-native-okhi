@@ -13,7 +13,10 @@ def okhi_spm_signature_fix_shell_script
       %(rm -f "${CONFIGURATION_BUILD_DIR}/#{name}.xcframework-#{slice}.signature")
     end
   end
-  "#{lines.join("\n")}\n"
+  # `set -e` so a failing removal (e.g. permission denied -- `-f` only
+  # suppresses "no such file" errors, not others) stops the script instead of
+  # being masked by a later line succeeding and the phase reporting success.
+  "set -e\n#{lines.join("\n")}\n"
 end
 
 def okhi_spm_signature_fix_manual_instructions

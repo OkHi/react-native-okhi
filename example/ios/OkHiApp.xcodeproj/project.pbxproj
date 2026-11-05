@@ -256,7 +256,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "rm -f \"${CONFIGURATION_BUILD_DIR}/OkHi.xcframework-ios.signature\"\nrm -f \"${CONFIGURATION_BUILD_DIR}/OkHi.xcframework-ios-simulator.signature\"\nrm -f \"${CONFIGURATION_BUILD_DIR}/OkHi.xcframework-ios-maccatalyst.signature\"\n";
+			shellScript = "set -e\nrm -f \"${CONFIGURATION_BUILD_DIR}/OkHi.xcframework-ios.signature\"\nrm -f \"${CONFIGURATION_BUILD_DIR}/OkHi.xcframework-ios-simulator.signature\"\nrm -f \"${CONFIGURATION_BUILD_DIR}/OkHi.xcframework-ios-maccatalyst.signature\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
