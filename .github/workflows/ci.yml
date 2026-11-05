@@ -165,6 +165,14 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
+      # This runner is a persistent self-hosted machine (not an ephemeral
+      # GitHub-hosted runner), so DerivedData/module caches survive across
+      # runs and Xcode version changes. Stale caches from a different Xcode
+      # version are a known cause of xcodebuild failing with an opaque,
+      # non-specific error, so start from a clean cache every build.
+      - name: Clear Xcode DerivedData cache
+        run: rm -rf ~/Library/Developer/Xcode/DerivedData
+
       - name: Write app credentials
         env:
           APP_CREDENTIALS_JSON: ${{ secrets.APP_CREDENTIALS_JSON }}
@@ -218,6 +226,9 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
+      - name: Clear Xcode DerivedData cache
+        run: rm -rf ~/Library/Developer/Xcode/DerivedData
+
       - name: Write app credentials
         env:
           APP_CREDENTIALS_JSON: ${{ secrets.APP_CREDENTIALS_JSON }}
@@ -255,6 +266,14 @@ jobs:
           name: gym-log
           path: /Users/runner/Library/Logs/gym/OkHiApp-OkHiApp.log
           retention-days: 1
+
+      - name: Upload xcresult
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcresult
+          path: example/build/*.xcresult
+          retention-days: 7
 
       - name: Clean up API key
         if: always()
