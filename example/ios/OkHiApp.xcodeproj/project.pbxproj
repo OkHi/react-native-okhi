@@ -110,6 +110,7 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				C84B46F998EBF17697EC4F4D /* [OkHi] Remove duplicate SPM xcframework signature files */,
 				2139ACFDDB6ED4996D590E0A /* [CP] Embed Pods Frameworks */,
 				68E622A44802E58800176203 /* [CP] Copy Pods Resources */,
 			);
@@ -238,6 +239,24 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		C84B46F998EBF17697EC4F4D /* [OkHi] Remove duplicate SPM xcframework signature files */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[OkHi] Remove duplicate SPM xcframework signature files";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "rm -f \"${CONFIGURATION_BUILD_DIR}/OkHi.xcframework-ios.signature\"\nrm -f \"${CONFIGURATION_BUILD_DIR}/OkHi.xcframework-ios-simulator.signature\"\nrm -f \"${CONFIGURATION_BUILD_DIR}/OkHi.xcframework-ios-maccatalyst.signature\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
