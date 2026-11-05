@@ -126,14 +126,14 @@ jobs:
         with:
           name: app-${{ matrix.arch.name }}-arch-debug
           path: example/android/app/build/outputs/apk/debug/app-debug.apk
-          retention-days: ${{ github.ref == 'refs/heads/master' && 14 || github.event_name == 'pull_request' && 3 || 7 }}
+          retention-days: 1
 
       - name: Upload release APK
         uses: actions/upload-artifact@v4
         with:
           name: app-${{ matrix.arch.name }}-arch-release
           path: example/android/app/build/outputs/apk/release/app-release.apk
-          retention-days: ${{ github.ref == 'refs/heads/master' && 14 || github.event_name == 'pull_request' && 3 || 7 }}
+          retention-days: 1
 
   build-ios:
     runs-on: xcode-27
@@ -254,7 +254,7 @@ jobs:
         with:
           name: gym-log
           path: /Users/runner/Library/Logs/gym/OkHiApp-OkHiApp.log
-          retention-days: 7
+          retention-days: 1
 
       - name: Clean up API key
         if: always()
