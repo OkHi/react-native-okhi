@@ -24,10 +24,18 @@ yarn add react-native-okhi
 <details>
 <summary><b>iOS Setup</b></summary>
 
+The native OkHi iOS SDK is distributed via Swift Package Manager (SPM) and requires dynamic frameworks. Set `USE_FRAMEWORKS=dynamic` and pass it to `use_frameworks!` in your `Podfile` before installing pods:
+
+```ruby
+linkage = ENV['USE_FRAMEWORKS'] || 'dynamic'
+ENV['USE_FRAMEWORKS'] = linkage
+use_frameworks! :linkage => linkage.to_sym
+```
+
 Install pods:
 
 ```bash
-cd ios && pod install && cd ..
+cd ios && USE_FRAMEWORKS=dynamic pod install && cd ..
 ```
 
 Add to `Info.plist`:

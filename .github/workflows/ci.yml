@@ -154,7 +154,10 @@ jobs:
       TURBO_CACHE_DIR: .turbo/ios-${{ matrix.arch.name }}
       RCT_NEW_ARCH_ENABLED: ${{ matrix.arch.newArchEnabled }}
       RCT_USE_RN_DEP: 1
-      RCT_USE_PREBUILT_RNCORE: 1
+      # Disabled: prebuilt RNCore races with dynamic framework linkage on RN 0.83,
+      # producing "no such module 'React'" (fixed upstream in facebook/react-native#57814,
+      # not yet in this RN version). Build React-Core from source instead.
+      RCT_USE_PREBUILT_RNCORE: 0
 
     steps:
       - name: Checkout
