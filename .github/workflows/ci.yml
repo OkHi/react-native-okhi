@@ -248,6 +248,10 @@ jobs:
           ASC_KEY_P8_PATH: /tmp/asc_key.p8
         run: bundle exec fastlane beta
 
+      - name: Print gym log
+        if: always()
+        run: cat /Users/runner/Library/Logs/gym/OkHiApp-OkHiApp.log
+
       - name: Clean up API key
         if: always()
         run: rm -f /tmp/asc_key.p8
