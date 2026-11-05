@@ -20,7 +20,7 @@
     "react-native-gesture-handler": "^3.4.0",
     "react-native-okhi": "workspace:*",
     "react-native-safe-area-context": "^5.10.1",
-    "react-native-screens": "~4.25.2"
+    "react-native-screens": "4.24.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
