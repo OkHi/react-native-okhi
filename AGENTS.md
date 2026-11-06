@@ -739,6 +739,21 @@ Then reinstall pods:
 cd ios && USE_FRAMEWORKS=dynamic pod install && cd ..
 ```
 
+### iOS: `xcodebuild archive` fails with "couldn't be copied to Signatures because an item with the same name already exists"
+
+This is a long-standing Xcode bug (reproducible from Xcode 16 through at least Xcode 27, independent of Xcode version) that affects any project referencing the same Swift Package Manager product from more than one place in the build graph — the native OkHi iOS SDK is one such product, bridged into `react-native-okhi`'s pod target via `spm_dependency`. `react-native-okhi` installs an automatic workaround during `pod install` (see `node_modules/react-native-okhi/ios/okhi_spm_signature_fix.rb`) that adds a Run Script build phase deleting OkHi's stale `.signature` files before each build, so this should not occur — no Podfile changes are required for it.
+
+If you still hit this error:
+
+- Run `cd ios && pod install && cd ..` again — the workaround is reinstalled on every `pod install` and is idempotent.
+- Check your app target's Build Phases for `[OkHi] Remove duplicate SPM xcframework signature files`, positioned immediately before `[CP] Embed Pods Frameworks`. If it's missing (e.g., the automatic install failed — `pod install` prints a `[OkHi]` warning in that case), add it manually with this script:
+  ```bash
+  rm -f "${CONFIGURATION_BUILD_DIR}/OkHi.xcframework-ios.signature"
+  rm -f "${CONFIGURATION_BUILD_DIR}/OkHi.xcframework-ios-simulator.signature"
+  rm -f "${CONFIGURATION_BUILD_DIR}/OkHi.xcframework-ios-maccatalyst.signature"
+  ```
+- This is the same bug and fix pattern documented by `react-native-firebase` for its own SPM-vendored dependencies: https://github.com/invertase/react-native-firebase/issues/9414
+
 ### Expo: "Native module not found"
 
 Expo Go doesn't support native modules. Use a development build:
