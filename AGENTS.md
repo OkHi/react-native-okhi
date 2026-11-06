@@ -754,6 +754,26 @@ If you still hit this error:
   ```
 - This is the same bug and fix pattern documented by `react-native-firebase` for its own SPM-vendored dependencies: https://github.com/invertase/react-native-firebase/issues/9414
 
+### iOS: app crashes at launch with "Library not loaded: @rpath/OkHi.framework/OkHi" (archived/TestFlight/App Store builds only)
+
+This is a separate consequence of the same underlying issue as above: because OkHi is consumed via `spm_dependency` rather than `vendored_frameworks`, nothing in a default CocoaPods integration tells Xcode to copy `OkHi.framework` into the app bundle's `Frameworks/` folder — it builds and links correctly, but is silently missing from the archived `.app`/`.ipa`. This doesn't show up when running from Xcode (its debug launcher injects extra dyld search paths that happen to resolve the framework from the build directory), only in a distributed build.
+
+`react-native-okhi` installs a second automatic workaround during `pod install` (same file, `node_modules/react-native-okhi/ios/okhi_spm_signature_fix.rb`) that adds a `[OkHi] Embed OkHi.framework` Run Script build phase, positioned immediately after `[CP] Embed Pods Frameworks`, which copies and re-signs `OkHi.framework` into the app bundle. No Podfile changes are required for it.
+
+If you still hit this crash:
+
+- Run `cd ios && pod install && cd ..` again — the workaround is reinstalled on every `pod install` and is idempotent.
+- Check your app target's Build Phases for `[OkHi] Embed OkHi.framework`, positioned immediately after `[CP] Embed Pods Frameworks`. If it's missing (e.g., the automatic install failed — `pod install` prints a `[OkHi]` warning in that case), add it manually with this script:
+  ```bash
+  mkdir -p "${CODESIGNING_FOLDER_PATH}/Frameworks"
+  rsync -a --delete "${BUILT_PRODUCTS_DIR}/OkHi.framework/" "${CODESIGNING_FOLDER_PATH}/Frameworks/OkHi.framework/"
+  chmod -R u+w "${CODESIGNING_FOLDER_PATH}/Frameworks/OkHi.framework"
+  if [ "${CODE_SIGNING_ALLOWED}" != "NO" ]; then
+    codesign --force --sign "${EXPANDED_CODE_SIGN_IDENTITY:--}" --preserve-metadata=identifier,entitlements,flags "${CODESIGNING_FOLDER_PATH}/Frameworks/OkHi.framework"
+  fi
+  ```
+- To confirm whether a given archive is affected, unzip the `.ipa` (or inspect the `.xcarchive`) and check for `Payload/[YourAppName].app/Frameworks/OkHi.framework` — its absence confirms this issue.
+
 ### Expo: "Native module not found"
 
 Expo Go doesn't support native modules. Use a development build:
@@ -879,6 +899,8 @@ When auditing an integration, follow these steps:
 | Kotlin version too low        | `compileDebugKotlin FAILED` during Android build  | Set `kotlinVersion = "2.0.21"` in app's `android/build.gradle`  |
 | Maven repo missing            | Build fails with "Could not resolve io.okhi..."   | Add OkHi Maven URL to `android/build.gradle`                    |
 | Static framework linkage (iOS)| Pod install or linker errors resolving `OkHi`     | Set `USE_FRAMEWORKS=dynamic` and pass it to `use_frameworks!` in `ios/Podfile` before `pod install` |
+| SPM signature collision (iOS) | `xcodebuild archive` fails: "couldn't be copied to Signatures..." | Automatic on `pod install`; see troubleshooting section below if it still occurs |
+| OkHi.framework not embedded (iOS) | `dyld: Library not loaded: @rpath/OkHi.framework/OkHi` at launch, archived builds only | Automatic on `pod install`; see troubleshooting section below if it still occurs |
 | minSdk too low                | Build fails with SDK version error                | Set `minSdkVersion = 24` in `android/build.gradle`              |
 | Missing permissions (Android) | Runtime permission errors or crashes              | Add all required `<uses-permission>` entries                    |
 | Missing Info.plist keys       | iOS crashes or permission dialogs don't appear    | Add all NSLocation\*UsageDescription keys                       |

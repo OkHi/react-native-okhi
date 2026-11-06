@@ -112,6 +112,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				C84B46F998EBF17697EC4F4D /* [OkHi] Remove duplicate SPM xcframework signature files */,
 				2139ACFDDB6ED4996D590E0A /* [CP] Embed Pods Frameworks */,
+				78D0C3B4135D94377D264569 /* [OkHi] Embed OkHi.framework */,
 				68E622A44802E58800176203 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -217,6 +218,24 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OkHiApp/Pods-OkHiApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		78D0C3B4135D94377D264569 /* [OkHi] Embed OkHi.framework */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[OkHi] Embed OkHi.framework";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\nmkdir -p \"${CODESIGNING_FOLDER_PATH}/Frameworks\"\nrsync -a --delete \"${BUILT_PRODUCTS_DIR}/OkHi.framework/\" \"${CODESIGNING_FOLDER_PATH}/Frameworks/OkHi.framework/\"\n# The SPM-resolved framework is read-only on disk (Xcode marks\n# SourcePackages/checkouts artifacts non-writable) and `rsync -a`\n# preserves that, so `codesign` below would otherwise fail with\n# \"Permission denied\" trying to rewrite the signature in place.\nchmod -R u+w \"${CODESIGNING_FOLDER_PATH}/Frameworks/OkHi.framework\"\nif [ \"${CODE_SIGNING_ALLOWED}\" != \"NO\" ]; then\n  codesign --force --sign \"${EXPANDED_CODE_SIGN_IDENTITY:--}\" --preserve-metadata=identifier,entitlements,flags \"${CODESIGNING_FOLDER_PATH}/Frameworks/OkHi.framework\"\nfi\n";
 		};
 		B71544C16E0347B288326033 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
