@@ -188,9 +188,13 @@ jobs:
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: ${{ env.TURBO_CACHE_DIR }}
-          key: ${{ runner.os }}-turborepo-ios-${{ matrix.arch.name }}-${{ hashFiles('yarn.lock') }}
+          # The `xcode-27` token must match the `runs-on` label above -- turbo's
+          # own task hash has no notion of Xcode version, so without it a cached
+          # build:ios result from a previous Xcode version would get replayed
+          # here without ever re-running xcodebuild on the new toolchain.
+          key: ${{ runner.os }}-turborepo-ios-xcode-27-${{ matrix.arch.name }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-turborepo-ios-${{ matrix.arch.name }}-
+            ${{ runner.os }}-turborepo-ios-xcode-27-${{ matrix.arch.name }}-
 
       - name: Check turborepo cache for iOS
         run: |
@@ -258,22 +262,6 @@ jobs:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_P8_PATH: /tmp/asc_key.p8
         run: bundle exec fastlane beta
-
-      - name: Upload gym log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: gym-log
-          path: /Users/runner/Library/Logs/gym/OkHiApp-OkHiApp.log
-          retention-days: 1
-
-      - name: Upload xcresult
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: xcresult
-          path: example/build/*.xcresult
-          retention-days: 7
 
       - name: Clean up API key
         if: always()
