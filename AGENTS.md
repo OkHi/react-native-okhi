@@ -287,6 +287,124 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 @end
 ```
 
+### 5. Adopt the UIScene Lifecycle (required when building with newer iOS SDKs)
+
+When the app is built with a newer iOS SDK (iOS 26+, depending on the Xcode version in use), UIKit **requires** apps to adopt the `UIScene` lifecycle. Apps that still create their `UIWindow` directly in `AppDelegate` (the default React Native template pattern prior to RN 0.88) will crash at launch with a stack trace like:
+
+```
+UIKitCore: ___UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption_block_invoke
+UIApplicationMain
+specialized static UIApplicationDelegate.main()
+static AppDelegate.$main()
+main
+```
+
+If your app does not already have a `SceneDelegate`, add one and move window/React Native setup out of `AppDelegate`:
+
+**1. Add `UIApplicationSceneManifest` to `Info.plist`:**
+
+```xml
+<key>UIApplicationSceneManifest</key>
+<dict>
+    <key>UIApplicationSupportsMultipleScenes</key>
+    <false/>
+    <key>UISceneConfigurations</key>
+    <dict>
+        <key>UIWindowSceneSessionRoleApplication</key>
+        <array>
+            <dict>
+                <key>UISceneConfigurationName</key>
+                <string>Default Configuration</string>
+                <key>UISceneDelegateClassName</key>
+                <string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
+            </dict>
+        </array>
+    </dict>
+</dict>
+```
+
+**2. Create `SceneDelegate.swift`** (and add it to your Xcode target's Sources build phase) to own the window and start React Native:
+
+```swift
+import UIKit
+import React
+import React_RCTAppDelegate
+import ReactAppDependencyProvider
+
+class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+  var window: UIWindow?
+  var reactNativeDelegate: ReactNativeDelegate?
+  var reactNativeFactory: RCTReactNativeFactory?
+
+  func scene(
+    _ scene: UIScene,
+    willConnectTo session: UISceneSession,
+    options connectionOptions: UIScene.ConnectionOptions
+  ) {
+    guard let windowScene = scene as? UIWindowScene,
+      let appDelegate = UIApplication.shared.delegate as? AppDelegate
+    else { return }
+
+    let delegate = ReactNativeDelegate()
+    let factory = RCTReactNativeFactory(delegate: delegate)
+    delegate.dependencyProvider = RCTAppDependencyProvider()
+
+    reactNativeDelegate = delegate
+    reactNativeFactory = factory
+    appDelegate.reactNativeDelegate = delegate
+    appDelegate.reactNativeFactory = factory
+
+    window = UIWindow(windowScene: windowScene)
+
+    factory.startReactNative(
+      withModuleName: "YourAppName",
+      in: window,
+      launchOptions: appDelegate.launchOptions
+    )
+  }
+}
+```
+
+**3. Slim down `AppDelegate.swift`** — it no longer owns the window, but still calls `OK.startMonitoring()` and now also vends the scene configuration:
+
+```swift
+import UIKit
+import OkHi
+
+@main
+class AppDelegate: UIResponder, UIApplicationDelegate {
+  var reactNativeDelegate: ReactNativeDelegate?
+  var reactNativeFactory: RCTReactNativeFactory?
+  var launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+
+  func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+  ) -> Bool {
+    OK.startMonitoring() // KEEP THIS LINE — does not depend on window
+
+    self.launchOptions = launchOptions
+
+    return true
+  }
+
+  func application(
+    _ application: UIApplication,
+    configurationForConnecting connectingSceneSession: UISceneSession,
+    options: UIScene.ConnectionOptions
+  ) -> UISceneConfiguration {
+    let configuration = UISceneConfiguration(
+      name: "Default Configuration",
+      sessionRole: connectingSceneSession.role
+    )
+    configuration.delegateClass = SceneDelegate.self
+    return configuration
+  }
+}
+```
+
+> **Note:** This is a general React Native / UIKit requirement, not specific to `react-native-okhi`. `OK.startMonitoring()` only needs `AppDelegate.didFinishLaunchingWithOptions` to have run — it does not depend on `window`, so it can stay in `AppDelegate` unchanged.
+
 ---
 
 ## Usage Guide
@@ -774,6 +892,12 @@ If you still hit this crash:
   ```
 - To confirm whether a given archive is affected, unzip the `.ipa` (or inspect the `.xcarchive`) and check for `Payload/[YourAppName].app/Frameworks/OkHi.framework` — its absence confirms this issue.
 
+### iOS: app crashes at launch with `UIKitCore ___UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption_block_invoke`
+
+This is **not** caused by `react-native-okhi` — the crash stack is pure UIKit launch machinery (`dyld → main → AppDelegate.$main() → UIApplicationMain → UIKitCore`) with no OkHi or React Native frames involved. It happens when the app is built against a newer iOS SDK (iOS 26+, depending on the Xcode version used to build) that now enforces `UIScene` lifecycle adoption, while the app still creates its `UIWindow` directly in `AppDelegate` without a `SceneDelegate` — the default pattern in React Native templates prior to RN 0.88.
+
+Fix: add `UIApplicationSceneManifest` to `Info.plist` and move window/React Native startup into a `SceneDelegate`. See "Adopt the UIScene Lifecycle" under iOS Configuration above for the full before/after code.
+
 ### Expo: "Native module not found"
 
 Expo Go doesn't support native modules. Use a development build:
@@ -834,6 +958,7 @@ Use this checklist to verify that a React Native project has correctly integrate
 | I8  | AppDelegate startMonitoring (Swift)    | `ios/[AppName]/AppDelegate.swift`      | `OK.startMonitoring()` called in `application(_:didFinishLaunchingWithOptions:)`    | Yes (if Swift) |
 | I9  | AppDelegate startMonitoring (Obj-C)    | `ios/[AppName]/AppDelegate.mm` or `.m` | `[OK startMonitoring];` called in `application:didFinishLaunchingWithOptions:`      | Yes (if Obj-C) |
 | I10 | Pods installed                         | `ios/Podfile.lock`                     | Contains `OkHi` pod entry                                                           | Yes            |
+| I11 | UIScene lifecycle adopted (newer SDKs) | `ios/[AppName]/Info.plist`, `ios/[AppName]/SceneDelegate.swift` (or `.m`) | `UIApplicationSceneManifest` present in `Info.plist` and a `SceneDelegate` owns the window, instead of `AppDelegate` creating `UIWindow` directly | Yes (when building with an iOS SDK that enforces scene lifecycle — see troubleshooting) |
 
 ### Code Integration Checklist
 
@@ -900,6 +1025,7 @@ When auditing an integration, follow these steps:
 | Maven repo missing            | Build fails with "Could not resolve io.okhi..."   | Add OkHi Maven URL to `android/build.gradle`                    |
 | Static framework linkage (iOS)| Pod install or linker errors resolving `OkHi`     | Set `USE_FRAMEWORKS=dynamic` and pass it to `use_frameworks!` in `ios/Podfile` before `pod install` |
 | SPM signature collision (iOS) | `xcodebuild archive` fails: "couldn't be copied to Signatures..." | Automatic on `pod install`; see troubleshooting section below if it still occurs |
+| No UIScene lifecycle adoption (iOS) | Crash at launch, top frame `UIKitCore ___UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption_block_invoke`, happens on newer iOS SDK builds | Add `UIApplicationSceneManifest` to `Info.plist` and a `SceneDelegate` that owns the window; see "Adopt the UIScene Lifecycle" above |
 | OkHi.framework not embedded (iOS) | `dyld: Library not loaded: @rpath/OkHi.framework/OkHi` at launch, archived builds only | Automatic on `pod install`; see troubleshooting section below if it still occurs |
 | minSdk too low                | Build fails with SDK version error                | Set `minSdkVersion = 24` in `android/build.gradle`              |
 | Missing permissions (Android) | Runtime permission errors or crashes              | Add all required `<uses-permission>` entries                    |
