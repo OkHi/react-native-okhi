@@ -26,11 +26,11 @@ Pod::Spec.new do |s|
   if defined?(spm_dependency)
     spm_dependency(s,
       url: 'https://github.com/OkHi/ios-okhi',
-      requirement: { kind: 'exactVersion', version: '1.10.19' },
+      requirement: { kind: 'exactVersion', version: '1.10.21' },
       products: ['OkHi']
     )
   else
-    s.dependency "OkHi", "1.10.19"
+    s.dependency "OkHi", "1.10.21"
   end
   install_modules_dependencies(s)
 end
